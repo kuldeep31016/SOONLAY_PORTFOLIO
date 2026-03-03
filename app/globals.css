@@ -62,6 +62,7 @@ body {
     );
   filter: blur(0px);
   animation: mesh-move 18s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 
 @keyframes mesh-move {
