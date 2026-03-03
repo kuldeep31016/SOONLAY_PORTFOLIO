@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
+import { Eye } from "lucide-react"
 import { SectionHeading } from "@/components/ui/SectionHeading"
 import { cn } from "@/lib/utils"
 
@@ -27,7 +28,7 @@ const cardVariant = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] }
   }
 }
 
@@ -196,10 +197,10 @@ export function PortfolioSection({
         </div>
 
         <motion.div
+          key={activeFilter}
           variants={staggerContainer}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-80px" }}
+          animate="visible"
           className="grid gap-6 md:grid-cols-3"
         >
           {filtered.map((project) => (
@@ -242,9 +243,10 @@ export function PortfolioSection({
                   <button
                     type="button"
                     onClick={() => openLightbox(project)}
-                    className="text-accent hover:text-accent-2"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-accent/60 bg-surface text-accent hover:border-accent hover:bg-accent hover:text-black transition-colors"
+                    aria-label={`View ${project.title} screenshots`}
                   >
-                    View
+                    <Eye className="h-4 w-4" />
                   </button>
                 </div>
               </div>
@@ -266,7 +268,10 @@ export function PortfolioSection({
           </div>
         )}
         {lightboxProject && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-2 sm:px-6">
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-2 sm:px-6"
+            onClick={closeLightbox}
+          >
             <button
               type="button"
               onClick={closeLightbox}
@@ -275,9 +280,12 @@ export function PortfolioSection({
             >
               ✕
             </button>
-            <div className="relative flex w-full max-w-5xl flex-col items-center gap-3">
+            <div
+              className="relative flex w-full max-w-5xl flex-col items-center gap-3"
+              onClick={(event) => event.stopPropagation()}
+            >
               <div className="flex w-full items-center justify-between text-xs text-secondary">
-                <span className="font-display text-sm text-primary sm:text-base">
+                <span className="font-display text-base text-accent sm:text-lg md:text-xl">
                   {lightboxProject.title}
                 </span>
                 <span className="text-muted">
@@ -288,10 +296,10 @@ export function PortfolioSection({
                 <button
                   type="button"
                   onClick={() => stepLightbox(-1)}
-                  className="absolute left-1 sm:left-4 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/70 text-xs text-secondary hover:text-primary"
+                  className="absolute -left-3 sm:-left-12 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-black shadow-lg hover:scale-105 transition-transform"
                   aria-label="Previous image"
                 >
-                  ←
+                  <span className="text-lg">‹</span>
                 </button>
                 <div className="relative mx-auto aspect-[16/9] w-full max-w-5xl overflow-hidden rounded-2xl">
                   <Image
@@ -305,10 +313,10 @@ export function PortfolioSection({
                 <button
                   type="button"
                   onClick={() => stepLightbox(1)}
-                  className="absolute right-1 sm:right-2 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-xs text-secondary hover:text-primary"
+                  className="absolute -right-3 sm:-right-12 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-black shadow-lg hover:scale-105 transition-transform"
                   aria-label="Next image"
                 >
-                  →
+                  <span className="text-lg">›</span>
                 </button>
               </div>
               <div className="flex items-center justify-center gap-2">
