@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
 import { AnimatedText } from "@/components/ui/AnimatedText"
@@ -109,9 +110,11 @@ export function Hero() {
                 →
               </span>
             </Button>
-            <Button variant="secondary" size="lg">
-              See Our Work
-            </Button>
+            <Link href="/work">
+              <Button variant="secondary" size="lg">
+                See Our Work
+              </Button>
+            </Link>
           </motion.div>
 
           <motion.div

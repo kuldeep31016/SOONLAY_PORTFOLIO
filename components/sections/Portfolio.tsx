@@ -84,7 +84,7 @@ const projects: Project[] = [
     title: "Billing and Payments",
     description: "Metrics dashboard for tracking MRR, churn, and activation.",
     tags: ["SaaS", "Dashboard"],
-    tech: "Next.js · Prisma · PostgreSQL",
+    tech: "Typescript · Prisma · PostgreSQL",
     category: "saas" as ProjectCategory,
     images: [
       "/images/khaata-1.png",
@@ -96,7 +96,7 @@ const projects: Project[] = [
     title: "Coupon management system",
     description: "Internal tool that automates repetitive back-office operations.",
     tags: ["Automation", "Internal Tools"],
-    tech: "Node.js · Queue workers · Slack",
+    tech: "Compose Multiplatform · Cron.js · Firebase",
     category: "mobile" as ProjectCategory,
     images: [
       "/images/dealora-1.png",
@@ -105,10 +105,10 @@ const projects: Project[] = [
     ]
   },
   {
-    title: "Mobile Booking App",
-    description: "Cross-platform booking experience for events and classes.",
+    title: "Terminal Emulator & File System",
+    description: "Android Native terminal emulator with integrated file system.",
     tags: ["Mobile", "B2C"],
-    tech: "React Native · Expo · Stripe",
+    tech: "Kotlin · Jetpack Compose · Dependency Injection",
     category: "mobile" as ProjectCategory,
     images: [
       "/images/Betturmux-1.png",
