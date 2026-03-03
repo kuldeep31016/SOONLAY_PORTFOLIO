@@ -6,7 +6,7 @@ export const organizationSchema = {
   logo: "https://soonlay.tech/logo.svg",
   description:
     "Soonlay is a product development studio that builds web apps, mobile apps, SaaS platforms, and AI products for startup founders.",
-  email: "hello@soonlay.tech",
+  email: "soonlay.tech@gmail.com",
   foundingDate: "2025",
   areaServed: "Worldwide",
   serviceType: [
