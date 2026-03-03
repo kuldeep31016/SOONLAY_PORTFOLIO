@@ -44,8 +44,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      type={props.type ?? "button"}
-      className={cn(
+      type={props.type ?? "button"} className={cn(
         baseClasses,
         variantClasses[variant],
         sizeClasses[size],
