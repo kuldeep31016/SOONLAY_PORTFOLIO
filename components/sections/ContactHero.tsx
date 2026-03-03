@@ -194,7 +194,7 @@ ${fullName.trim()}`
               <div className="space-y-6">
                 {/* Email */}
                 <motion.a
-                  href="mailto:hello@soonlay.tech"
+                  href="mailto:soonlay.tech@gmail.com"
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
@@ -209,7 +209,7 @@ ${fullName.trim()}`
                       Email
                     </h3>
                     <p className="text-base font-medium text-primary">
-                      hello@soonlay.tech
+                      soonlay.tech@gmail.com
                     </p>
                   </div>
                 </motion.a>
