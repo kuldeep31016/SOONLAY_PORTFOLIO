@@ -29,6 +29,11 @@ function FloatingOrb({ className }: { className?: string }) {
 
 export function Hero() {
   const [progress, setProgress] = useState(0)
+  const [showContact, setShowContact] = useState(false)
+  const [projectTitle, setProjectTitle] = useState("")
+  const [techStack, setTechStack] = useState("")
+  const [description, setDescription] = useState("")
+  const [message, setMessage] = useState<string | null>(null)
 
   useEffect(() => {
     const onScroll = () => {
@@ -91,8 +96,16 @@ export function Hero() {
             transition={{ delay: 0.6 }}
             className="mb-6 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
-            <Button size="lg" className="group">
-              <span className="mr-1">Start Your Project</span>
+            <Button
+              size="lg"
+              className="group"
+              onClick={() => {
+                console.log("Contact Us clicked")
+                setShowContact(true)
+                setMessage(null)
+              }}
+            >
+              <span className="mr-1">Contact Us</span>
               <span className="transition-transform group-hover:translate-x-0.5">
                 →
               </span>
@@ -142,6 +155,125 @@ export function Hero() {
           </div>
         </motion.div>
       </div>
+      {showContact && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
+          onClick={() => setShowContact(false)}
+        >
+          <div
+            className="w-full max-w-2xl rounded-2xl border border-border bg-surface/95 p-8 shadow-xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="font-display text-lg text-primary">
+                Tell us about your project
+              </h2>
+              <button
+                className="text-secondary hover:text-primary"
+                onClick={() => setShowContact(false)}
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="space-y-4 text-sm">
+              <div>
+                <label className="mb-1 block text-xs font-medium text-secondary">
+                  Project title<span className="text-accent">*</span>
+                </label>
+                <input
+                  className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm text-primary outline-none focus:border-accent"
+                  placeholder="e.g. Telemedicine platform for clinics"
+                  value={projectTitle}
+                  onChange={(event) => setProjectTitle(event.target.value)}
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium text-secondary">
+                  Preferred tech stack (optional)
+                </label>
+                <input
+                  className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm text-primary outline-none focus:border-accent"
+                  placeholder="e.g. Next.js, Node.js, PostgreSQL"
+                  value={techStack}
+                  onChange={(event) => setTechStack(event.target.value)}
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium text-secondary">
+                  Description (optional)
+                </label>
+                <textarea
+                  rows={4}
+                  className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm text-primary outline-none focus:border-accent"
+                  placeholder="Share anything that helps us understand your idea or stage."
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                />
+              </div>
+              {message && (
+                <p className="text-xs text-accent">{message}</p>
+              )}
+              <div className="mt-2 flex justify-end gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setShowContact(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if (!projectTitle.trim()) {
+                      setMessage(
+                        "Please add a project title so we know what to discuss."
+                      )
+                      return
+                    }
+
+                    const recipients =
+                      "syedayaan9376@gmail.com,iamkuldeepraj55@gmail.com,soonlay.tech@gmail.com"
+
+                    const subject = `New project inquiry: ${projectTitle.trim()}`
+
+                    const bodyLines = [
+                      `Project Title: ${projectTitle.trim()}`,
+                      techStack.trim()
+                        ? `Preferred Tech Stack: ${techStack.trim()}`
+                        : "",
+                      description.trim()
+                        ? `Description:\n${description.trim()}`
+                        : ""
+                    ].filter(Boolean)
+
+                    const params = new URLSearchParams({
+                      subject,
+                      body: bodyLines.join("\n\n")
+                    })
+
+                    window.location.href = `mailto:${recipients}?${params.toString()}`
+
+                    setMessage(
+                      "Opening your email client..."
+                    )
+                    
+                    setTimeout(() => {
+                      setShowContact(false)
+                      setProjectTitle("")
+                      setTechStack("")
+                      setDescription("")
+                      setMessage(null)
+                    }, 1500)
+                  }}
+                >
+                  Submit
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
