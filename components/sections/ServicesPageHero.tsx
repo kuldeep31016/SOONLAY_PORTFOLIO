@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { Code2, Cloud, Smartphone, Globe2 } from "lucide-react"
+import { useContactModal } from "@/components/layout/ContactModalContext"
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -61,6 +62,8 @@ const services = [
 ]
 
 export function ServicesPageHero() {
+  const { openModal } = useContactModal()
+
   return (
     <section className="relative overflow-hidden bg-gradient-dark pb-20 pt-24 sm:pt-28">
       <div className="pointer-events-none absolute inset-0">
@@ -106,7 +109,7 @@ export function ServicesPageHero() {
             transition={{ delay: 0.45 }}
             className="mt-6"
           >
-            <Button size="md" className="group">
+            <Button size="md" className="group" onClick={openModal}>
               <span className="mr-1">Start a Project</span>
               <span className="transition-transform group-hover:translate-x-0.5">
                 →

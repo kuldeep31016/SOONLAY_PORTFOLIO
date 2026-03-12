@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
 import { MobileMenu } from "@/components/layout/MobileMenu"
+import { useContactModal } from "@/components/layout/ContactModalContext"
 
 const links = [
   { href: "/", label: "Home" },
@@ -20,6 +21,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+  const { openModal } = useContactModal()
 
   useEffect(() => {
     const onScroll = () => {
@@ -75,7 +77,7 @@ export function Navbar() {
         </nav>
 
         <div className="hidden md:flex">
-          <Button size="sm" className="group">
+          <Button size="sm" className="group" onClick={openModal}>
             <span className="mr-1">Start a Project</span>
             <span className="transition-transform group-hover:translate-x-0.5">
               →

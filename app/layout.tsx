@@ -5,6 +5,7 @@ import { siteMetadata } from "@/lib/metadata"
 import { organizationSchema, websiteSchema } from "@/lib/schema"
 import { Analytics } from "@vercel/analytics/react"
 import { ReactNode } from "react"
+import { ContactModalProvider } from "@/components/layout/ContactModalContext"
 
 const syne = Syne({
   subsets: ["latin"],
@@ -44,7 +45,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             __html: JSON.stringify([organizationSchema, websiteSchema])
           }}
         />
-        {children}
+        <ContactModalProvider>
+          {children}
+        </ContactModalProvider>
         <Analytics />
       </body>
     </html>
