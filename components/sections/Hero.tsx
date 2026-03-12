@@ -31,10 +31,12 @@ function FloatingOrb({ className }: { className?: string }) {
 export function Hero() {
   const [progress, setProgress] = useState(0)
   const [showContact, setShowContact] = useState(false)
+  const [fullName, setFullName] = useState("")
+  const [email, setEmail] = useState("")
   const [projectTitle, setProjectTitle] = useState("")
-  const [techStack, setTechStack] = useState("")
   const [description, setDescription] = useState("")
   const [message, setMessage] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const onScroll = () => {
@@ -179,36 +181,52 @@ export function Hero() {
               </button>
             </div>
             <div className="space-y-4 text-sm">
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-secondary">
+                    Your Name<span className="text-accent">*</span>
+                    </label>
+                <input
+                  className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm text-primary outline-none focus:border-accent"
+                  placeholder="e.g. John Doe"
+                  required
+                  value={fullName}
+                  onChange={(event) => setFullName(event.target.value)}
+                />
+              </div>
               <div>
                 <label className="mb-1 block text-xs font-medium text-secondary">
-                  Project title<span className="text-accent">*</span>
+                  Email Address<span className="text-accent">*</span>
+                </label>
+                <input
+                  type="email"
+                  className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm text-primary outline-none focus:border-accent"
+                  placeholder="e.g. john@example.com"
+                  required
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium text-secondary">
+                  Project Title<span className="text-accent">*</span>
                 </label>
                 <input
                   className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm text-primary outline-none focus:border-accent"
                   placeholder="e.g. Telemedicine platform for clinics"
+                  required
                   value={projectTitle}
                   onChange={(event) => setProjectTitle(event.target.value)}
                 />
               </div>
               <div>
                 <label className="mb-1 block text-xs font-medium text-secondary">
-                  Preferred tech stack (optional)
-                </label>
-                <input
-                  className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm text-primary outline-none focus:border-accent"
-                  placeholder="e.g. Next.js, Node.js, PostgreSQL"
-                  value={techStack}
-                  onChange={(event) => setTechStack(event.target.value)}
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-medium text-secondary">
-                  Description (optional)
+                  Project Summary<span className="text-accent">*</span>
                 </label>
                 <textarea
                   rows={4}
                   className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2 text-sm text-primary outline-none focus:border-accent"
                   placeholder="Share anything that helps us understand your idea or stage."
+                  required
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                 />
@@ -220,63 +238,65 @@ export function Hero() {
                 <Button
                   variant="secondary"
                   size="sm"
-                  onClick={() => setShowContact(false)}
+                  onClick={() => {
+                    setShowContact(false)
+                    setMessage(null)
+                  }}
                 >
                   Cancel
                 </Button>
                 <Button
                   size="sm"
-                  onClick={() => {
-                    if (!projectTitle.trim()) {
+                  disabled={isSubmitting}
+                  onClick={async () => {
+                    if (!fullName.trim() || !email.trim() || !projectTitle.trim() || !description.trim()) {
                       setMessage(
-                        "Please add a project title so we know what to discuss."
+                        "Please fill in all mandatory fields."
                       )
                       return
                     }
 
-                    const toRecipient = "soonlay.tech@gmail.com"
+                    setIsSubmitting(true)
+                    setMessage("Sending your inquiry...")
 
-                    const subject = `New Project Inquiry: ${projectTitle.trim()}`
+                    try {
+                      const response = await fetch("/api/contact", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          fullName: fullName.trim(),
+                          email: email.trim(),
+                          projectTitle: projectTitle.trim(),
+                          message: description.trim(),
+                        }),
+                      })
 
-                    // Create a professional email template
-                    const emailBody = `Hello Soonlay Team,
-
-I would like to discuss a new project with you. Here are the details:
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-PROJECT DETAILS
-
-Title: ${projectTitle.trim()}
-${techStack.trim() ? `\nTech Stack: ${techStack.trim()}` : ''}
-
-${description.trim() ? `Description:\n${description.trim()}` : ''}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Looking forward to hearing from you soon!
-
-Best regards`
-
-                    const mailtoLink = `mailto:${toRecipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`
-
-                    window.location.href = mailtoLink
-
-                    setMessage(
-                      "Opening your email client..."
-                    )
-                    
-                    setTimeout(() => {
-                      setShowContact(false)
-                      setProjectTitle("")
-                      setTechStack("")
-                      setDescription("")
-                      setMessage(null)
-                    }, 1500)
+                      if (response.ok) {
+                        setMessage("Inquiry sent successfully!")
+                        setTimeout(() => {
+                          setShowContact(false)
+                          setFullName("")
+                          setEmail("")
+                          setProjectTitle("")
+                          setDescription("")
+                          setMessage(null)
+                        }, 2000)
+                      } else {
+                        const data = await response.json()
+                        setMessage(data.error || "Failed to send inquiry.")
+                      }
+                    } catch (error) {
+                      console.error("Submission error:", error)
+                      setMessage("An error occurred. Please try again later.")
+                    } finally {
+                      setIsSubmitting(false)
+                    }
                   }}
-                >
-                  Submit
-                </Button>
+                  >
+                    {isSubmitting ? "Sending..." : "Submit"}
+                  </Button>
               </div>
             </div>
           </div>
@@ -289,4 +309,3 @@ Best regards`
 function SocialProofItem({ children }: { children: ReactNode }) {
   return <span className="inline-flex items-center gap-2">{children}</span>
 }
-
