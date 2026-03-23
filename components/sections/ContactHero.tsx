@@ -18,55 +18,58 @@ const fadeUp = {
 export function ContactHero() {
   const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
   const [subject, setSubject] = useState("")
   const [message, setMessage] = useState("")
-  const [statusMessage, setStatusMessage] = useState<string | null>(null)
+  const [statusMessage, setStatusMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
     if (!fullName.trim() || !email.trim() || !subject.trim() || !message.trim()) {
-      setStatusMessage("Please fill in all fields.")
+      setStatusMessage({ type: 'error', text: "Please fill in all mandatory fields." })
       return
     }
 
-    const toRecipient = "soonlay.tech@gmail.com"
+    setIsSubmitting(true)
+    setStatusMessage({ type: 'success', text: "Sending your message..." })
 
-    const emailSubject = `${subject.trim()}`
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullName: fullName.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          subject: subject.trim(),
+          message: message.trim(),
+        }),
+      })
 
-    const emailBody = `Hello Soonlay Team,
-
-I would like to get in touch with you. Here are my details:
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-CONTACT DETAILS
-
-Name: ${fullName.trim()}
-Email: ${email.trim()}
-Subject: ${subject.trim()}
-
-Message:
-${message.trim()}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Looking forward to your response!
-
-Best regards,
-${fullName.trim()}`
-
-    const mailtoLink = `mailto:${toRecipient}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
-
-    window.location.href = mailtoLink
-
-    setStatusMessage("Opening your email client...")
-    
-    setTimeout(() => {
-      setFullName("")
-      setEmail("")
-      setSubject("")
-      setMessage("")
-      setStatusMessage(null)
-    }, 1500)
+      if (response.ok) {
+        setStatusMessage({ type: 'success', text: "Message sent successfully! We'll get back to you soon." })
+        setFullName("")
+        setEmail("")
+        setPhone("")
+        setSubject("")
+        setMessage("")
+      } else {
+        const data = await response.json()
+        setStatusMessage({ type: 'error', text: data.error || "Failed to send message. Please try again later." })
+      }
+    } catch (error) {
+      console.error("Submission error:", error)
+      setStatusMessage({ type: 'error', text: "An error occurred. Please try again later." })
+    } finally {
+      setIsSubmitting(false)
+      setTimeout(() => {
+        setStatusMessage(null)
+      }, 5000)
+    }
   }
 
   return (
@@ -123,11 +126,12 @@ ${fullName.trim()}`
                 Send Us a <span className="text-accent">Message</span>
               </h2>
 
-              <div className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
                   <input
                     type="text"
-                    placeholder="Full Name"
+                    placeholder="Your Name *"
+                    required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     className="w-full rounded-xl border border-border/50 bg-surface/60 px-4 py-3 text-sm text-primary placeholder:text-muted outline-none transition-colors focus:border-accent focus:bg-surface"
@@ -137,7 +141,8 @@ ${fullName.trim()}`
                 <div>
                   <input
                     type="email"
-                    placeholder="Email Address"
+                    placeholder="Email Address *"
+                    required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full rounded-xl border border-border/50 bg-surface/60 px-4 py-3 text-sm text-primary placeholder:text-muted outline-none transition-colors focus:border-accent focus:bg-surface"
@@ -147,7 +152,8 @@ ${fullName.trim()}`
                 <div>
                   <input
                     type="text"
-                    placeholder="Subject"
+                    placeholder="Project Title *"
+                    required
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     className="w-full rounded-xl border border-border/50 bg-surface/60 px-4 py-3 text-sm text-primary placeholder:text-muted outline-none transition-colors focus:border-accent focus:bg-surface"
@@ -157,7 +163,8 @@ ${fullName.trim()}`
                 <div>
                   <textarea
                     rows={5}
-                    placeholder="Your Message"
+                    placeholder="Project Summary *"
+                    required
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     className="w-full rounded-xl border border-border/50 bg-surface/60 px-4 py-3 text-sm text-primary placeholder:text-muted outline-none transition-colors focus:border-accent focus:bg-surface resize-none"
@@ -165,17 +172,20 @@ ${fullName.trim()}`
                 </div>
 
                 {statusMessage && (
-                  <p className="text-sm text-accent">{statusMessage}</p>
+                  <p className={`text-sm ${statusMessage.type === 'error' ? 'text-red-500' : 'text-accent'}`}>
+                    {statusMessage.text}
+                  </p>
                 )}
 
                 <Button
+                  type="submit"
                   size="lg"
                   className="w-full"
-                  onClick={handleSubmit}
+                  disabled={isSubmitting}
                 >
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
-              </div>
+              </form>
             </motion.div>
 
             {/* Contact Information */}
@@ -213,28 +223,6 @@ ${fullName.trim()}`
                   </div>
                 </motion.a>
 
-                {/* Phone */}
-                <motion.a
-                  href="tel:+1234567890"
-                  variants={fadeUp}
-                  initial="hidden"
-                  animate="visible"
-                  transition={{ delay: 0.6 }}
-                  className="group flex items-start gap-4 rounded-xl border border-border/30 bg-surface/20 p-5 backdrop-blur-sm transition-all hover:border-accent/50 hover:bg-surface/40"
-                >
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent transition-colors group-hover:bg-accent/20">
-                    <Phone className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 className="mb-1 text-sm font-medium text-secondary">
-                      Call
-                    </h3>
-                    <p className="text-base font-medium text-primary">
-                      +123-456-7890
-                    </p>
-                  </div>
-                </motion.a>
-
                 {/* Location */}
                 <motion.div
                   variants={fadeUp}
@@ -251,7 +239,7 @@ ${fullName.trim()}`
                       Location
                     </h3>
                     <p className="text-base font-medium text-primary">
-                      Mumbai, India
+                      Bangalore, India
                     </p>
                   </div>
                 </motion.div>
