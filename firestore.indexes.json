@@ -1,0 +1,5 @@
+{
+  "//": "The careers datastore deliberately uses single-field Firestore filters and in-memory filtering, so no composite indexes are required. This file exists so `firebase deploy --only firestore:indexes` succeeds as a no-op.",
+  "indexes": [],
+  "fieldOverrides": []
+}

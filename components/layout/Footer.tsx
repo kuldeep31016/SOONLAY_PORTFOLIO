@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Github, Linkedin, Twitter, Instagram } from "lucide-react"
+import { Linkedin, Twitter, Instagram } from "lucide-react"
 
 export function Footer() {
   const year = new Date().getFullYear()
@@ -62,6 +62,9 @@ export function Footer() {
               </Link>
               <Link href="/work" className="hover:text-primary">
                 Work
+              </Link>
+              <Link href="/careers" className="hover:text-primary">
+                Careers
               </Link>
               <Link href="/blog" className="hover:text-primary">
                 Blog

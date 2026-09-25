@@ -14,6 +14,7 @@ const links = [
   { href: "/services", label: "Services" },
   { href: "/work", label: "Work" },
   { href: "/about", label: "About" },
+  { href: "/careers", label: "Careers" },
   { href: "/contact", label: "Contact" }
 ]
 
@@ -48,35 +49,41 @@ export function Navbar() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="group relative flex flex-col items-center text-sm"
-            >
-              <span
-                className={cn(
-                  "transition-colors",
-                  pathname === link.href
-                    ? "text-primary"
-                    : "text-secondary group-hover:text-primary"
-                )}
+        <nav className="hidden items-center gap-8 lg:flex">
+          {links.map((link) => {
+            const isActive =
+              pathname === link.href || pathname.startsWith(`${link.href}/`)
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                className="group relative flex flex-col items-center text-sm"
               >
-                {link.label}
-              </span>
-              <span
-                className={cn(
-                  "mt-1 h-0.5 w-0 rounded-full bg-transparent opacity-0 transition-all duration-300",
-                  pathname === link.href &&
-                    "w-10 bg-gradient-accent opacity-100 shadow-[0_0_18px_rgba(110,231,183,0.8)]"
-                )}
-              />
-            </Link>
-          ))}
+                <span
+                  className={cn(
+                    "transition-colors",
+                    isActive
+                      ? "text-primary"
+                      : "text-secondary group-hover:text-primary"
+                  )}
+                >
+                  {link.label}
+                </span>
+                <span
+                  className={cn(
+                    "mt-1 h-0.5 w-0 rounded-full bg-transparent opacity-0 transition-all duration-300",
+                    isActive &&
+                      "w-10 bg-gradient-accent opacity-100 shadow-[0_0_18px_rgba(110,231,183,0.8)]"
+                  )}
+                />
+              </Link>
+            )
+          })}
         </nav>
 
-        <div className="hidden md:flex">
+        <div className="hidden lg:flex">
           <Button size="sm" className="group" onClick={openModal}>
             <span className="mr-1">Start a Project</span>
             <span className="transition-transform group-hover:translate-x-0.5">
@@ -86,7 +93,7 @@ export function Navbar() {
         </div>
 
         <button
-          className="inline-flex items-center justify-center rounded-full border border-border bg-surface/80 p-2 text-secondary hover:border-border-bright md:hidden"
+          className="inline-flex items-center justify-center rounded-full border border-border bg-surface/80 p-2 text-secondary hover:border-border-bright lg:hidden"
           onClick={() => setOpen((prev) => !prev)}
           aria-label="Toggle navigation"
         >

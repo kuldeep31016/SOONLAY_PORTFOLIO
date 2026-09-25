@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
-import { Mail, Phone, MapPin } from "lucide-react"
+import { Mail, MapPin } from "lucide-react"
 import { useState } from "react"
 
 const fadeUp = {
@@ -96,7 +96,7 @@ export function ContactHero() {
               transition={{ delay: 0.1 }}
               className="mb-6 font-display text-4xl leading-tight tracking-tight text-primary sm:text-5xl lg:text-6xl"
             >
-              Let's Work{" "}
+              Let&apos;s Work{" "}
               <span className="gradient-text">Together</span>
             </motion.h1>
 
@@ -255,7 +255,7 @@ export function ContactHero() {
             transition={{ delay: 0.8 }}
             className="mt-12 text-center text-sm text-secondary"
           >
-            We'll get back to you within 24 hours.
+            We&apos;ll get back to you within 24 hours.
           </motion.p>
         </div>
       </div>
