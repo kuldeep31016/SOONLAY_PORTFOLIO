@@ -87,10 +87,10 @@ export function Footer() {
             <h3 className="font-medium text-primary">Contact</h3>
             <div className="flex flex-col gap-2 text-secondary">
               <a
-                href="mailto:syedayaan9376@gmail.com"
+                href="mailto:soonlay.tech@gmail.com"
                 className="hover:text-primary"
               >
-                syedayaan9376@gmail.com
+                soonlay.tech@gmail.com
               </a>
               <span>India · Remote-first</span>
               <span>Working with founders globally</span>
