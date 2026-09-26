@@ -3,8 +3,9 @@
 import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 import { motion } from "framer-motion"
-import { Code2, Cloud, Smartphone, Globe2 } from "lucide-react"
+import { Code2, Cloud, Smartphone, Globe2, Rocket, Workflow } from "lucide-react"
 import { useContactModal } from "@/components/layout/ContactModalContext"
 
 const fadeUp = {
@@ -37,27 +38,45 @@ const scaleIn = {
 const services = [
   {
     title: "Web App Development",
+    href: "/services/web-app-development",
     icon: Globe2,
     description:
       "Custom, responsive, and scalable web applications using modern frameworks like Next.js and TypeScript."
   },
   {
     title: "Mobile App Development",
+    href: "/services/mobile-app-development",
     icon: Smartphone,
     description:
       "Native-feel mobile apps for iOS and Android built with React Native and a focus on smooth UX."
   },
   {
     title: "SaaS Development",
+    href: "/services/saas-platforms",
     icon: Cloud,
     description:
       "Multi-tenant SaaS platforms with billing, user management, analytics dashboards, and secure infrastructure."
   },
   {
     title: "AI & LLM Solutions",
+    href: "/services/ai-solutions",
     icon: Code2,
     description:
       "Intelligent products using OpenAI, Gemini, and Claude — from chatbots and agents to RAG search and automation."
+  },
+  {
+    title: "MVP Development",
+    href: "/services/mvp-development",
+    icon: Rocket,
+    description:
+      "Launch in weeks, not months. Lean MVPs built to validate your idea with real users and investors."
+  },
+  {
+    title: "Custom Systems",
+    href: "/services/custom-systems",
+    icon: Workflow,
+    description:
+      "Internal tools, automation, and custom backends that streamline your operations and workflows."
   }
 ]
 
@@ -123,36 +142,37 @@ export function ServicesPageHero() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
-          className="grid gap-6 md:grid-cols-2"
+          className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
           {services.map((service) => (
-            <motion.div
-              key={service.title}
-              variants={scaleIn}
-              className={cn(
-                "card-surface card-hover-glow relative flex flex-col justify-between overflow-hidden p-6 sm:p-7 md:p-8",
-                "bg-surface/80"
-              )}
-            >
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-accent/40" />
-              <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
-                  <service.icon className="h-5 w-5" />
+            <Link key={service.title} href={service.href}>
+              <motion.div
+                variants={scaleIn}
+                className={cn(
+                  "card-surface card-hover-glow relative flex flex-col justify-between overflow-hidden p-6 sm:p-7 md:p-8",
+                  "bg-surface/80"
+                )}
+              >
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-accent/40" />
+                <div className="mb-6 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
+                    <service.icon className="h-5 w-5" />
+                  </div>
+                  <h2 className="font-display text-lg text-primary sm:text-xl">
+                    {service.title}
+                  </h2>
                 </div>
-                <h2 className="font-display text-lg text-primary sm:text-xl">
-                  {service.title}
-                </h2>
-              </div>
-              <p className="mb-6 text-sm text-secondary">
-                {service.description}
-              </p>
-              <button className="group inline-flex items-center text-xs font-medium text-accent">
-                Learn More{" "}
-                <span className="ml-1 transition-transform group-hover:translate-x-0.5">
-                  →
+                <p className="mb-6 text-sm text-secondary">
+                  {service.description}
+                </p>
+                <span className="group inline-flex items-center text-xs font-medium text-accent">
+                  Learn More{" "}
+                  <span className="ml-1 transition-transform group-hover:translate-x-0.5">
+                    →
+                  </span>
                 </span>
-              </button>
-            </motion.div>
+              </motion.div>
+            </Link>
           ))}
         </motion.div>
       </div>
