@@ -6,6 +6,38 @@ import { parsePublicJobQuery } from "@/lib/careers/query"
 import { toSearchParams } from "@/components/careers/queryState"
 import { ProviderConfigurationError, ProviderUnavailableError } from "@/lib/careers/providers/chain"
 
+// Initialize canvas for pdf-parse/pdf.js
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const canvas = require("canvas")
+const { createCanvas } = canvas
+// Make canvas globals available for pdf.js
+globalThis.HTMLCanvasElement = canvas.Canvas
+globalThis.ImageData = canvas.ImageData
+globalThis.Path2D = canvas.Path2D
+globalThis.DOMMatrix = canvas.DOMMatrix
+globalThis.HTMLImageElement = canvas.Image
+// Minimal document mock for pdf.js
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockElement: any = {
+  style: {},
+  setAttribute: () => {},
+  getAttribute: () => null,
+}
+globalThis.document = {
+  createElement: (tag: string) => {
+    if (tag === "canvas") return createCanvas(1, 1)
+    return mockElement
+  },
+  createElementNS: () => mockElement,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getElementById: () => null as any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  querySelector: () => null as any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  querySelectorAll: () => ({ length: 0, item: () => null, forEach: () => {}, [Symbol.iterator]: () => [] } as any),
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+} as any
+
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
 export const maxDuration = 60
