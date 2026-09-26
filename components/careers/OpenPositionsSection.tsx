@@ -67,6 +67,7 @@ export function OpenPositionsSection({
             department={firstParamValue(searchParams.department)}
             employmentType={firstParamValue(searchParams.employmentType)}
             hasActiveFilters={hasFilters}
+            showResumeCTA
           />
         </div>
 
