@@ -6,11 +6,16 @@ import { useState, type FormEvent } from "react"
 import { ClientRequestError, requestJson } from "@/lib/client-http"
 import { jobInputSchema } from "@/lib/schemas"
 import type { EmploymentType, JobInput, JobRecord, JobStatus } from "@/lib/types"
+import { COUNTRIES, LOCATION_HIERARCHY, DEPARTMENTS } from "@/lib/careers/constants"
 
 type FormValues = {
   title: string
   department: string
-  location: string
+  customDepartment: string
+  country: string
+  city: string
+  customCountry: string
+  customCity: string
   employmentType: EmploymentType
   experienceLevel: string
   shortDescription: string
@@ -27,11 +32,55 @@ function toText(values: string[] | null | undefined) {
   return Array.isArray(values) ? values.join("\n") : ""
 }
 
+function parseLocation(location: string): { country: string; city: string; customCountry: string; customCity: string } {
+  if (!location) return { country: "", city: "", customCountry: "", customCity: "" }
+
+  // Try to match "City, Country" format
+  const parts = location.split(",").map(p => p.trim())
+  if (parts.length >= 2) {
+    const city = parts.slice(0, -1).join(", ")
+    const country = parts[parts.length - 1]
+
+    // Check if country is in our list
+    if (COUNTRIES.includes(country as any)) {
+      // Check if city is in the hierarchy for that country
+      const citiesForCountry = LOCATION_HIERARCHY[country] ?? []
+      if (citiesForCountry.includes(city as any)) {
+        return { country, city, customCountry: "", customCity: "" }
+      }
+      return { country, city: "__custom__", customCountry: "", customCity: city }
+    }
+    // Country not in list, treat as custom
+    return { country: "__custom__", city: "__custom__", customCountry: country, customCity: city }
+  }
+
+  // Single value, check if it's a known country
+  if (COUNTRIES.includes(location as any)) {
+    return { country: location, city: "", customCountry: "", customCity: "" }
+  }
+
+  // Check if it's a known city
+  for (const [country, cities] of Object.entries(LOCATION_HIERARCHY)) {
+    if (cities.includes(location as any)) {
+      return { country, city: location, customCountry: "", customCity: "" }
+    }
+  }
+
+  // Unknown location, treat as custom
+  return { country: "__custom__", city: "__custom__", customCountry: "", customCity: location }
+}
+
 function initialValues(job?: JobRecord): FormValues {
+  const parsedLocation = parseLocation(job?.location ?? "")
+
   return {
     title: job?.title ?? "",
     department: job?.department ?? "",
-    location: job?.location ?? "",
+    customDepartment: "",
+    country: parsedLocation.country,
+    city: parsedLocation.city,
+    customCountry: parsedLocation.customCountry,
+    customCity: parsedLocation.customCity,
     employmentType: job?.employmentType ?? "Full-time",
     experienceLevel: job?.experienceLevel ?? "",
     shortDescription: job?.shortDescription ?? "",
@@ -54,10 +103,34 @@ function skills(value: string) {
 }
 
 function buildInput(values: FormValues, status: JobStatus, featured: boolean): JobInput {
+  // Build location from country + city
+  let location = ""
+  if (values.country === "__custom__" && values.customCountry) {
+    location = values.customCountry
+    if (values.city === "__custom__" && values.customCity) {
+      location = `${values.customCity}, ${values.customCountry}`
+    } else if (values.city && values.city !== "__custom__") {
+      location = `${values.city}, ${values.customCountry}`
+    }
+  } else if (values.country && values.country !== "__custom__") {
+    if (values.city === "__custom__" && values.customCity) {
+      location = `${values.customCity}, ${values.country}`
+    } else if (values.city && values.city !== "__custom__") {
+      location = `${values.city}, ${values.country}`
+    } else {
+      location = values.country
+    }
+  }
+
+  // Build department (use custom if provided and department is __custom__)
+  const department = values.department === "__custom__" && values.customDepartment
+    ? values.customDepartment
+    : values.department
+
   return {
     title: values.title,
-    department: values.department,
-    location: values.location,
+    department,
+    location,
     employmentType: values.employmentType,
     experienceLevel: values.experienceLevel.trim() || null,
     shortDescription: values.shortDescription,
@@ -186,12 +259,92 @@ export default function JobForm({ job }: { job?: JobRecord }) {
               </div>
               <div className="field-group">
                 <label htmlFor="job-department">Department</label>
-                <input id="job-department" value={values.department} onChange={(event) => updateField("department", event.target.value)} aria-invalid={Boolean(errors.department)} aria-describedby={errors.department ? "job-department-error" : undefined} required disabled={isSaving} />
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <select id="job-department" value={values.department} onChange={(event) => updateField("department", event.target.value)} aria-invalid={Boolean(errors.department)} aria-describedby={errors.department ? "job-department-error" : undefined} required disabled={isSaving}>
+                    <option value="">Select department</option>
+                    {DEPARTMENTS.map((d) => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                    <option value="__custom__">Other…</option>
+                  </select>
+                  {values.department === "__custom__" && (
+                    <input
+                      id="job-custom-department"
+                      value={values.customDepartment}
+                      onChange={(event) => updateField("customDepartment", event.target.value)}
+                      placeholder="Enter department name"
+                      className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-sm text-primary outline-none transition-colors focus:border-accent"
+                      aria-label="Custom department"
+                      required
+                    />
+                  )}
+                </div>
                 <FieldError name="department" errors={errors} />
               </div>
               <div className="field-group">
-                <label htmlFor="job-location">Location</label>
-                <input id="job-location" value={values.location} onChange={(event) => updateField("location", event.target.value)} aria-invalid={Boolean(errors.location)} aria-describedby={errors.location ? "job-location-error" : undefined} placeholder="Remote, City, or Region" required disabled={isSaving} />
+                <label htmlFor="job-country">Country</label>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <select
+                    id="job-country"
+                    value={values.country}
+                    onChange={(event) => updateField("country", event.target.value)}
+                    aria-invalid={Boolean(errors.location)}
+                    aria-describedby={errors.location ? "job-location-error" : undefined}
+                    required
+                    disabled={isSaving}
+                  >
+                    <option value="">Select country</option>
+                    {COUNTRIES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                    <option value="__custom__">Other…</option>
+                  </select>
+                  {values.country === "__custom__" && (
+                    <input
+                      id="job-custom-country"
+                      value={values.customCountry}
+                      onChange={(event) => updateField("customCountry", event.target.value)}
+                      placeholder="Enter country"
+                      className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-sm text-primary outline-none transition-colors focus:border-accent"
+                      aria-label="Custom country"
+                      required
+                    />
+                  )}
+                </div>
+                <FieldError name="location" errors={errors} />
+              </div>
+              <div className="field-group">
+                <label htmlFor="job-city">City / Region</label>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <select
+                    id="job-city"
+                    value={values.city}
+                    onChange={(event) => updateField("city", event.target.value)}
+                    aria-invalid={Boolean(errors.location)}
+                    aria-describedby={errors.location ? "job-location-error" : undefined}
+                    required
+                    disabled={isSaving}
+                  >
+                    <option value="">Select city / region</option>
+                    {values.country && values.country !== "__custom__"
+                      ? LOCATION_HIERARCHY[values.country]?.map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        )) ?? []
+                      : []}
+                    <option value="__custom__">Other…</option>
+                  </select>
+                  {values.city === "__custom__" && (
+                    <input
+                      id="job-custom-city"
+                      value={values.customCity}
+                      onChange={(event) => updateField("customCity", event.target.value)}
+                      placeholder="Enter city or region"
+                      className="w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-sm text-primary outline-none transition-colors focus:border-accent"
+                      aria-label="Custom city"
+                      required
+                    />
+                  )}
+                </div>
                 <FieldError name="location" errors={errors} />
               </div>
               <div className="field-group">

@@ -2,6 +2,7 @@ import Link from "next/link"
 import { SlidersHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import type { JobFilters } from "@/lib/careers/types"
+import { ALL_CITIES, DEPARTMENTS } from "@/lib/careers/constants"
 
 interface JobFiltersFormProps {
   filters: JobFilters
@@ -18,6 +19,18 @@ interface FilterFieldsProps extends Omit<JobFiltersFormProps, "hasActiveFilters"
 
 function uniqueValues(values: string[]): string[] {
   return Array.from(new Set(values))
+}
+
+function getLocationOptions(filters: JobFilters): string[] {
+  const staticCities = new Set<string>(ALL_CITIES as readonly string[])
+  const dynamicOnly = filters.locations.filter((l) => !staticCities.has(l)).sort()
+  return [...ALL_CITIES, ...dynamicOnly]
+}
+
+function getDepartmentOptions(filters: JobFilters): string[] {
+  const staticDepts = new Set<string>(DEPARTMENTS as readonly string[])
+  const dynamicOnly = filters.departments.filter((d) => !staticDepts.has(d)).sort()
+  return [...DEPARTMENTS, ...dynamicOnly]
 }
 
 function FilterFields({
@@ -63,7 +76,7 @@ function FilterFields({
           className={fieldClasses}
         >
           <option value="">All locations</option>
-          {uniqueValues(filters.locations).map((value) => (
+          {getLocationOptions(filters).map((value) => (
             <option key={value} value={value}>
               {value}
             </option>
@@ -82,7 +95,7 @@ function FilterFields({
           className={fieldClasses}
         >
           <option value="">All departments</option>
-          {uniqueValues(filters.departments).map((value) => (
+          {getDepartmentOptions(filters).map((value) => (
             <option key={value} value={value}>
               {value}
             </option>
