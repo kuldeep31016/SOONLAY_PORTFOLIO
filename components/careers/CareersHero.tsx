@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, Globe2, MapPin, Wifi, Upload, Brain, Sparkles, ArrowRight as ArrowRightIcon } from "lucide-react"
 import { Badge } from "@/components/ui/Badge"
 import { Button } from "@/components/ui/Button"
-import { CareersHeroIllustration } from "./CareersHeroIllustration"
 import { ResumeProfileBanner } from "./ResumeProfileBanner"
 import { ResumeUploadDialog } from "./ResumeUploadDialog"
 
@@ -153,7 +152,7 @@ export function CareersHero() {
                     onViewMatches={handleViewMatches}
                   />
                 </motion.div>
-              ) : (
+) : (
                 <motion.div
                   key="cta"
                   initial={{ x: -300, opacity: 0 }}
@@ -161,9 +160,6 @@ export function CareersHero() {
                   exit={{ x: 300, opacity: 0 }}
                   transition={{ type: "spring", damping: 25, stiffness: 300 }}
                 >
-<div className="relative h-[360px] max-h-[360px]">
-                    <CareersHeroIllustration />
-                  </div>
                   <div className="mt-6 card-surface bg-surface/70 p-5 lg:p-6">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 text-accent">
