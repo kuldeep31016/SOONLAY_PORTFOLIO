@@ -10,6 +10,7 @@ import {
 } from "@/components/careers/queryState"
 import { parsePublicJobQuery } from "@/lib/careers/query"
 import { listPublishedJobs } from "@/lib/careers/repository"
+import type { JobListResponse } from "@/lib/careers/types"
 
 const description =
   "Explore open positions at Soonlay, an India-based, remote-first product development studio building production-ready software for founders around the world."
@@ -47,9 +48,21 @@ export const dynamic = "force-dynamic"
 
 export default async function CareersPage({ searchParams }: CareersPageProps) {
   const params = await searchParams
-  const result = await listPublishedJobs(
-    parsePublicJobQuery(toSearchParams(params))
-  )
+  let result: JobListResponse
+
+  try {
+    result = await listPublishedJobs(
+      parsePublicJobQuery(toSearchParams(params))
+    )
+  } catch (error) {
+    console.error("[careers] Failed to load jobs:", error)
+    result = {
+      jobs: [],
+      pagination: { page: 1, limit: 12, total: 0, totalPages: 0 },
+      filters: { locations: [], departments: [], employmentTypes: [] },
+      truncated: false
+    }
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
