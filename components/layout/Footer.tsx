@@ -72,11 +72,24 @@ export function Footer() {
           <div className="space-y-3 text-sm">
             <h3 className="font-medium text-primary">Services</h3>
             <div className="flex flex-col gap-2 text-secondary">
-              <span>Web Applications</span>
-              <span>Mobile Apps</span>
-              <span>SaaS Platforms</span>
-              <span>AI Products</span>
-              <span>MVP Development</span>
+              <Link href="/services/web-app-development" className="hover:text-primary">
+                Web Applications
+              </Link>
+              <Link href="/services/mobile-app-development" className="hover:text-primary">
+                Mobile Apps
+              </Link>
+              <Link href="/services/saas-platforms" className="hover:text-primary">
+                SaaS Platforms
+              </Link>
+              <Link href="/services/ai-solutions" className="hover:text-primary">
+                AI Products
+              </Link>
+              <Link href="/services/mvp-development" className="hover:text-primary">
+                MVP Development
+              </Link>
+              <Link href="/services/custom-systems" className="hover:text-primary">
+                Custom Systems
+              </Link>
             </div>
           </div>
 
