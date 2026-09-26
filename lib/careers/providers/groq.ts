@@ -2,8 +2,8 @@ import "server-only"
 
 import { ParsedResume, ResumeParserProvider } from "../providers"
 
-const GROQ_PRIMARY_MODEL = "llama-3.1-70b-versatile"
-const GROQ_FALLBACK_MODEL = "llama-3.1-8b-instant"
+const GROQ_PRIMARY_MODEL = "openai/gpt-oss-20b"
+const GROQ_FALLBACK_MODEL = "qwen/qwen3.8-27b"
 
 const RECOMMENDATION_PROMPT = `You are an expert technical recruiter. Analyze the resume and extract structured data.
 

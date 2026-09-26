@@ -1,14 +1,12 @@
-import "server-only"
-
-import { ParsedResume, ProviderConfig, ResumeParserProvider } from "../providers"
-
-const GROK_CONFIG: ProviderConfig = {
-  name: "grok",
-  apiUrl: "https://api.x.ai/v1/chat/completions",
-  apiKeyEnv: "GROK_API_KEY",
-  model: "grok-beta",
-  maxTokens: 2000,
-  temperature: 0.1,
+export interface ParsedResume {
+  skills: string[]
+  experienceLevel: "Entry" | "Mid" | "Senior" | "Lead" | "Executive"
+  yearsExperience: number
+  preferredRoles: string[]
+  preferredLocations: string[]
+  employmentTypes: ("Full-time" | "Part-time" | "Contract" | "Internship")[]
+  industries: string[]
+  summary: string
 }
 
 const RECOMMENDATION_PROMPT = `You are an expert technical recruiter. Analyze the resume and extract structured data.
@@ -38,47 +36,20 @@ Guidelines:
 - industries: Domain experience (fintech, healthtech, e-commerce, SaaS, AI/ML, etc.)
 - summary: 2-3 sentence professional summary highlighting key strengths`
 
-function getApiKey(): string {
-  const key = process.env[GROK_CONFIG.apiKeyEnv]
-  if (!key) {
-    throw new Error(`${GROK_CONFIG.apiKeyEnv} environment variable is not set`)
-  }
-  return key
-}
-
-function parseAndValidate(content: string): ParsedResume {
-  const parsed = JSON.parse(content)
-
-  return {
-    skills: Array.isArray(parsed.skills) ? parsed.skills.filter((s: unknown) => typeof s === "string").slice(0, 50) : [],
-    experienceLevel: ["Entry", "Mid", "Senior", "Lead", "Executive"].includes(parsed.experienceLevel)
-      ? parsed.experienceLevel
-      : "Mid",
-    yearsExperience: typeof parsed.yearsExperience === "number" ? Math.max(0, Math.floor(parsed.yearsExperience)) : 3,
-    preferredRoles: Array.isArray(parsed.preferredRoles) ? parsed.preferredRoles.filter((r: unknown) => typeof r === "string").slice(0, 10) : [],
-    preferredLocations: Array.isArray(parsed.preferredLocations) ? parsed.preferredLocations.filter((l: unknown) => typeof l === "string").slice(0, 10) : [],
-    employmentTypes: Array.isArray(parsed.employmentTypes)
-      ? parsed.employmentTypes.filter((e: unknown) => ["Full-time", "Part-time", "Contract", "Internship"].includes(e as string)) as ("Full-time" | "Part-time" | "Contract" | "Internship")[]
-      : ["Full-time"],
-    industries: Array.isArray(parsed.industries) ? parsed.industries.filter((i: unknown) => typeof i === "string").slice(0, 10) : [],
-    summary: typeof parsed.summary === "string" ? parsed.summary.slice(0, 500) : "Experienced professional seeking new opportunities."
-  }
-}
-
-export const grokProvider: ResumeParserProvider = {
+export const grokProvider = {
   name: "grok",
 
   async parse(resumeText: string): Promise<ParsedResume> {
     const prompt = RECOMMENDATION_PROMPT.replace("{{RESUME_TEXT}}", resumeText.slice(0, 15000))
 
-    const response = await fetch(GROK_CONFIG.apiUrl, {
+    const response = await fetch("https://api.x.ai/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${getApiKey()}`,
+        "Authorization": `Bearer ${process.env.GROK_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: GROK_CONFIG.model,
+        model: "grok-beta",
         messages: [
           {
             role: "system",
@@ -89,24 +60,44 @@ export const grokProvider: ResumeParserProvider = {
             content: prompt
           }
         ],
-        temperature: GROK_CONFIG.temperature,
-        max_tokens: GROK_CONFIG.maxTokens,
+        temperature: 0.1,
+        max_tokens: 2000,
         response_format: { type: "json_object" }
       })
     })
 
-    if (!response.ok) {
-      const errorText = await response.text()
-      throw new Error(`${GROK_CONFIG.name} API error: ${response.status} - ${errorText}`)
-    }
-
-    const data = await response.json()
-    const content = data.choices?.[0]?.message?.content
-
-    if (!content) {
-      throw new Error(`${GROK_CONFIG.name} API returned empty response`)
-    }
-
-    return parseAndValidate(content)
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`Grok API error: ${response.status} - ${errorText}`)
   }
+
+  const data = await response.json()
+  const content = data.choices?.[0]?.message?.content
+
+  if (!content) {
+    throw new Error("Grok API returned empty response")
+  }
+
+  try {
+    const parsed = JSON.parse(content)
+
+    // Validate and normalize
+    return {
+      skills: Array.isArray(parsed.skills) ? parsed.skills.filter((s: unknown) => typeof s === "string").slice(0, 50) : [],
+      experienceLevel: ["Entry", "Mid", "Senior", "Lead", "Executive"].includes(parsed.experienceLevel)
+        ? parsed.experienceLevel
+        : "Mid",
+      yearsExperience: typeof parsed.yearsExperience === "number" ? Math.max(0, Math.floor(parsed.yearsExperience)) : 3,
+      preferredRoles: Array.isArray(parsed.preferredRoles) ? parsed.preferredRoles.filter((r: unknown) => typeof r === "string").slice(0, 10) : [],
+      preferredLocations: Array.isArray(parsed.preferredLocations) ? parsed.preferredLocations.filter((l: unknown) => typeof l === "string").slice(0, 10) : [],
+      employmentTypes: Array.isArray(parsed.employmentTypes)
+        ? parsed.employmentTypes.filter((e: unknown) => ["Full-time", "Part-time", "Contract", "Internship"].includes(e as string)) as ("Full-time" | "Part-time" | "Contract" | "Internship")[]
+        : ["Full-time"],
+      industries: Array.isArray(parsed.industries) ? parsed.industries.filter((i: unknown) => typeof i === "string").slice(0, 10) : [],
+      summary: typeof parsed.summary === "string" ? parsed.summary.slice(0, 500) : "Experienced professional seeking new opportunities."
+    }
+  } catch (e) {
+    throw new Error(`Failed to parse Grok response: ${e instanceof Error ? e.message : "Invalid JSON"}`)
+  }
+}
 }

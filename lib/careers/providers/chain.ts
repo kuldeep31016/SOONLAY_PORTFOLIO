@@ -55,21 +55,11 @@ export async function parseResumeWithFallback(
 }
 
 /**
- * Get the default provider chain (Grok -> Groq)
+ * Get the default provider chain (Groq only)
  * Only includes providers with valid API keys configured
  */
 export async function getDefaultProviderChain(): Promise<ResumeParserProvider[]> {
   const providers: ResumeParserProvider[] = []
-
-  // Try to load Grok provider
-  if (process.env.GROK_API_KEY) {
-    try {
-      const { grokProvider } = await import("./grok")
-      providers.push(grokProvider)
-    } catch (e) {
-      console.warn("[resume/parse] Failed to load Grok provider:", e)
-    }
-  }
 
   // Try to load Groq provider
   if (process.env.GROQ_API_KEY) {

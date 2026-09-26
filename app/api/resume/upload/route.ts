@@ -5,38 +5,7 @@ import { listPublishedJobs } from "@/lib/careers/repository"
 import { parsePublicJobQuery } from "@/lib/careers/query"
 import { toSearchParams } from "@/components/careers/queryState"
 import { ProviderConfigurationError, ProviderUnavailableError } from "@/lib/careers/providers/chain"
-
-// Initialize canvas for pdf-parse/pdf.js
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const canvas = require("canvas")
-const { createCanvas } = canvas
-// Make canvas globals available for pdf.js
-globalThis.HTMLCanvasElement = canvas.Canvas
-globalThis.ImageData = canvas.ImageData
-globalThis.Path2D = canvas.Path2D
-globalThis.DOMMatrix = canvas.DOMMatrix
-globalThis.HTMLImageElement = canvas.Image
-// Minimal document mock for pdf.js
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mockElement: any = {
-  style: {},
-  setAttribute: () => {},
-  getAttribute: () => null,
-}
-globalThis.document = {
-  createElement: (tag: string) => {
-    if (tag === "canvas") return createCanvas(1, 1)
-    return mockElement
-  },
-  createElementNS: () => mockElement,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getElementById: () => null as any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  querySelector: () => null as any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  querySelectorAll: () => ({ length: 0, item: () => null, forEach: () => {}, [Symbol.iterator]: () => [] } as any),
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-} as any
+import { extractTextFromPDF } from "@/lib/careers/pdf-parse-wrapper"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
@@ -47,14 +16,6 @@ const ALLOWED_TYPES = [
   "application/pdf",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 ]
-
-async function extractTextFromPDF(buffer: Buffer): Promise<string> {
-  // pdf-parse is a CommonJS module, use dynamic import with require
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const pdfParse = require("pdf-parse")
-  const data = await pdfParse(buffer)
-  return data.text
-}
 
 async function extractTextFromDOCX(buffer: Buffer): Promise<string> {
   const mammoth = await import("mammoth")
@@ -98,7 +59,7 @@ export async function POST(request: NextRequest) {
       resumeText = await extractTextFromDOCX(buffer)
     }
 
-    if (!resumeText || resumeText.trim().length < 50) {
+    if (!resumeText || resumeText.trim().length < 20) {
       return NextResponse.json(
         { error: "Could not extract sufficient text from the resume. Please ensure the file is not scanned/image-based.", code: "EXTRACTION_FAILED" },
         { status: 400 }
