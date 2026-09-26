@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer"
 import { CareersHero } from "@/components/careers/CareersHero"
 import { CareersOverview } from "@/components/careers/CareersOverview"
 import { OpenPositionsSection } from "@/components/careers/OpenPositionsSection"
+import { ResumeRecommendations } from "@/components/careers/ResumeRecommendations"
 import {
   toSearchParams,
   type JobSearchParams
@@ -71,6 +72,11 @@ export default async function CareersPage({ searchParams }: CareersPageProps) {
         <CareersHero />
         <CareersOverview />
         <OpenPositionsSection result={result} searchParams={params} />
+        <section className="border-t border-border/60 bg-background py-20 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <ResumeRecommendations />
+          </div>
+        </section>
       </main>
       <Footer />
     </div>
