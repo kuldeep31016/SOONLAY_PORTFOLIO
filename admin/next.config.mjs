@@ -12,7 +12,7 @@ const contentSecurityPolicy = [
   `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
-  "font-src 'self' data:",
+  "font-src 'self' data: https://frontend-cdn.perplexity.ai",
   // The browser only ever calls this app's own /api routes; the public Careers
   // API is reached server-side by the BFF, so no external origin is needed here.
   "connect-src 'self'",

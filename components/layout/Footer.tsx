@@ -66,9 +66,6 @@ export function Footer() {
               <Link href="/careers" className="hover:text-primary">
                 Careers
               </Link>
-              <Link href="/blog" className="hover:text-primary">
-                Blog
-              </Link>
             </div>
           </div>
 
