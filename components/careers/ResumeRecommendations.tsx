@@ -209,7 +209,7 @@ export function ResumeRecommendations({ initialRecommendations, initialParsedRes
             </h3>
             <p className="mt-2 text-sm text-secondary max-w-md mx-auto">
               Drag & drop a PDF or DOCX (max 5MB). We&apos;ll extract your skills and experience
-              to find the best matching roles using Grok AI.
+              to find the best matching roles for you.
             </p>
             <div className="mt-4 flex items-center justify-center gap-2">
               <Button
