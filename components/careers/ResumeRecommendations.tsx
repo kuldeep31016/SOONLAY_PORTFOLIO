@@ -44,9 +44,10 @@ interface ScoredJob {
 interface ResumeRecommendationsProps {
   initialRecommendations?: ScoredJob[]
   initialParsedResume?: ParsedResume
+  onUploadComplete?: () => void
 }
 
-export function ResumeRecommendations({ initialRecommendations, initialParsedResume }: ResumeRecommendationsProps) {
+export function ResumeRecommendations({ initialRecommendations, initialParsedResume, onUploadComplete }: ResumeRecommendationsProps) {
   const router = useRouter()
   const [recommendations, setRecommendations] = useState<ScoredJob[]>(initialRecommendations ?? [])
   const [parsedResume, setParsedResume] = useState<ParsedResume | null>(initialParsedResume ?? null)
@@ -149,12 +150,13 @@ export function ResumeRecommendations({ initialRecommendations, initialParsedRes
       setRecommendations(data.recommendations ?? [])
       setParsedResume(data.parsedResume ?? null)
       saveToCache(data.recommendations ?? [], data.parsedResume)
+      onUploadComplete?.()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to upload resume")
     } finally {
       setIsUploading(false)
     }
-  }, [saveToCache])
+  }, [saveToCache, onUploadComplete])
 
   const clearCache = useCallback(() => {
     sessionStorage.removeItem(sessionKey)

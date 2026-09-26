@@ -3,7 +3,6 @@ import { SlidersHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import type { JobFilters } from "@/lib/careers/types"
 import { ALL_CITIES, DEPARTMENTS } from "@/lib/careers/constants"
-import { ResumeUploadCTA } from "./ResumeUploadCTA"
 
 interface JobFiltersFormProps {
   filters: JobFilters
@@ -12,7 +11,6 @@ interface JobFiltersFormProps {
   department: string
   employmentType: string
   hasActiveFilters: boolean
-  showResumeCTA?: boolean
 }
 
 interface FilterFieldsProps extends Omit<JobFiltersFormProps, "hasActiveFilters"> {
@@ -145,8 +143,7 @@ export function JobFiltersForm(props: JobFiltersFormProps) {
     location,
     department,
     employmentType,
-    hasActiveFilters,
-    showResumeCTA = false
+    hasActiveFilters
   } = props
   const fieldProps = {
     filters,
@@ -198,9 +195,8 @@ export function JobFiltersForm(props: JobFiltersFormProps) {
         method="get"
         className="card-surface hidden bg-surface/70 p-5 lg:block"
       >
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <FilterFields {...fieldProps} idPrefix="desktop" />
-          {showResumeCTA && <ResumeUploadCTA />}
         </div>
         <div className="mt-5 flex items-center gap-3">
           <Button type="submit" size="sm" showArrow>
