@@ -9,6 +9,20 @@ export interface ProviderResult {
   error?: string
 }
 
+export class ProviderConfigurationError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "ProviderConfigurationError"
+  }
+}
+
+export class ProviderUnavailableError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "ProviderUnavailableError"
+  }
+}
+
 export async function parseResumeWithFallback(
   resumeText: string,
   providers: ResumeParserProvider[]
@@ -37,7 +51,7 @@ export async function parseResumeWithFallback(
     .map(r => `${r.provider}: ${r.error ?? "unknown error"}`)
     .join("; ")
   
-  throw new Error(`All resume parsing providers failed: ${errorSummary}`)
+  throw new ProviderUnavailableError(`All resume parsing providers failed: ${errorSummary}`)
 }
 
 /**
@@ -78,7 +92,9 @@ export async function parseResumeWithDefaultProviders(resumeText: string): Promi
   const providers = await getDefaultProviderChain()
   
   if (providers.length === 0) {
-    throw new Error("No resume parsing providers configured. Set GROK_API_KEY or GROQ_API_KEY.")
+    throw new ProviderConfigurationError(
+      "AI resume parsing is not configured. Please contact the administrator to set up the service."
+    )
   }
 
   return parseResumeWithFallback(resumeText, providers)

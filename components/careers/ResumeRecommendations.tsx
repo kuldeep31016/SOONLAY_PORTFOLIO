@@ -116,7 +116,34 @@ export function ResumeRecommendations({ initialRecommendations, initialParsedRes
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to process resume")
+        // Handle specific error codes with user-friendly messages
+        const errorCode = data.code
+        let userMessage = data.error || "Failed to process resume"
+        
+        switch (errorCode) {
+          case "SERVICE_UNAVAILABLE":
+            userMessage = "Resume analysis is currently unavailable. Please try again later or contact support."
+            break
+          case "PROVIDERS_UNAVAILABLE":
+            userMessage = "AI resume analysis is temporarily unavailable. Please try again in a few moments."
+            break
+          case "NO_FILE":
+            userMessage = "No file was uploaded. Please select a file and try again."
+            break
+          case "INVALID_TYPE":
+            userMessage = "Invalid file type. Please upload a PDF or DOCX file."
+            break
+          case "FILE_TOO_LARGE":
+            userMessage = "File is too large. Maximum size is 5MB."
+            break
+          case "EXTRACTION_FAILED":
+            userMessage = "Could not read the file. Please ensure it's not password-protected or scanned."
+            break
+          default:
+            userMessage = data.error || "Something went wrong. Please try again."
+        }
+        
+        throw new Error(userMessage)
       }
 
       setRecommendations(data.recommendations ?? [])

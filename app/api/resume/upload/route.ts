@@ -4,6 +4,7 @@ import { scoreJobsForResume } from "@/lib/careers/recommendations"
 import { listPublishedJobs } from "@/lib/careers/repository"
 import { parsePublicJobQuery } from "@/lib/careers/query"
 import { toSearchParams } from "@/components/careers/queryState"
+import { ProviderConfigurationError, ProviderUnavailableError } from "@/lib/careers/providers/chain"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
@@ -105,6 +106,28 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error("[resume/upload] Error:", error)
+
+    // Handle specific error types with user-friendly messages
+    if (error instanceof ProviderConfigurationError) {
+      return NextResponse.json(
+        { 
+          error: "Resume analysis is currently unavailable. Please try again later or contact support.", 
+          code: "SERVICE_UNAVAILABLE" 
+        },
+        { status: 503 }
+      )
+    }
+
+    if (error instanceof ProviderUnavailableError) {
+      return NextResponse.json(
+        { 
+          error: "AI resume analysis is temporarily unavailable. Please try again in a few moments.", 
+          code: "PROVIDERS_UNAVAILABLE" 
+        },
+        { status: 503 }
+      )
+    }
+
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to process resume", code: "PROCESSING_ERROR" },
       { status: 500 }
