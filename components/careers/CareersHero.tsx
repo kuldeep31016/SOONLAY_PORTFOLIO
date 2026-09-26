@@ -161,44 +161,33 @@ export function CareersHero() {
                   exit={{ x: 300, opacity: 0 }}
                   transition={{ type: "spring", damping: 25, stiffness: 300 }}
                 >
-                  <div className="relative h-[360px] max-h-[360px]">
+<div className="relative h-[360px] max-h-[360px]">
                     <CareersHeroIllustration />
                   </div>
                   <div className="mt-6 card-surface bg-surface/70 p-5 lg:p-6">
-                    <motion.div
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 text-accent">
+                        <Brain className="h-5 w-5" aria-hidden="true" />
+                      </div>
+                      <h4 className="font-display text-base font-semibold text-primary">
+                        Get personalized matches
+                      </h4>
+                    </div>
+                    <p className="text-xs text-secondary leading-relaxed mb-4">
+                      Got a great resume? Let AI match you with the best opportunities based on your skills.
+                    </p>
+                    <button
+                      onClick={() => setShowUploadDialog(true)}
+                      className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-border bg-transparent px-6 py-3 text-base text-primary transition-colors hover:border-border-bright hover:bg-surface/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 text-accent">
-                          <Brain className="h-5 w-5" aria-hidden="true" />
-                        </div>
-                        <h4 className="font-display text-base font-semibold text-primary">
-                          Get personalized matches
-                        </h4>
-                      </div>
-                      <motion.p
-                        initial={{ y: 10, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                        className="text-xs text-secondary leading-relaxed mb-4"
-                      >
-                        Got a great resume? Let AI match you with the best opportunities based on your skills.
-                      </motion.p>
-                      <button
-                        onClick={() => setShowUploadDialog(true)}
-                        className="w-full inline-flex items-center justify-center gap-2 rounded-full border border-border bg-transparent px-6 py-3 text-base text-primary transition-colors hover:border-border-bright hover:bg-surface/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                      >
-                        <Upload className="h-4 w-4" aria-hidden="true" />
-                        <span>Upload resume</span>
-                        <ArrowRightIcon className="h-4 w-4 ml-auto" aria-hidden="true" />
-                      </button>
-                      <div className="mt-4 pt-4 border-t border-border flex items-center gap-2 text-[0.65rem] text-muted">
-                        <Sparkles className="h-3 w-3" aria-hidden="true" />
-                        <span>Powered by AI &mdash; your data is never stored</span>
-                      </div>
-                    </motion.div>
+                      <Upload className="h-4 w-4" aria-hidden="true" />
+                      <span>Upload resume</span>
+                      <ArrowRightIcon className="h-4 w-4 ml-auto" aria-hidden="true" />
+                    </button>
+                    <div className="mt-4 pt-4 border-t border-border flex items-center gap-2 text-[0.65rem] text-muted">
+                      <Sparkles className="h-3 w-3" aria-hidden="true" />
+                      <span>Powered by AI &mdash; your data is never stored</span>
+                    </div>
                   </div>
                 </motion.div>
               )}
@@ -208,7 +197,7 @@ export function CareersHero() {
           {/* Mobile: CTA below content */}
           <div className="lg:hidden mt-8">
             <AnimatePresence mode="wait">
-              {profileData ? (
+{profileData ? (
                 <motion.div
                   key="profile-mobile"
                   initial={{ y: 20, opacity: 0 }}
@@ -226,41 +215,33 @@ export function CareersHero() {
                   />
                 </motion.div>
               ) : (
-                <motion.div
-                  key="cta-mobile"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: 20, opacity: 0 }}
-                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                >
-                  <div className="card-surface bg-surface/70 p-5">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 text-accent">
-                        <Brain className="h-5 w-5" aria-hidden="true" />
-                      </div>
-                      <h4 className="font-display text-base font-semibold text-primary">
-                        Get personalized matches
-                      </h4>
+                <div className="card-surface bg-surface/70 p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 text-accent">
+                      <Brain className="h-5 w-5" aria-hidden="true" />
                     </div>
-                    <p className="text-xs text-secondary leading-relaxed mb-4">
-                      Got a great resume? Let AI match you with the best opportunities based on your skills.
-                    </p>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="w-full justify-start gap-2"
-                      onClick={() => setShowUploadDialog(true)}
-                    >
-                      <Upload className="h-4 w-4" aria-hidden="true" />
-                      <span>Upload resume</span>
-                      <ArrowRightIcon className="h-4 w-4 ml-auto" aria-hidden="true" />
-                    </Button>
-                    <div className="mt-4 pt-4 border-t border-border flex items-center gap-2 text-[0.65rem] text-muted">
-                      <Sparkles className="h-3 w-3" aria-hidden="true" />
-                      <span>Powered by AI &mdash; your data is never stored</span>
-                    </div>
+                    <h4 className="font-display text-base font-semibold text-primary">
+                      Get personalized matches
+                    </h4>
                   </div>
-                </motion.div>
+                  <p className="text-xs text-secondary leading-relaxed mb-4">
+                    Got a great resume? Let AI match you with the best opportunities based on your skills.
+                  </p>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="w-full justify-start gap-2"
+                    onClick={() => setShowUploadDialog(true)}
+                  >
+                    <Upload className="h-4 w-4" aria-hidden="true" />
+                    <span>Upload resume</span>
+                    <ArrowRightIcon className="h-4 w-4 ml-auto" aria-hidden="true" />
+                  </Button>
+                  <div className="mt-4 pt-4 border-t border-border flex items-center gap-2 text-[0.65rem] text-muted">
+                    <Sparkles className="h-3 w-3" aria-hidden="true" />
+                    <span>Powered by AI &mdash; your data is never stored</span>
+                  </div>
+                </div>
               )}
             </AnimatePresence>
           </div>
