@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowDown, ArrowRight, ArrowUpRight, Briefcase, Cpu, Globe, Layers, Smartphone } from "lucide-react"
+import { ArrowRight, ArrowUpRight, Briefcase, Cpu, Globe, Layers, Smartphone } from "lucide-react"
 import { Badge } from "@/components/ui/Badge"
 import { AnimatedWords } from "@/components/ui/AnimatedWords"
 import { useContactModal } from "@/components/layout/ContactModalContext"
@@ -101,12 +101,6 @@ export function Hero() {
               </li>
             ))}
           </ul>
-          <span className="hidden flex-col items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-secondary lg:flex">
-            <span className="flex items-center gap-2">
-              Scroll <ArrowDown className="h-3.5 w-3.5" />
-            </span>
-            <span className="h-8 w-px bg-white/30" />
-          </span>
         </div>
       </div>
     </section>

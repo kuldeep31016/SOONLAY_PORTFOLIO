@@ -11,7 +11,7 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
   const [activeFilter, setActiveFilter] = useState<ProjectCategory>("all")
   const [lightbox, setLightbox] = useState<{ project: Project; index: number } | null>(null)
 
-  const filtered = activeFilter === "all" ? projects : projects.filter((p) => p.category === activeFilter)
+  const filtered = activeFilter === "all" ? projects : projects.filter((p) => p.category === activeFilter || p.alsoIn?.includes(activeFilter))
 
   const step = useCallback((direction: -1 | 1) => {
     setLightbox((current) => {
@@ -108,7 +108,6 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
                   </div>
                   <h3 className="font-display text-lg font-medium text-primary">{project.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-secondary">{project.description}</p>
-                  {project.tech && <p className="mt-3 font-mono text-xs text-muted">{project.tech}</p>}
                   <button
                     type="button"
                     onClick={() => setLightbox({ project, index: 0 })}
@@ -128,30 +127,30 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
           role="dialog"
           aria-modal="true"
           aria-label={`${lightbox.project.title} screenshots`}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-primary/90 px-3 backdrop-blur-sm sm:px-8"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#030a09]/80 px-3 backdrop-blur-xl sm:px-8"
           onClick={() => setLightbox(null)}
         >
           <button
             type="button"
             onClick={() => setLightbox(null)}
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-primary ring-1 ring-white/15 backdrop-blur-xl transition-colors hover:bg-white/20"
             aria-label="Close"
           >
             <X className="h-5 w-5" />
           </button>
           <div className="relative w-full max-w-5xl" onClick={(event) => event.stopPropagation()}>
-            <div className="mb-3 flex items-center justify-between text-white">
+            <div className="mb-3 flex items-center justify-between text-primary">
               <span className="font-display text-lg font-medium">{lightbox.project.title}</span>
-              <span className="text-sm text-white/70">
+              <span className="text-sm text-secondary">
                 {lightbox.index + 1} / {lightbox.project.images.length}
               </span>
             </div>
-            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-white">
+            <div className="glass-strong relative aspect-[16/10] w-full overflow-hidden rounded-[1.75rem]">
               <Image
                 src={lightbox.project.images[lightbox.index]}
                 alt={`${lightbox.project.title} screenshot ${lightbox.index + 1}`}
                 fill
-                className="object-contain"
+                className="object-contain p-3 drop-shadow-[0_24px_48px_rgba(0,0,0,0.55)] sm:p-5"
                 sizes="(min-width:1280px) 1000px, 100vw"
               />
             </div>

@@ -230,3 +230,10 @@ Revisit these on the next Next.js and nodemailer majors rather than forcing them
 ## Image credits
 
 - Hero background (`public/images/hero-bg.webp`): supplied by the Soonlay team.
+- Service card photos (`public/images/services/`), all from Unsplash under the [Unsplash License](https://unsplash.com/license), colour-graded teal for the site:
+  - `web.webp`: [Ryland Dean](https://unsplash.com/photos/rMyel7micAg)
+  - `mobile.webp`: [Egor Komarov](https://unsplash.com/photos/TFccbmbHUIw)
+  - `saas.webp`: [Luke Chesser](https://unsplash.com/photos/JKUTrJ4vK00)
+  - `ai.webp`: [Swello](https://unsplash.com/photos/z2LZn6fDVyk)
+  - `business.webp`: [Cova Software](https://unsplash.com/photos/wwnWstLaRHs)
+  - `design.webp`: [Kelly Sikkema](https://unsplash.com/photos/v9FQR4tbIq8)
