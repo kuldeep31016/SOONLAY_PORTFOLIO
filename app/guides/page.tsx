@@ -35,22 +35,22 @@ export default function GuidesPage() {
             <Link
               href={`/guides/${featured.slug}`}
               data-reveal
-              className="card-hover-glow group grid overflow-hidden rounded-2xl border border-border bg-surface lg:grid-cols-[1fr_1.2fr]"
+              className="card-hover-glow group grid overflow-hidden rounded-2xl border border-border glass lg:grid-cols-[1fr_1.2fr]"
             >
-              <div className="relative flex min-h-[220px] flex-col justify-end bg-primary p-8 text-white">
+              <div className="relative flex min-h-[220px] flex-col justify-end bg-accent-2 p-8 text-ink">
                 <div
                   aria-hidden
-                  className="absolute inset-0 bg-[radial-gradient(ellipse_at_100%_0%,rgba(242,194,48,0.4),transparent_60%)]"
+                  className="absolute inset-0 bg-[radial-gradient(ellipse_at_100%_0%,rgba(255,107,74,0.35),transparent_60%)]"
                 />
                 <span className="relative text-xs font-semibold uppercase tracking-[0.2em] text-white/70">Featured guide</span>
-                <span className="relative mt-3 font-display text-5xl font-bold text-accent-2">₹</span>
+                <span className="relative mt-3 font-display text-5xl font-medium text-accent-2">₹</span>
               </div>
               <div className="p-8 lg:p-10">
                 <p className="flex items-center gap-2 text-xs font-medium text-muted">
                   <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-accent">{featured.relatedService.label}</span>
                   <Clock className="h-3.5 w-3.5" /> {featured.readingMinutes} min read
                 </p>
-                <h2 className="mt-4 font-display text-2xl font-bold leading-tight text-primary sm:text-3xl">{featured.title}</h2>
+                <h2 className="mt-4 font-display text-2xl font-medium leading-tight text-primary sm:text-3xl">{featured.title}</h2>
                 <p className="mt-3 text-[15px] leading-relaxed text-secondary">{featured.description}</p>
                 <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary group-hover:text-accent">
                   Read guide <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -63,13 +63,13 @@ export default function GuidesPage() {
                   key={guide.slug}
                   href={`/guides/${guide.slug}`}
                   data-reveal
-                  className="card-hover-glow group flex flex-col rounded-2xl border border-border bg-surface p-7"
+                  className="card-hover-glow group flex flex-col rounded-2xl border border-border glass p-7"
                 >
                   <p className="flex items-center gap-2 text-xs font-medium text-muted">
                     <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-accent">{guide.relatedService.label}</span>
                     <Clock className="h-3.5 w-3.5" /> {guide.readingMinutes} min
                   </p>
-                  <h2 className="mt-4 font-display text-lg font-bold leading-snug text-primary">{guide.title}</h2>
+                  <h2 className="mt-4 font-display text-lg font-medium leading-snug text-primary">{guide.title}</h2>
                   <p className="mt-3 text-sm leading-relaxed text-secondary">{guide.description}</p>
                   <span className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-semibold text-primary group-hover:text-accent">
                     Read guide <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

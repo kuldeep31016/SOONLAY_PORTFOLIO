@@ -56,7 +56,7 @@ export default async function CareersPage() {
           </div>
         </section>
 
-        <section id="apply" className="scroll-mt-24 border-t border-border bg-surface-2/40 py-16 md:py-24">
+        <section id="apply" className="scroll-mt-24 border-t border-border bg-white/[0.06] py-16 md:py-24">
           <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:px-8">
             <div>
               <SectionHeading

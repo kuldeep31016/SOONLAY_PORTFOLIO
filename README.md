@@ -226,3 +226,7 @@ Revisit these on the next Next.js and nodemailer majors rather than forcing them
 
 - Email: soonlay.tech@gmail.com
 - Website: [soonlay.tech](https://soonlay.tech)
+
+## Image credits
+
+- Hero background (`public/images/hero-bg.webp`): supplied by the Soonlay team.

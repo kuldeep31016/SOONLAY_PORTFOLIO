@@ -11,8 +11,8 @@ export function FlowDiagram({ steps }: { steps: string[] }) {
         const isLast = index === steps.length - 1
         return (
           <li key={step} data-reveal className="relative">
-            <div className="flex items-center gap-4 rounded-2xl bg-surface px-5 py-5 shadow-[0_1px_2px_rgba(28,24,16,0.04)] ring-1 ring-border lg:flex-col lg:items-start lg:gap-5 lg:px-6 lg:py-6">
-              <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary font-display text-sm font-semibold text-accent-2">
+            <div className="flex items-center gap-4 rounded-2xl glass px-5 py-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-border lg:flex-col lg:items-start lg:gap-5 lg:px-6 lg:py-6">
+              <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full font-display text-sm font-semibold bg-ink text-accent-2 ring-1 ring-white/10">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <span className="font-display text-lg font-semibold leading-snug text-primary lg:text-xl">{step}</span>

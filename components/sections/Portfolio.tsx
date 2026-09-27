@@ -62,8 +62,8 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
               className={cn(
                 "rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
                 activeFilter === filter.id
-                  ? "border-primary bg-primary text-white"
-                  : "border-border bg-surface text-secondary hover:border-border-bright hover:text-primary"
+                  ? "border-primary bg-accent-2 text-ink"
+                  : "border-border glass text-secondary hover:border-border-bright hover:text-primary"
               )}
             >
               {filter.label}
@@ -79,12 +79,12 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
                 key={project.title}
                 data-reveal
                 style={{ ["--reveal-delay" as string]: `${(index % 3) * 90}ms` }}
-                className="card-hover-glow group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface"
+                className="card-hover-glow group flex flex-col overflow-hidden rounded-2xl border border-border glass"
               >
                 <button
                   type="button"
                   onClick={() => setLightbox({ project, index: 0 })}
-                  className="relative aspect-[16/11] w-full overflow-hidden bg-surface-2"
+                  className="relative aspect-[16/11] w-full overflow-hidden bg-white/[0.06]"
                   aria-label={`View ${project.title} screenshots`}
                 >
                   <Image
@@ -106,7 +106,7 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
                       </span>
                     ))}
                   </div>
-                  <h3 className="font-display text-lg font-bold text-primary">{project.title}</h3>
+                  <h3 className="font-display text-lg font-medium text-primary">{project.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-secondary">{project.description}</p>
                   {project.tech && <p className="mt-3 font-mono text-xs text-muted">{project.tech}</p>}
                   <button
@@ -141,7 +141,7 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
           </button>
           <div className="relative w-full max-w-5xl" onClick={(event) => event.stopPropagation()}>
             <div className="mb-3 flex items-center justify-between text-white">
-              <span className="font-display text-lg font-bold">{lightbox.project.title}</span>
+              <span className="font-display text-lg font-medium">{lightbox.project.title}</span>
               <span className="text-sm text-white/70">
                 {lightbox.index + 1} / {lightbox.project.images.length}
               </span>
@@ -158,7 +158,7 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
             <button
               type="button"
               onClick={() => step(-1)}
-              className="absolute left-2 top-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-white text-primary shadow-lg sm:-left-6"
+              className="absolute left-2 top-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-accent-2 text-ink shadow-lg sm:-left-6"
               aria-label="Previous image"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -166,7 +166,7 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
             <button
               type="button"
               onClick={() => step(1)}
-              className="absolute right-2 top-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-white text-primary shadow-lg sm:-right-6"
+              className="absolute right-2 top-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-accent-2 text-ink shadow-lg sm:-right-6"
               aria-label="Next image"
             >
               <ChevronRight className="h-5 w-5" />

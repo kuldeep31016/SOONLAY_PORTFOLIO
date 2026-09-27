@@ -1,5 +1,5 @@
 const shimmer =
-  "animate-pulse rounded-md bg-surface-2 motion-reduce:animate-none"
+  "animate-pulse rounded-md bg-white/[0.06] motion-reduce:animate-none"
 
 export function JobDetailSkeleton() {
   return (
@@ -20,7 +20,7 @@ export function JobDetailSkeleton() {
 
       <section className="bg-background py-12 md:py-16">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12 lg:px-8">
-          <div className="min-w-0 divide-y divide-border rounded-2xl border border-border bg-surface p-6 sm:p-10">
+          <div className="min-w-0 divide-y divide-border rounded-2xl border border-border glass p-6 sm:p-10">
             {Array.from({ length: 4 }, (_, index) => (
               <div key={index} className="py-8 first:pt-0 last:pb-0">
                 <div className="flex items-center gap-3">
@@ -33,7 +33,7 @@ export function JobDetailSkeleton() {
               </div>
             ))}
           </div>
-          <div className="h-fit rounded-2xl border border-border bg-surface p-6 sm:p-7">
+          <div className="h-fit rounded-2xl border border-border glass p-6 sm:p-7">
             <div className={`${shimmer} h-6 w-40`} />
             <div className={`${shimmer} mt-3 h-4 w-full`} />
             <div className={`${shimmer} mt-2 h-4 w-3/4`} />

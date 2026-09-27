@@ -19,8 +19,8 @@ export default async function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px 80px",
-          background: "linear-gradient(135deg, #F7F8F6 0%, #FFFFFF 55%, #E3F3EA 100%)",
-          color: "#0E1311",
+          background: "radial-gradient(ellipse at 78% 55%, #2f5c55 0%, #0b1a17 55%, #07110f 100%)",
+          color: "#EAF2EF",
           fontFamily: "sans-serif"
         }}
       >
@@ -33,13 +33,13 @@ export default async function OpengraphImage() {
           <div style={{ fontSize: 68, fontWeight: 800, lineHeight: 1.08, letterSpacing: -2 }}>
             Turn your business idea into working software.
           </div>
-          <div style={{ fontSize: 30, color: "#47514C" }}>
+          <div style={{ fontSize: 30, color: "#A9BCB6" }}>
             Web apps · Mobile apps · SaaS · AI · Custom business systems
           </div>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 26, color: "#0D8457" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 26, color: "#9FE6CD" }}>
           <span>soonlay.tech</span>
-          <span style={{ color: "#47514C" }}>Bangalore, India · Working worldwide</span>
+          <span style={{ color: "#A9BCB6" }}>Bangalore, India · Working worldwide</span>
         </div>
       </div>
     ),

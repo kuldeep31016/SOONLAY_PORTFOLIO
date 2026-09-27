@@ -27,7 +27,7 @@ const reasons = [
 
 export function HowWeWork() {
   return (
-    <section className="border-y border-border bg-surface py-20 md:py-24">
+    <section className="border-y border-border glass py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           align="split"

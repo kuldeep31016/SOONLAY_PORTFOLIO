@@ -58,7 +58,7 @@ export default async function JobPreviewPage({
       <Navbar />
       <main className="flex-1">
         {/* Sticks directly under the fixed 64px navbar; JobDetail's hero already reserves the navbar offset. */}
-        <div className="sticky top-16 z-30 border-b border-border bg-surface-2">
+        <div className="sticky top-16 z-30 border-b border-border bg-white/[0.06]">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2.5 sm:px-6 lg:px-8">
             <p className="inline-flex items-center gap-2 text-xs font-semibold text-accent sm:text-sm">
               <EyeOff className="h-4 w-4" aria-hidden="true" />

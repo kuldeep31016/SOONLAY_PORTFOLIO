@@ -13,7 +13,7 @@ interface FaqProps {
 
 function Accordion({ items }: { items: FaqProps["items"] }) {
   return (
-    <div data-reveal className="divide-y divide-border rounded-2xl border border-border bg-surface">
+    <div data-reveal className="divide-y divide-border rounded-2xl border border-border glass">
       {items.map((item) => (
         <details key={item.question} className="group px-6 py-5">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-[15px] font-semibold text-primary sm:text-base [&::-webkit-details-marker]:hidden">
@@ -34,7 +34,7 @@ export function Faq({ items, compact, heading = "Questions we get asked a lot" }
     return (
       <section className="py-12">
         <JsonLd data={faqSchema(items)} />
-        <h2 className="mb-6 font-display text-2xl font-bold tracking-[-0.02em] text-primary">Frequently asked questions</h2>
+        <h2 className="mb-6 font-display text-2xl font-medium tracking-[-0.02em] text-primary">Frequently asked questions</h2>
         <Accordion items={items} />
       </section>
     )
@@ -50,7 +50,7 @@ export function Faq({ items, compact, heading = "Questions we get asked a lot" }
             heading={heading}
             subheading="Straight answers about cost, timelines, ownership and how we work."
           />
-          <div className="mt-8 rounded-2xl border border-border bg-surface p-6">
+          <div className="mt-8 rounded-2xl border border-border glass p-6">
             <p className="font-semibold text-primary">Still have a question?</p>
             <p className="mt-1 text-sm text-secondary">We usually reply within one business day.</p>
             <div className="mt-5 flex flex-col gap-3">

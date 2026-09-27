@@ -12,7 +12,7 @@ export function Logo({ className, priority }: { className?: string; priority?: b
         priority={priority}
         className="h-9 w-9 rounded-lg"
       />
-      <span className="font-display text-xl font-bold tracking-tight text-primary">Soonlay</span>
+      <span className="font-display text-xl font-medium tracking-tight text-primary">Soonlay</span>
     </span>
   )
 }

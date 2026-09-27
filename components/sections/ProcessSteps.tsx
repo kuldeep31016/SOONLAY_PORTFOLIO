@@ -6,27 +6,27 @@ import { cn } from "@/lib/utils"
 
 const STEP_MS = 3200
 
-const card = "rounded-2xl bg-surface shadow-[0_30px_60px_-28px_rgba(28,24,16,0.45)] ring-1 ring-black/5"
+const card = "rounded-2xl glass shadow-[0_30px_60px_-28px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
 
 function DiscoverScene() {
   const notes = [
-    { text: "Who uses it?", tone: "bg-[#FDE9A6]", pos: "left-[6%] top-[10%] -rotate-3" },
-    { text: "What's slow today?", tone: "bg-[#F9D9C4]", pos: "right-[8%] top-[16%] rotate-2" },
-    { text: "What does success look like?", tone: "bg-[#DDEBD1]", pos: "left-[14%] bottom-[14%] rotate-1" },
-    { text: "Must-haves vs later", tone: "bg-[#E6E0F5]", pos: "right-[10%] bottom-[10%] -rotate-2" }
+    { text: "Who uses it?", tone: "bg-[#CDEFE2]", pos: "left-[6%] top-[10%] -rotate-3" },
+    { text: "What's slow today?", tone: "bg-[#FFC9B8]", pos: "right-[8%] top-[16%] rotate-2" },
+    { text: "What does success look like?", tone: "bg-[#D8EDE6]", pos: "left-[14%] bottom-[14%] rotate-1" },
+    { text: "Must-haves vs later", tone: "bg-[#E3E9F0]", pos: "right-[10%] bottom-[10%] -rotate-2" }
   ]
   return (
     <div className="relative h-full w-full">
       {notes.map((note, i) => (
         <div
           key={note.text}
-          className={cn("sv-bubble absolute w-[38%] rounded-lg p-2.5 text-[11px] font-medium leading-snug text-primary shadow-md sm:p-4 sm:text-sm", note.tone, note.pos)}
+          className={cn("sv-bubble absolute w-[38%] rounded-lg p-2.5 text-[11px] font-medium leading-snug text-ink shadow-md sm:p-4 sm:text-sm", note.tone, note.pos)}
           style={{ animationDelay: `${0.1 + i * 0.15}s` }}
         >
           {note.text}
         </div>
       ))}
-      <div className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-accent-2 shadow-xl sm:h-24 sm:w-24">
+      <div className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent-2 text-ink shadow-xl sm:h-24 sm:w-24">
         <Search className="h-6 w-6 sm:h-10 sm:w-10" strokeWidth={1.6} />
       </div>
     </div>
@@ -38,12 +38,12 @@ function ScopeScene() {
     <div className={cn(card, "mx-auto w-full max-w-md p-6")}>
       <div className="flex items-center justify-between">
         <p className="font-display text-xl font-semibold text-primary">Project scope</p>
-        <span className="rounded-full bg-accent-2 px-3 py-1 text-xs font-semibold text-primary">Fixed price</span>
+        <span className="rounded-full bg-accent-2 px-3 py-1 text-xs font-semibold text-ink">Fixed price</span>
       </div>
       <ul className="mt-5 space-y-3">
         {["User roles & login", "Booking flow", "Admin dashboard", "Payments"].map((item, i) => (
           <li key={item} className="sv-bubble flex items-center gap-3 text-sm text-primary" style={{ animationDelay: `${0.1 + i * 0.12}s` }}>
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-accent-2">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent-2 text-ink">
               <Check className="h-3 w-3" strokeWidth={3} />
             </span>
             {item}
@@ -71,7 +71,7 @@ function BuildScene() {
   ]
   return (
     <div className="grid h-full w-full grid-cols-5 items-center gap-4">
-      <div className="col-span-3 rounded-2xl bg-[#1C1810] p-5 font-mono text-[12px] leading-6 text-white/80 shadow-[0_30px_60px_-28px_rgba(28,24,16,0.7)]">
+      <div className="col-span-3 rounded-2xl bg-ink ring-1 ring-white/10 p-5 font-mono text-[12px] leading-6 text-white/80 shadow-[0_30px_60px_-28px_rgba(0,0,0,0.7)]">
         <div className="mb-3 flex gap-1.5">
           <span className="h-2 w-2 rounded-full bg-white/20" />
           <span className="h-2 w-2 rounded-full bg-white/20" />
@@ -89,9 +89,9 @@ function BuildScene() {
       <div className={cn(card, "sv-rise col-span-2 p-4")}>
         <p className="text-[11px] font-semibold uppercase tracking-wider text-muted">Demo · week 2</p>
         <p className="mt-2 font-display text-base font-semibold text-primary">Booking confirmed</p>
-        <div className="mt-3 h-2 w-3/4 rounded bg-surface-2" />
-        <div className="mt-2 h-2 w-1/2 rounded bg-surface-2" />
-        <span className="mt-4 block rounded-lg bg-primary py-2 text-center text-[11px] font-semibold text-white">View booking</span>
+        <div className="mt-3 h-2 w-3/4 rounded bg-white/[0.06]" />
+        <div className="mt-2 h-2 w-1/2 rounded bg-white/[0.06]" />
+        <span className="mt-4 block rounded-lg bg-accent-2 py-2 text-center text-[11px] font-semibold text-ink">View booking</span>
       </div>
     </div>
   )
@@ -102,14 +102,14 @@ function LaunchScene() {
   return (
     <div className={cn(card, "mx-auto w-full max-w-md p-6")}>
       <div className="flex items-center gap-3">
-        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent-2 text-primary">
+        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-ink text-accent-2 ring-1 ring-white/10">
           <Rocket className="h-5 w-5" />
         </span>
         <div>
           <p className="font-display text-xl font-semibold text-primary">Launch</p>
           <p className="text-xs text-muted">Release v1.0</p>
         </div>
-        <span className="ml-auto flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+        <span className="ml-auto flex items-center gap-1.5 rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-semibold text-emerald-300">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Live
         </span>
       </div>
@@ -117,10 +117,10 @@ function LaunchScene() {
         {checks.map((item, i) => (
           <li
             key={item}
-            className="sv-bubble flex items-center gap-3 rounded-xl bg-surface-2 px-4 py-3 text-sm text-primary"
+            className="sv-bubble flex items-center gap-3 rounded-xl bg-white/[0.06] px-4 py-3 text-sm text-primary"
             style={{ animationDelay: `${0.15 + i * 0.25}s` }}
           >
-            <Check className="h-4 w-4 text-emerald-600" strokeWidth={3} />
+            <Check className="h-4 w-4 text-emerald-400" strokeWidth={3} />
             {item}
           </li>
         ))}
@@ -136,13 +136,13 @@ function SupportScene() {
       <div className={cn(card, "col-span-3 p-5")}>
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-primary">Active users</p>
-          <span className="text-xs font-semibold text-emerald-600">▲ growing</span>
+          <span className="text-xs font-semibold text-emerald-400">▲ growing</span>
         </div>
         <div className="mt-5 flex h-32 items-end gap-2">
           {bars.map((height, i) => (
             <span
               key={i}
-              className="sv-rise flex-1 rounded-t bg-gradient-to-t from-primary to-[#5a4a2a]"
+              className="sv-rise flex-1 rounded-t bg-gradient-to-t from-accent-2 to-accent/30"
               style={{ height: `${height}%`, animationDelay: `${i * 0.06}s` }}
             />
           ))}
@@ -209,14 +209,14 @@ export function ProcessSteps() {
                 aria-current={isActive ? "step" : undefined}
                 className={cn(
                   "group relative w-full overflow-hidden rounded-2xl px-4 py-3 text-left transition-colors duration-500 lg:px-5 lg:py-4",
-                  isActive ? "bg-surface shadow-sm ring-1 ring-border" : "hover:bg-surface/60"
+                  isActive ? "glass shadow-sm ring-1 ring-border" : "hover:bg-surface/60"
                 )}
               >
                 <span className="flex items-center gap-3">
                   <span
                     className={cn(
                       "flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-colors duration-500",
-                      isActive ? "bg-primary text-accent-2" : "bg-surface-2 text-muted"
+                      isActive ? "bg-accent-2 text-ink" : "bg-white/[0.06] text-muted"
                     )}
                   >
                     <step.icon className="h-4 w-4" strokeWidth={1.8} />
@@ -252,7 +252,7 @@ export function ProcessSteps() {
       </ol>
 
       <div className="relative">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-[1.75rem] bg-[radial-gradient(ellipse_at_70%_15%,rgba(242,194,48,0.3),transparent_55%),linear-gradient(160deg,#EFE9DD,#E6DECE)] p-6 sm:p-10">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-[1.75rem] bg-[radial-gradient(ellipse_at_80%_15%,rgba(255,107,74,0.22),transparent_55%),radial-gradient(ellipse_at_10%_100%,rgba(143,220,194,0.16),transparent_55%),linear-gradient(160deg,#10231F,#0A1715)] ring-1 ring-white/10 p-6 sm:p-10">
           <div key={active} className="step-scene flex h-full w-full items-center justify-center">
             <Scene />
           </div>

@@ -6,7 +6,7 @@ import { APPLICATION_AREAS, MAX_RESUME_MB } from "@/lib/careers/areas"
 import { cn } from "@/lib/utils"
 
 const inputClass =
-  "w-full rounded-xl border border-border bg-surface px-4 py-3 text-[15px] text-primary placeholder:text-muted outline-none transition-colors focus:border-primary/50"
+  "w-full rounded-xl border border-border bg-white/[0.04] px-4 py-3 text-[15px] text-primary placeholder:text-muted outline-none transition-colors focus:border-primary/50"
 
 export function ApplicationForm({ jobSlug, defaultArea }: { jobSlug?: string; defaultArea?: string }) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle")
@@ -44,8 +44,8 @@ export function ApplicationForm({ jobSlug, defaultArea }: { jobSlug?: string; de
 
   if (status === "sent") {
     return (
-      <div className="rounded-2xl border border-border bg-surface p-8 text-center sm:p-10">
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-2 text-primary">
+      <div className="rounded-2xl border border-border glass p-8 text-center sm:p-10">
+        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent-2 text-ink">
           <Check className="h-6 w-6" />
         </span>
         <h3 className="mt-5 font-display text-2xl font-semibold text-primary">Thanks — we&apos;ve received it.</h3>
@@ -57,7 +57,7 @@ export function ApplicationForm({ jobSlug, defaultArea }: { jobSlug?: string; de
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="relative rounded-2xl border border-border bg-surface p-6 shadow-sm sm:p-8">
+    <form onSubmit={onSubmit} noValidate className="relative rounded-2xl border border-border glass p-6 shadow-sm sm:p-8">
       {jobSlug && <input type="hidden" name="jobSlug" value={jobSlug} />}
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block">
@@ -95,10 +95,10 @@ export function ApplicationForm({ jobSlug, defaultArea }: { jobSlug?: string; de
             onClick={() => fileRef.current?.click()}
             className={cn(
               "flex w-full items-center gap-4 rounded-xl border border-dashed px-4 py-4 text-left transition-colors",
-              fileName ? "border-primary/40 bg-surface-2" : "border-border-bright hover:border-primary/40"
+              fileName ? "border-primary/40 bg-white/[0.06]" : "border-border-bright hover:border-primary/40"
             )}
           >
-            <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-surface-2 text-primary">
+            <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-primary">
               {fileName ? <FileText className="h-5 w-5" /> : <Upload className="h-5 w-5" />}
             </span>
             <span className="min-w-0">
@@ -135,7 +135,7 @@ export function ApplicationForm({ jobSlug, defaultArea }: { jobSlug?: string; de
       </div>
 
       {error && (
-        <p role="alert" className="mt-5 text-sm text-red-700">
+        <p role="alert" className="mt-5 text-sm text-red-400">
           {error}
         </p>
       )}
@@ -145,10 +145,10 @@ export function ApplicationForm({ jobSlug, defaultArea }: { jobSlug?: string; de
         <button
           type="submit"
           disabled={status === "sending"}
-          className="group inline-flex flex-shrink-0 items-center justify-between gap-4 self-start whitespace-nowrap rounded-full bg-primary py-2 pl-6 pr-2 text-[15px] font-semibold text-white transition-transform duration-500 [transition-timing-function:var(--ease-spring)] active:scale-[0.98] disabled:opacity-70 sm:self-auto"
+          className="group inline-flex flex-shrink-0 items-center justify-between gap-4 self-start whitespace-nowrap rounded-full bg-accent-2 py-2 pl-6 pr-2 text-[15px] font-semibold text-ink transition-transform duration-500 [transition-timing-function:var(--ease-spring)] active:scale-[0.98] disabled:opacity-70 sm:self-auto"
         >
           {status === "sending" ? "Sending…" : "Submit Application"}
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-2 text-primary transition-transform duration-500 [transition-timing-function:var(--ease-spring)] group-hover:translate-x-0.5">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full transition-transform duration-500 [transition-timing-function:var(--ease-spring)] group-hover:translate-x-0.5 bg-ink text-accent-2 ring-1 ring-white/10">
             {status === "sending" ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
           </span>
         </button>

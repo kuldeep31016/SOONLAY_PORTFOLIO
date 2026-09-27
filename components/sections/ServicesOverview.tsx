@@ -78,7 +78,7 @@ export function ServicesOverview() {
         <div data-reveal className="mb-12 grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:items-center">
           <div className="lg:border-r lg:border-border lg:pr-14">
             <Badge>Our Services</Badge>
-            <h2 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-[-0.03em] text-primary sm:text-5xl lg:text-[3.4rem]">
+            <h2 className="mt-5 font-display text-4xl font-medium leading-[1.05] tracking-[-0.03em] text-primary sm:text-5xl lg:text-[3.4rem]">
               End-to-End Product
               <br className="hidden sm:block" /> Development Services
             </h2>
@@ -96,7 +96,7 @@ export function ServicesOverview() {
             <div className="mt-7 flex flex-wrap items-center gap-6 xl:flex-nowrap">
               <Link
                 href="/services"
-                className="group inline-flex items-center gap-2 rounded-lg bg-primary px-7 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-primary/85"
+                className="group inline-flex items-center gap-2 rounded-lg bg-accent-2 px-7 py-3.5 text-[15px] font-semibold text-ink transition-colors hover:bg-accent-2/85"
               >
                 Explore All Services
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -112,7 +112,7 @@ export function ServicesOverview() {
               href={service.href}
               data-reveal
               style={{ ["--reveal-delay" as string]: `${(index % 3) * 90}ms` }}
-              className="card-hover-glow group relative flex min-h-[300px] flex-col overflow-hidden rounded-2xl border border-border bg-surface p-7"
+              className="card-hover-glow group relative flex min-h-[300px] flex-col overflow-hidden rounded-2xl border border-border glass p-7"
             >
               <div aria-hidden className="pointer-events-none absolute right-5 top-6 hidden sm:block">
                 {service.illustration}
@@ -121,7 +121,7 @@ export function ServicesOverview() {
                 <service.icon className="h-6 w-6" strokeWidth={1.6} />
               </span>
               <div className="relative sm:max-w-[62%]">
-                <h3 className="mt-5 font-display text-xl font-bold tracking-[-0.01em] text-primary">{service.title}</h3>
+                <h3 className="mt-5 font-display text-xl font-medium tracking-[-0.01em] text-primary">{service.title}</h3>
                 <p className="mt-2 text-[15px] leading-relaxed text-secondary">{service.body}</p>
               </div>
               <ul className="relative mt-5 space-y-2">

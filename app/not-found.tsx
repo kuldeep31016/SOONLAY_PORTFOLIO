@@ -18,7 +18,7 @@ export default function NotFound() {
       <main className="flex-1 pt-16">
         <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           <Badge className="mb-6">Error 404</Badge>
-          <h1 className="font-display text-5xl font-bold tracking-[-0.035em] text-primary sm:text-6xl">
+          <h1 className="font-display text-5xl font-medium tracking-[-0.035em] text-primary sm:text-6xl">
             This page <span className="accent-serif">doesn&apos;t exist</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg text-secondary">
@@ -37,7 +37,7 @@ export default function NotFound() {
               <Link
                 key={service.href}
                 href={service.href}
-                className="card-hover-glow group flex items-center justify-between rounded-xl border border-border bg-surface p-5"
+                className="card-hover-glow group flex items-center justify-between rounded-xl border border-border glass p-5"
               >
                 <span>
                   <span className="block font-semibold text-primary">{service.title}</span>

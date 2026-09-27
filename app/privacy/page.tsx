@@ -65,8 +65,8 @@ export default function PrivacyPage() {
         <article className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
           <div className="space-y-4">
             {sections.map((section) => (
-              <section key={section.heading} className="rounded-2xl border border-border bg-surface p-6 sm:p-7">
-                <h2 className="mb-2 font-display font-bold text-lg text-primary">{section.heading}</h2>
+              <section key={section.heading} className="rounded-2xl border border-border glass p-6 sm:p-7">
+                <h2 className="mb-2 font-display font-medium text-lg text-primary">{section.heading}</h2>
                 <div className="space-y-3 text-sm leading-relaxed text-secondary sm:text-base">
                   {section.body.map((paragraph) => (
                     <p key={paragraph}>{paragraph}</p>

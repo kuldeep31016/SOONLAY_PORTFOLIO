@@ -85,7 +85,7 @@ export function ServiceDetail({ page }: { page: ServicePage }) {
           </div>
         </section>
 
-        <section className="border-t border-border bg-surface py-20 md:py-24">
+        <section className="border-t border-border glass py-20 md:py-24">
           <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
             <div>
               <SectionHeading heading={page.fit.title} />
@@ -94,16 +94,16 @@ export function ServiceDetail({ page }: { page: ServicePage }) {
             <div data-reveal className="space-y-4">
               {page.outcomes && (
                 <div className="rounded-2xl border border-border bg-background p-7">
-                  <h3 className="mb-5 font-display text-xl font-bold text-primary">{page.outcomes.title}</h3>
+                  <h3 className="mb-5 font-display text-xl font-medium text-primary">{page.outcomes.title}</h3>
                   <CheckList items={page.outcomes.items} />
                 </div>
               )}
-              <div className="rounded-2xl bg-primary p-7 text-white">
-                <h3 className="font-display text-xl font-bold">{page.cta.title}</h3>
+              <div className="rounded-2xl glass-strong p-7 text-primary">
+                <h3 className="font-display text-xl font-medium">{page.cta.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/75">{page.cta.body}</p>
                 <Link
                   href={startHref}
-                  className="group mt-6 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-primary"
+                  className="group mt-6 inline-flex items-center gap-2 rounded-lg bg-accent-2 px-6 py-3 text-sm font-semibold text-ink"
                 >
                   {page.cta.label}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -139,7 +139,7 @@ export function ServiceDetail({ page }: { page: ServicePage }) {
                   key={other.slug}
                   href={`/services/${other.slug}`}
                   data-reveal
-                  className="card-hover-glow group flex items-center justify-between gap-3 rounded-xl border border-border bg-surface p-5"
+                  className="card-hover-glow group flex items-center justify-between gap-3 rounded-xl border border-border glass p-5"
                 >
                   <span className="text-sm font-semibold text-primary">{other.navTitle}</span>
                   <ArrowRight className="h-4 w-4 flex-shrink-0 text-secondary transition-colors group-hover:text-accent" />

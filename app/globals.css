@@ -24,38 +24,72 @@ body::after {
   inset: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.045;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
 h1,
 h2,
 h3 {
-  font-variation-settings: "SOFT" 30;
+  font-variation-settings: "SOFT" 0;
 }
 
-/* Highlighter marker, drawn left to right like a pen stroke. */
+/* Italic mint accent in headlines, e.g. "real products." */
 .accent-serif {
-  background-image: linear-gradient(transparent 58%, #f2c230 58%, #f2c230 90%, transparent 90%);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  padding: 0 0.06em;
-  margin: 0 -0.06em;
+  font-style: italic;
+  font-weight: 400;
+  background-image: linear-gradient(100deg, #d5f5e8 0%, #9fe6cd 45%, #6fc9ad 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-right: 0.12em;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
 
-[data-js] .accent-serif {
-  animation: marker-draw 1.1s var(--ease-out-expo) 0.55s both;
+/* Liquid glass: translucent, blurred, with a bright top edge like iOS/macOS. */
+.glass,
+.card-surface {
+  position: relative;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.025));
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+    0 24px 60px -30px rgba(0, 0, 0, 0.6);
 }
 
-@keyframes marker-draw {
-  from {
-    background-size: 0% 100%;
-  }
-  to {
-    background-size: 100% 100%;
-  }
+.glass-strong {
+  position: relative;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(255, 107, 74, 0.2), transparent 55%),
+    radial-gradient(120% 90% at 0% 100%, rgba(143, 220, 194, 0.14), transparent 55%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.09),
+    0 40px 80px -40px rgba(0, 0, 0, 0.7);
+}
+
+/* Ambient page light so glass has something to refract. */
+.ambient {
+  position: relative;
+  isolation: isolate;
+}
+
+.ambient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 85% 10%, rgba(143, 220, 194, 0.08), transparent 70%),
+    radial-gradient(50% 45% at 5% 90%, rgba(255, 107, 74, 0.06), transparent 70%);
 }
 
 /* Blur-in on scroll. Only hidden once JS has marked the document, so content is never lost without JS. */
@@ -136,7 +170,7 @@ h3 {
   bottom: -6px;
   height: 2px;
   border-radius: 2px;
-  background: #1c1810;
+  background: #9fe6cd;
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.45s var(--ease-spring);
@@ -151,16 +185,16 @@ h3 {
 .link-underline[aria-current="page"]::after,
 .link-underline[data-active]::after {
   transform: scaleX(1);
-  background: #f2c230;
-  height: 3px;
+  background: #9fe6cd;
+  height: 2px;
 }
 
 /* Double-bezel card: outer tray + inner core. */
 .bezel {
   border-radius: 1.75rem;
   padding: 6px;
-  background: rgba(28, 24, 16, 0.035);
-  box-shadow: inset 0 0 0 1px rgba(28, 24, 16, 0.06);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
   transition:
     transform 0.6s var(--ease-spring),
     box-shadow 0.6s var(--ease-spring);
@@ -168,21 +202,19 @@ h3 {
 
 .bezel > .bezel-core {
   border-radius: calc(1.75rem - 6px);
-  background: #fffdf8;
-  box-shadow:
-    0 1px 2px rgba(28, 24, 16, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background: #0e1c19;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .bezel:hover {
   transform: translate3d(0, -4px, 0);
   box-shadow:
-    inset 0 0 0 1px rgba(28, 24, 16, 0.08),
-    0 24px 48px -24px rgba(28, 24, 16, 0.22);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 24px 48px -24px rgba(0, 0, 0, 0.6);
 }
 
 .card-surface {
-  @apply bg-surface border border-border rounded-2xl;
+  @apply border border-border rounded-2xl;
 }
 
 .card-hover-glow {
@@ -193,8 +225,11 @@ h3 {
 }
 
 .card-hover-glow:hover {
-  box-shadow: 0 24px 48px -24px rgba(28, 24, 16, 0.22);
-  border-color: rgba(138, 98, 8, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 30px 60px -28px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(159, 230, 205, 0.25);
+  border-color: rgba(159, 230, 205, 0.3);
   transform: translateY(-3px);
 }
 
@@ -274,7 +309,8 @@ a:focus-visible .link-underline::after {
   height: 3px;
   width: 18px;
   border-radius: 3px;
-  background: #f2c230;
+  background: #9fe6cd;
+  box-shadow: 0 0 10px rgba(159, 230, 205, 0.8);
   animation: flow-x 2.4s var(--ease-out-expo) infinite;
 }
 
@@ -343,6 +379,74 @@ a:focus-visible .link-underline::after {
   .flow-pulse,
   .step-progress,
   .step-scene {
+    animation: none;
+  }
+}
+
+/* Hero portrait: coral light streaks across the eyes. */
+.hero-portrait {
+  animation: portrait-in 1.6s var(--ease-out-expo) 0.15s both;
+}
+
+.hero-streak {
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(255, 107, 74, 0) 0%, rgba(255, 107, 74, 0.85) 12%, #ff6b4a 45%, rgba(255, 140, 110, 0.9) 70%, rgba(255, 107, 74, 0) 100%);
+  filter: blur(5px);
+  mix-blend-mode: screen;
+  opacity: 0.92;
+  transform-origin: left center;
+  animation:
+    streak-in 1.4s var(--ease-out-expo) 0.9s both,
+    streak-drift 7s ease-in-out 2.3s infinite alternate;
+}
+
+.hero-streak::after {
+  content: "";
+  position: absolute;
+  inset: -40% -6%;
+  background: inherit;
+  filter: blur(16px);
+  opacity: 0.55;
+}
+
+.hero-streak-thin {
+  opacity: 0.7;
+  animation:
+    streak-in 1.4s var(--ease-out-expo) 1.1s both,
+    streak-drift 5.5s ease-in-out 2.5s infinite alternate-reverse;
+}
+
+@keyframes portrait-in {
+  from {
+    opacity: 0;
+    transform: translate3d(4%, 0, 0) scale(1.04);
+    filter: blur(10px);
+  }
+  to {
+    filter: blur(0);
+  }
+}
+
+@keyframes streak-in {
+  from {
+    opacity: 0;
+    transform: scaleX(0.15) translate3d(-10%, 0, 0);
+  }
+}
+
+@keyframes streak-drift {
+  from {
+    transform: translate3d(0, 0, 0) scaleX(1);
+  }
+  to {
+    transform: translate3d(5%, 0, 0) scaleX(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-portrait,
+  .hero-streak,
+  .hero-streak-thin {
     animation: none;
   }
 }

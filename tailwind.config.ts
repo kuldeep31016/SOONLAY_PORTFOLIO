@@ -5,16 +5,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#F6F2EA",
-        surface: "#FFFDF8",
-        "surface-2": "#EFE9DD",
-        border: "#E6DECE",
-        "border-bright": "#CFC4AE",
-        primary: "#1C1810",
-        secondary: "#524A3A",
-        muted: "#6F6757",
-        accent: "#8A6208",
-        "accent-2": "#F2C230"
+        background: "#07110F",
+        surface: "#0E1C19",
+        "surface-2": "#152623",
+        border: "#22332F",
+        "border-bright": "#3A514B",
+        primary: "#EAF2EF",
+        secondary: "#A9BCB6",
+        muted: "#7F948D",
+        accent: "#8EDCC2",
+        "accent-2": "#9FE6CD",
+        coral: "#FF6B4A",
+        ink: "#051210"
       },
       fontFamily: {
         display: ["var(--font-display)", "Georgia", "serif"],
@@ -23,8 +25,8 @@ const config: Config = {
         mono: ["var(--font-mono)", "monospace"]
       },
       backgroundImage: {
-        "gradient-accent": "linear-gradient(135deg, #F2C230, #D9A514)",
-        "gradient-soft": "linear-gradient(180deg, #F1ECE1 0%, #F6F2EA 100%)"
+        "gradient-accent": "linear-gradient(135deg, #C8F2E2, #7FD3B8)",
+        "gradient-soft": "linear-gradient(180deg, #0B1917 0%, #07110F 100%)"
       },
       animation: {
         float: "float 6s ease-in-out infinite",

@@ -5,7 +5,7 @@ import type { PublicJob } from "@/lib/careers/types"
 export function OpenPositions({ jobs }: { jobs: PublicJob[] }) {
   if (jobs.length === 0) {
     return (
-      <div data-reveal className="rounded-2xl border border-border bg-surface px-6 py-12 text-center sm:px-10">
+      <div data-reveal className="rounded-2xl border border-border glass px-6 py-12 text-center sm:px-10">
         <h3 className="font-display text-2xl font-semibold text-primary">No open positions right now.</h3>
         <p className="mx-auto mt-3 max-w-lg text-secondary">
           We don&apos;t have any open positions at the moment, but we&apos;re always interested in meeting talented
@@ -13,10 +13,10 @@ export function OpenPositions({ jobs }: { jobs: PublicJob[] }) {
         </p>
         <a
           href="#apply"
-          className="group mt-7 inline-flex items-center gap-3 rounded-full bg-primary py-2 pl-6 pr-2 text-[15px] font-semibold text-white"
+          className="group mt-7 inline-flex items-center gap-3 rounded-full bg-accent-2 py-2 pl-6 pr-2 text-[15px] font-semibold text-ink"
         >
           Send Your Resume
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-2 text-primary transition-transform duration-500 [transition-timing-function:var(--ease-spring)] group-hover:translate-x-0.5">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full transition-transform duration-500 [transition-timing-function:var(--ease-spring)] group-hover:translate-x-0.5 bg-ink text-accent-2 ring-1 ring-white/10">
             <ArrowRight className="h-4 w-4" />
           </span>
         </a>

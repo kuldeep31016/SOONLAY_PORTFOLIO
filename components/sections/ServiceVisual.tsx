@@ -5,12 +5,12 @@ export type ServiceVisualKind = "web" | "mobile" | "saas" | "ai" | "business" | 
 
 function BrowserShot({ src, alt, label, className }: { src: string; alt: string; label: string; className?: string }) {
   return (
-    <div className={`overflow-hidden rounded-xl bg-surface shadow-[0_30px_60px_-25px_rgba(28,24,16,0.45)] ring-1 ring-black/5 ${className ?? ""}`}>
-      <div className="flex items-center gap-1.5 border-b border-border bg-surface-2 px-3 py-2">
+    <div className={`overflow-hidden rounded-xl glass shadow-[0_30px_60px_-25px_rgba(0,0,0,0.45)] ring-1 ring-white/10 ${className ?? ""}`}>
+      <div className="flex items-center gap-1.5 border-b border-border bg-white/[0.06] px-3 py-2">
         <span className="h-2 w-2 rounded-full bg-border-bright" />
         <span className="h-2 w-2 rounded-full bg-border-bright" />
         <span className="h-2 w-2 rounded-full bg-border-bright" />
-        <span className="ml-2 truncate rounded bg-surface px-2 py-0.5 text-[10px] text-muted">{label}</span>
+        <span className="ml-2 truncate rounded glass px-2 py-0.5 text-[10px] text-muted">{label}</span>
       </div>
       <Image src={src} alt={alt} width={1470} height={836} sizes="(min-width:1024px) 560px, 90vw" className="h-auto w-full" />
     </div>
@@ -19,7 +19,7 @@ function BrowserShot({ src, alt, label, className }: { src: string; alt: string;
 
 function Phone({ src, alt, className }: { src: string; alt: string; className?: string }) {
   return (
-    <div className={`w-[34%] rounded-[1.6rem] bg-primary p-[5px] shadow-[0_30px_60px_-20px_rgba(28,24,16,0.55)] ${className ?? ""}`}>
+    <div className={`w-[34%] rounded-[1.6rem] bg-accent-2 p-[5px] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.55)] ${className ?? ""}`}>
       <Image src={src} alt={alt} width={402} height={874} sizes="200px" className="h-auto w-full rounded-[1.3rem]" />
     </div>
   )
@@ -27,7 +27,7 @@ function Phone({ src, alt, className }: { src: string; alt: string; className?: 
 
 function Stage({ children }: { children: React.ReactNode }) {
   return (
-    <div className="service-visual relative aspect-[5/4] w-full overflow-hidden rounded-[1.75rem] bg-[radial-gradient(ellipse_at_70%_20%,rgba(242,194,48,0.28),transparent_55%),linear-gradient(160deg,#EFE9DD,#E6DECE)] p-6 sm:p-8">
+    <div className="service-visual relative aspect-[5/4] w-full overflow-hidden rounded-[1.75rem] bg-[radial-gradient(ellipse_at_80%_15%,rgba(255,107,74,0.22),transparent_55%),radial-gradient(ellipse_at_10%_100%,rgba(143,220,194,0.16),transparent_55%),linear-gradient(160deg,#10231F,#0A1715)] ring-1 ring-white/10 p-6 sm:p-8">
       {children}
     </div>
   )
@@ -36,9 +36,9 @@ function Stage({ children }: { children: React.ReactNode }) {
 function AiAssistant() {
   return (
     <div className="absolute inset-6 flex flex-col justify-center sm:inset-10">
-      <div className="rounded-2xl bg-surface p-5 shadow-[0_30px_60px_-25px_rgba(28,24,16,0.45)] ring-1 ring-black/5">
+      <div className="rounded-2xl glass p-5 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
         <div className="mb-4 flex items-center gap-2 border-b border-border pb-3">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-2 text-primary">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink text-accent-2 ring-1 ring-white/10">
             <Sparkles className="h-3.5 w-3.5" />
           </span>
           <span className="text-sm font-semibold text-primary">Support assistant</span>
@@ -47,16 +47,16 @@ function AiAssistant() {
           </span>
         </div>
         <div className="space-y-3 text-[13px]">
-          <p className="sv-bubble ml-auto w-fit max-w-[80%] rounded-2xl rounded-br-sm bg-primary px-3.5 py-2 text-white" style={{ animationDelay: "0.2s" }}>
+          <p className="sv-bubble ml-auto w-fit max-w-[80%] rounded-2xl rounded-br-sm bg-accent-2 px-3.5 py-2 text-ink" style={{ animationDelay: "0.2s" }}>
             Where is my order #4821?
           </p>
-          <p className="sv-bubble w-fit max-w-[85%] rounded-2xl rounded-bl-sm bg-surface-2 px-3.5 py-2 text-primary" style={{ animationDelay: "1s" }}>
+          <p className="sv-bubble w-fit max-w-[85%] rounded-2xl rounded-bl-sm bg-white/[0.06] px-3.5 py-2 text-primary" style={{ animationDelay: "1s" }}>
             It shipped this morning and arrives Thursday. Want delivery updates on WhatsApp?
           </p>
-          <p className="sv-bubble ml-auto w-fit rounded-2xl rounded-br-sm bg-primary px-3.5 py-2 text-white" style={{ animationDelay: "1.8s" }}>
+          <p className="sv-bubble ml-auto w-fit rounded-2xl rounded-br-sm bg-accent-2 px-3.5 py-2 text-ink" style={{ animationDelay: "1.8s" }}>
             Yes please
           </p>
-          <div className="sv-bubble flex w-fit gap-1 rounded-2xl bg-surface-2 px-3.5 py-3" style={{ animationDelay: "2.4s" }}>
+          <div className="sv-bubble flex w-fit gap-1 rounded-2xl bg-white/[0.06] px-3.5 py-3" style={{ animationDelay: "2.4s" }}>
             <span className="sv-dot h-1.5 w-1.5 rounded-full bg-muted" />
             <span className="sv-dot h-1.5 w-1.5 rounded-full bg-muted [animation-delay:0.15s]" />
             <span className="sv-dot h-1.5 w-1.5 rounded-full bg-muted [animation-delay:0.3s]" />
@@ -65,7 +65,7 @@ function AiAssistant() {
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
         {["Answers from your docs", "Connected to your CRM", "Hands off to a human"].map((chip) => (
-          <span key={chip} className="rounded-full bg-surface/80 px-3 py-1 text-[11px] font-medium text-secondary ring-1 ring-black/5">
+          <span key={chip} className="rounded-full glass px-3 py-1 text-[11px] font-medium text-secondary ring-1 ring-white/10">
             {chip}
           </span>
         ))}
@@ -77,7 +77,7 @@ function AiAssistant() {
 function MvpPrototype() {
   return (
     <div className="absolute inset-6 sm:inset-10">
-      <div className="absolute left-0 top-0 w-[62%] -rotate-3 rounded-xl border-2 border-dashed border-border-bright bg-surface/70 p-4">
+      <div className="absolute left-0 top-0 w-[62%] -rotate-3 rounded-xl border-2 border-dashed border-border-bright glass p-4">
         <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-muted">Wireframe</p>
         <div className="mb-2 h-3 w-2/3 rounded bg-border" />
         <div className="mb-4 h-3 w-1/2 rounded bg-border" />
@@ -88,9 +88,9 @@ function MvpPrototype() {
         </div>
         <div className="mt-3 h-6 w-24 rounded border border-dashed border-border-bright" />
       </div>
-      <div className="sv-rise absolute bottom-0 right-0 w-[68%] rotate-2 rounded-xl bg-surface p-4 shadow-[0_30px_60px_-25px_rgba(28,24,16,0.45)] ring-1 ring-black/5">
+      <div className="sv-rise absolute bottom-0 right-0 w-[68%] rotate-2 rounded-xl glass p-4 shadow-[0_30px_60px_-25px_rgba(0,0,0,0.45)] ring-1 ring-white/10">
         <p className="mb-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-accent">
-          Version 1 <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] text-emerald-700">Live</span>
+          Version 1 <span className="rounded-full bg-emerald-400/15 px-2 py-0.5 text-[9px] text-emerald-300">Live</span>
         </p>
         <p className="font-display text-lg font-semibold text-primary">Book a consultation</p>
         <p className="mb-3 text-[11px] text-muted">Pick a time that works for you</p>
@@ -98,13 +98,13 @@ function MvpPrototype() {
           {["10:00", "11:30", "15:00"].map((slot, i) => (
             <span
               key={slot}
-              className={`rounded-lg py-2 text-center text-xs font-semibold ${i === 1 ? "bg-primary text-white" : "bg-surface-2 text-primary"}`}
+              className={`rounded-lg py-2 text-center text-xs font-semibold ${i === 1 ? "bg-accent-2 text-ink" : "bg-white/[0.06] text-primary"}`}
             >
               {slot}
             </span>
           ))}
         </div>
-        <span className="mt-3 block rounded-lg bg-accent-2 py-2 text-center text-xs font-semibold text-primary">Confirm booking</span>
+        <span className="mt-3 block rounded-lg bg-accent-2 py-2 text-center text-xs font-semibold text-ink">Confirm booking</span>
       </div>
       <svg className="absolute left-[40%] top-[34%] hidden h-16 w-16 text-accent lg:block" viewBox="0 0 64 64" fill="none" aria-hidden>
         <path d="M8 8 C 40 8, 52 24, 52 50" stroke="currentColor" strokeWidth="2" strokeDasharray="4 5" strokeLinecap="round" />

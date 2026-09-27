@@ -7,9 +7,9 @@ attribute vec2 position;
 void main() { gl_Position = vec4(position, 0.0, 1.0); }
 `
 
-// Flowing "silk under studio light" field. Warm espresso base, amber and gold folds.
+// Teal fog with drifting coral light streaks, concentrated on the right.
 const FRAGMENT = `
-precision mediump float;
+precision highp float;
 uniform vec2 uResolution;
 uniform float uTime;
 uniform vec2 uPointer;
@@ -29,40 +29,50 @@ float fbm(vec2 p) {
   float a = 0.5;
   for (int i = 0; i < 5; i++) {
     v += a * noise(p);
-    p = p * 2.02 + vec2(1.7, 9.2);
+    p = p * 2.03 + vec2(1.7, 9.2);
     a *= 0.5;
   }
   return v;
 }
 
+float streak(vec2 uv, float y, float x0, float x1, float h, float t, float seed) {
+  float drift = 0.035 * sin(t * 0.35 + seed) + 0.02 * sin(t * 0.9 + seed * 3.0);
+  float dy = (uv.y - y - 0.006 * sin(uv.x * 9.0 + t + seed)) / h;
+  float vertical = exp(-dy * dy * 2.2);
+  float left = smoothstep(x0 - 0.03 + drift, x0 + 0.05 + drift, uv.x);
+  float right = 1.0 - smoothstep(x1 - 0.18 + drift, x1 + drift, uv.x);
+  float grain = 0.75 + 0.25 * noise(vec2(uv.x * 40.0 - t * 2.0, seed));
+  return vertical * left * right * grain;
+}
+
 void main() {
   vec2 uv = gl_FragCoord.xy / uResolution.xy;
-  vec2 p = uv;
-  p.x *= uResolution.x / uResolution.y;
+  float aspect = uResolution.x / uResolution.y;
+  vec2 p = vec2(uv.x * aspect, uv.y);
+  float t = uTime;
 
-  float t = uTime * 0.045;
-  vec2 q = vec2(fbm(p * 1.4 + vec2(0.0, t)), fbm(p * 1.4 + vec2(5.2, -t)));
-  vec2 r = vec2(fbm(p * 1.6 + 3.0 * q + vec2(1.7 - t, 9.2)), fbm(p * 1.6 + 3.0 * q + vec2(8.3, 2.8 + t)));
-  float f = fbm(p * 1.3 + 2.6 * r + uPointer * 0.35);
+  // Teal fog, brighter behind the right-hand focal area.
+  float fog = fbm(p * 1.3 + vec2(t * 0.02, -t * 0.015) + uPointer * 0.25);
+  vec3 deep = vec3(0.02, 0.055, 0.05);
+  vec3 teal = vec3(0.09, 0.27, 0.25);
+  vec3 mist = vec3(0.29, 0.5, 0.47);
+  float focus = exp(-pow(length((uv - vec2(0.7, 0.6)) * vec2(1.3, 1.0)) / 0.42, 2.0));
+  vec3 col = mix(deep, teal, smoothstep(0.25, 0.85, fog) * 0.85 + focus * 0.35);
+  col = mix(col, mist, focus * smoothstep(0.4, 0.9, fog) * 0.45);
 
-  float folds = smoothstep(0.35, 0.95, f);
-  float sheen = pow(smoothstep(0.55, 1.0, f + 0.25 * r.x), 3.0);
+  // Coral light streaks.
+  vec3 coral = vec3(1.0, 0.33, 0.2);
+    float s3 = streak(uv, 0.34, 0.8, 1.08, 0.045, t, 7.0) * 0.55;
+  float light = s3;
+  col = mix(col, coral, clamp(light * 0.85, 0.0, 0.9));
 
-  vec3 base = vec3(0.071, 0.059, 0.035);
-  vec3 amber = vec3(0.42, 0.30, 0.07);
-  vec3 gold = vec3(0.95, 0.76, 0.19);
-  vec3 cream = vec3(0.98, 0.93, 0.80);
+  // Warm haze at the bottom-right corner, like a light leak.
+  float haze = exp(-pow(length((uv - vec2(1.02, 0.12)) * vec2(1.0, 1.6)) / 0.45, 2.0));
+  col += vec3(0.9, 0.32, 0.2) * haze * (0.35 + 0.1 * sin(t * 0.4));
 
-  vec3 col = mix(base, amber, folds * 0.85);
-  col = mix(col, gold, sheen * 0.75);
-  col += cream * pow(sheen, 2.5) * 0.35;
-
-  // Keep the centre (where text sits) calmer and darker.
-  float textShade = smoothstep(0.55, 0.0, length((uv - vec2(0.5, 0.52)) * vec2(1.0, 1.35))) * 0.6;
-  col = mix(col, base, textShade);
-
-  float vig = smoothstep(1.25, 0.25, length((uv - vec2(0.5, 0.5)) * vec2(1.0, 1.3)));
-  col *= mix(0.55, 1.0, vig);
+  // Keep the text side calm and dark.
+  col = mix(col, deep, smoothstep(0.55, 0.05, uv.x) * 0.7);
+  col *= mix(0.55, 1.0, smoothstep(1.25, 0.3, length((uv - vec2(0.62, 0.5)) * vec2(1.0, 1.25))));
 
   gl_FragColor = vec4(col, 1.0);
 }
@@ -80,7 +90,7 @@ function compile(gl: WebGLRenderingContext, type: number, source: string) {
   return shader
 }
 
-export function SilkBackground({ className }: { className?: string }) {
+export function LightField({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -118,7 +128,7 @@ export function SilkBackground({ className }: { className?: string }) {
     const start = performance.now() - 20000
 
     const resize = () => {
-      const scale = Math.min(window.devicePixelRatio || 1, 1.5) * 0.6
+      const scale = Math.min(window.devicePixelRatio || 1, 1.5) * 0.7
       canvas.width = Math.max(1, Math.floor(canvas.clientWidth * scale))
       canvas.height = Math.max(1, Math.floor(canvas.clientHeight * scale))
       gl.viewport(0, 0, canvas.width, canvas.height)

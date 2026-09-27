@@ -34,7 +34,7 @@ export function AboutHero() {
           </div>
 
           <h1
-            className="motion-safe:animate-fade-up mb-6 font-display text-[2.6rem] font-bold leading-[1.05] tracking-[-0.035em] text-primary sm:text-6xl" style={{ animationDelay: "100ms" }}>
+            className="motion-safe:animate-fade-up mb-6 font-display text-[2.6rem] font-medium leading-[1.05] tracking-[-0.035em] text-primary sm:text-6xl" style={{ animationDelay: "100ms" }}>
             Building Ideas
             <br />
             Into <span className="accent-serif">Impactful Products</span>
@@ -63,7 +63,7 @@ export function AboutHero() {
           </div>
         </div>
 
-        <div          className="motion-safe:animate-fade-up self-center rounded-2xl border border-border bg-surface p-6 shadow-sm sm:p-8" style={{ animationDelay: "200ms" }}>
+        <div          className="motion-safe:animate-fade-up self-center rounded-2xl border border-border glass p-6 shadow-sm sm:p-8" style={{ animationDelay: "200ms" }}>
           <p className="mb-6 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-muted">
             How an idea becomes a product
           </p>
@@ -71,11 +71,11 @@ export function AboutHero() {
             <span aria-hidden className="absolute bottom-6 left-5 top-6 w-px bg-border" />
             {journey.map((step, index) => (
               <li key={step.title} className="relative flex gap-4">
-                <span className="relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border bg-surface text-accent">
+                <span className="relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-border glass text-accent">
                   <step.icon className="h-5 w-5" strokeWidth={1.6} />
                 </span>
                 <div className="pt-1">
-                  <p className="font-display text-lg font-bold text-primary">
+                  <p className="font-display text-lg font-medium text-primary">
                     <span className="mr-2 font-mono text-xs text-muted">0{index + 1}</span>
                     {step.title}
                   </p>
@@ -86,12 +86,12 @@ export function AboutHero() {
           </ol>
         </div>
       </div>
-      <div className="border-t border-border bg-surface">
+      <div className="border-t border-border glass">
         <dl className="mx-auto grid max-w-7xl grid-cols-2 gap-y-8 px-4 py-10 sm:px-6 lg:grid-cols-4 lg:px-8">
           {facts.map((fact) => (
             <div key={fact.label} data-reveal className="border-l-2 border-accent pl-4">
               <dt className="text-xs font-semibold uppercase tracking-[0.15em] text-muted">{fact.label}</dt>
-              <dd className="mt-1 font-display text-xl font-bold text-primary sm:text-2xl">{fact.value}</dd>
+              <dd className="mt-1 font-display text-xl font-medium text-primary sm:text-2xl">{fact.value}</dd>
             </div>
           ))}
         </dl>

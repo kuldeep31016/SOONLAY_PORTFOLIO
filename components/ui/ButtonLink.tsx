@@ -13,9 +13,9 @@ interface ButtonLinkProps {
 }
 
 const variants = {
-  primary: "bg-primary text-white shadow-lg shadow-black/10 hover:bg-primary/85",
-  secondary: "border border-border-bright bg-surface text-primary hover:border-primary/40",
-  light: "bg-white text-primary hover:bg-white/90"
+  primary: "bg-accent-2 text-ink shadow-lg shadow-black/10 hover:bg-accent-2/85",
+  secondary: "border border-border-bright glass text-primary hover:border-primary/40",
+  light: "bg-accent-2 text-ink hover:bg-accent-2/85"
 }
 
 export function ButtonLink({ href, children, variant = "primary", arrow, icon, className }: ButtonLinkProps) {

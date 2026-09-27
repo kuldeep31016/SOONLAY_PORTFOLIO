@@ -29,7 +29,7 @@ export function PageHero({
     <section className="relative overflow-hidden border-b border-border bg-background pt-16">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_0%,rgba(242,194,48,0.09),transparent_55%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_0%,rgba(143,220,194,0.1),transparent_55%)]"
       />
       <div
         className={cn(
@@ -60,7 +60,7 @@ export function PageHero({
           <Badge className="mb-6">{badge}</Badge>
           <h1
             className={cn(
-              "font-display font-bold tracking-[-0.035em] text-primary",
+              "font-display font-medium tracking-[-0.035em] text-primary",
               size === "lg" ? "text-[2.5rem] sm:text-5xl lg:text-6xl" : "text-[2.2rem] sm:text-5xl",
               "leading-[1.08]"
             )}

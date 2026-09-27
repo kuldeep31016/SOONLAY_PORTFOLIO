@@ -22,7 +22,7 @@ export function SectionHeading({
   as: Tag = "h2"
 }: SectionHeadingProps) {
   const title = (
-    <Tag className="font-display text-3xl font-bold leading-[1.1] tracking-[-0.025em] text-primary sm:text-4xl lg:text-[2.75rem]">
+    <Tag className="font-display text-3xl font-medium leading-[1.1] tracking-[-0.025em] text-primary sm:text-4xl lg:text-[2.75rem]">
       {heading}
     </Tag>
   )

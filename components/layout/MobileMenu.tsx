@@ -27,7 +27,7 @@ export function MobileMenu({ open, setOpen, links }: MobileMenuProps) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.16 }}
           onClick={() => setOpen(false)}
-          className="fixed inset-x-0 bottom-0 top-16 -z-10 bg-primary/40 lg:hidden"
+          className="fixed inset-0 -z-10 bg-black/60 backdrop-blur-sm lg:hidden"
         />
       )}
       {open && (
@@ -37,7 +37,7 @@ export function MobileMenu({ open, setOpen, links }: MobileMenuProps) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.16 }}
-          className="border-t border-border bg-surface shadow-xl shadow-black/10 lg:hidden"
+          className="mx-auto mt-2 max-w-7xl rounded-[1.75rem] bg-[#0c1a17]/90 p-2 shadow-2xl shadow-black/50 ring-1 ring-white/10 backdrop-blur-2xl lg:hidden"
         >
           <nav className="mx-auto flex max-w-7xl flex-col gap-2 px-4 pb-4 pt-2 sm:px-6 lg:px-8">
             {links.map((link) => {
@@ -53,8 +53,8 @@ export function MobileMenu({ open, setOpen, links }: MobileMenuProps) {
                   className={cn(
                     "rounded-xl px-3 py-2 text-sm transition-colors",
                     isActive
-                      ? "bg-surface-2 font-medium text-primary"
-                      : "text-secondary hover:bg-surface-2 hover:text-primary"
+                      ? "bg-white/[0.06] font-medium text-primary"
+                      : "text-secondary hover:bg-white/[0.07] hover:text-primary"
                   )}
                 >
                   {link.label}
@@ -67,7 +67,7 @@ export function MobileMenu({ open, setOpen, links }: MobileMenuProps) {
                 setOpen(false)
                 openModal({ source: "mobile-menu" })
               }}
-              className="mt-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white"
+              className="mt-2 rounded-lg bg-accent-2 px-4 py-2.5 text-sm font-semibold text-ink"
             >
               Start a Project →
             </button>

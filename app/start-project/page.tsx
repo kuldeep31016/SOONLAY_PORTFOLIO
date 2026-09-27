@@ -37,7 +37,7 @@ export default async function StartProjectPage({
         />
         <section className="bg-background py-12 md:py-16">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:px-8">
-            <div className="rounded-2xl border border-border bg-surface p-5 shadow-sm sm:p-8">
+            <div className="rounded-2xl border border-border glass p-5 shadow-sm sm:p-8">
               <StartProjectFlow initialType={initialType} source="start-project-page" />
             </div>
             <aside className="lg:sticky lg:top-24 lg:self-start">

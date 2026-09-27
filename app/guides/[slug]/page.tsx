@@ -42,7 +42,7 @@ function Block({ block }: { block: GuideBlock }) {
   switch (block.type) {
     case "h2":
       return (
-        <h2 id={anchor(block.text)} className="scroll-mt-24 pt-6 font-display text-2xl font-bold tracking-[-0.02em] text-primary">
+        <h2 id={anchor(block.text)} className="scroll-mt-24 pt-6 font-display text-2xl font-medium tracking-[-0.02em] text-primary">
           {block.text}
         </h2>
       )
@@ -74,9 +74,9 @@ function Block({ block }: { block: GuideBlock }) {
       )
     case "table":
       return (
-        <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+        <div className="overflow-x-auto rounded-xl border border-border glass">
           <table className="w-full min-w-[540px] text-left text-sm">
-            <thead className="bg-surface-2 text-primary">
+            <thead className="bg-white/[0.06] text-primary">
               <tr>
                 {block.head.map((cell) => (
                   <th key={cell} className="px-4 py-3 font-semibold">
@@ -146,7 +146,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
               </Link>
             </nav>
             <Badge className="mb-6">{guide.relatedService.label}</Badge>
-            <h1 className="max-w-4xl font-display text-[2.2rem] font-bold leading-[1.08] tracking-[-0.03em] text-primary sm:text-5xl">
+            <h1 className="max-w-4xl font-display text-[2.2rem] font-medium leading-[1.08] tracking-[-0.03em] text-primary sm:text-5xl">
               {guide.title}
             </h1>
             <p className="mt-5 max-w-3xl text-lg leading-relaxed text-secondary">{guide.description}</p>
@@ -174,7 +174,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
 
           <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
             {toc.length > 0 && (
-              <nav aria-label="On this page" className="hidden rounded-2xl border border-border bg-surface p-6 lg:block">
+              <nav aria-label="On this page" className="hidden rounded-2xl border border-border glass p-6 lg:block">
                 <p className="mb-4 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-muted">On this page</p>
                 <ol className="space-y-2.5">
                   {toc.map((heading) => (
@@ -187,14 +187,14 @@ export default async function GuidePage({ params }: GuidePageProps) {
                 </ol>
               </nav>
             )}
-            <div className="rounded-2xl bg-primary p-6 text-white">
-              <p className="font-display text-lg font-bold">Get a plan for your project</p>
+            <div className="rounded-2xl glass-strong p-6 text-primary">
+              <p className="font-display text-lg font-medium">Get a plan for your project</p>
               <p className="mt-2 text-sm leading-relaxed text-white/75">
                 Describe your idea and get a draft scope and preliminary estimate — reviewed by our team within one business day.
               </p>
               <Link
                 href={startHref}
-                className="group mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-primary"
+                className="group mt-5 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent-2 px-5 py-3 text-sm font-semibold text-ink"
               >
                 Start a Project <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
@@ -205,9 +205,9 @@ export default async function GuidePage({ params }: GuidePageProps) {
           </aside>
         </div>
 
-        <section className="border-t border-border bg-surface py-16">
+        <section className="border-t border-border glass py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h2 className="mb-8 font-display text-2xl font-bold tracking-[-0.02em] text-primary">More guides</h2>
+            <h2 className="mb-8 font-display text-2xl font-medium tracking-[-0.02em] text-primary">More guides</h2>
             <div className="grid gap-4 md:grid-cols-3">
               {others.map((other) => (
                 <Link

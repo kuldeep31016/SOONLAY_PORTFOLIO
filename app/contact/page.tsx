@@ -46,11 +46,11 @@ export default function ContactPage() {
                 </>
               )
               return channel.href ? (
-                <a key={channel.label} href={channel.href} className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4 transition-colors hover:border-accent/40 sm:block sm:p-5">
+                <a key={channel.label} href={channel.href} className="flex items-center gap-4 rounded-xl border border-border glass p-4 transition-colors hover:border-accent/40 sm:block sm:p-5">
                   {content}
                 </a>
               ) : (
-                <div key={channel.label} className="flex items-center gap-4 rounded-xl border border-border bg-surface p-4 sm:block sm:p-5">
+                <div key={channel.label} className="flex items-center gap-4 rounded-xl border border-border glass p-4 sm:block sm:p-5">
                   {content}
                 </div>
               )
@@ -59,7 +59,7 @@ export default function ContactPage() {
         </PageHero>
         <section className="bg-background py-14 md:py-20">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:px-8">
-            <div className="rounded-2xl border border-border bg-surface p-5 shadow-sm sm:p-8">
+            <div className="rounded-2xl border border-border glass p-5 shadow-sm sm:p-8">
               <StartProjectFlow source="contact-page" />
             </div>
             <aside className="lg:sticky lg:top-24 lg:self-start">

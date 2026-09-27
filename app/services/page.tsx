@@ -64,12 +64,12 @@ export default function ServicesPage() {
                   key={service.slug}
                   href={`/services/${service.slug}`}
                   data-reveal
-                  className="card-hover-glow group flex flex-col rounded-2xl border border-border bg-surface p-7"
+                  className="card-hover-glow group flex flex-col rounded-2xl border border-border glass p-7"
                 >
                   <span className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">
                     <Icon className="h-6 w-6" strokeWidth={1.6} />
                   </span>
-                  <h2 className="font-display text-xl font-bold text-primary">{service.navTitle}</h2>
+                  <h2 className="font-display text-xl font-medium text-primary">{service.navTitle}</h2>
                   <p className="mt-3 text-[15px] leading-relaxed text-secondary">{service.intro}</p>
                   <ul className="mt-5 space-y-2.5">
                     {service.primary.items.slice(0, 3).map((item) => (

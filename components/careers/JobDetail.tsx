@@ -37,7 +37,7 @@ interface DetailSectionProps {
 }
 
 const applyButtonClasses =
-  "group inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-7 py-3.5 text-[15px] font-semibold text-white shadow-lg shadow-black/10 transition-colors hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+  "group inline-flex items-center justify-center gap-2 rounded-lg bg-accent-2 px-7 py-3.5 text-[15px] font-semibold text-ink shadow-lg shadow-black/10 transition-colors hover:bg-accent-2/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 
 function safeApplicationUrl(value: string): string | null {
   const url = value.trim()
@@ -55,10 +55,10 @@ function safeApplicationUrl(value: string): string | null {
 function SectionTitle({ icon: Icon, children }: { icon: LucideIcon; children: string }) {
   return (
     <div className="mb-5 flex items-center gap-3">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-surface-2 text-accent">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-white/[0.06] text-accent">
         <Icon className="h-[18px] w-[18px]" strokeWidth={1.6} aria-hidden="true" />
       </span>
-      <h2 className="font-display text-xl font-bold tracking-[-0.015em] text-primary">
+      <h2 className="font-display text-xl font-medium tracking-[-0.015em] text-primary">
         {children}
       </h2>
     </div>
@@ -160,7 +160,7 @@ export function JobDetail({ job }: JobDetailProps) {
           {metaItems.map((item) => (
             <li
               key={item.label}
-              className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-secondary"
+              className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-border glass px-3 py-1.5 text-sm text-secondary"
             >
               <item.icon className="h-4 w-4 shrink-0 text-accent" strokeWidth={1.6} aria-hidden="true" />
               <span className="sr-only">{item.label}:</span>
@@ -189,7 +189,7 @@ export function JobDetail({ job }: JobDetailProps) {
 
       <section className="bg-background py-12 md:py-16">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12 lg:px-8">
-          <article className="min-w-0 divide-y divide-border rounded-2xl border border-border bg-surface p-6 sm:p-10">
+          <article className="min-w-0 divide-y divide-border rounded-2xl border border-border glass p-6 sm:p-10">
             <section className="pb-8 sm:pb-10">
               <SectionTitle icon={BriefcaseBusiness}>About this role</SectionTitle>
               <PlainText
@@ -230,7 +230,7 @@ export function JobDetail({ job }: JobDetailProps) {
                   {job.skills.map((skill, index) => (
                     <span
                       key={`${skill}-${index}`}
-                      className="rounded-md border border-border bg-surface-2 px-3 py-1.5 text-sm text-secondary"
+                      className="rounded-md border border-border bg-white/[0.06] px-3 py-1.5 text-sm text-secondary"
                     >
                       {skill}
                     </span>
@@ -245,8 +245,8 @@ export function JobDetail({ job }: JobDetailProps) {
           </article>
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
-            <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm sm:p-7">
-              <h2 className="font-display text-xl font-bold tracking-[-0.015em] text-primary">
+            <div className="rounded-2xl border border-border glass p-6 shadow-sm sm:p-7">
+              <h2 className="font-display text-xl font-medium tracking-[-0.015em] text-primary">
                 Apply for this role
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-secondary">
@@ -302,7 +302,7 @@ export function JobDetail({ job }: JobDetailProps) {
       </section>
 
       {!applicationUrl && (
-        <section id="apply" className="scroll-mt-24 border-t border-border bg-surface-2/40 py-16 md:py-20">
+        <section id="apply" className="scroll-mt-24 border-t border-border bg-white/[0.06] py-16 md:py-20">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <h2 className="font-display text-3xl font-semibold tracking-[-0.02em] text-primary">
               Apply for {job.title}

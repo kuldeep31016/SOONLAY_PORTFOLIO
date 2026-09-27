@@ -54,7 +54,7 @@ export function ContactModalProvider({ children }: { children: ReactNode }) {
             role="dialog"
             aria-modal="true"
             aria-label="Start a project with Soonlay"
-            className="relative w-full max-w-3xl rounded-2xl border border-border bg-surface p-5 shadow-xl sm:p-8"
+            className="relative w-full max-w-3xl rounded-2xl border border-border glass p-5 shadow-xl sm:p-8"
             onClick={(event) => event.stopPropagation()}
           >
             <button

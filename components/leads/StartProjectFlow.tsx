@@ -254,7 +254,7 @@ export function StartProjectFlow({ initialType = null, source, onDone }: StartPr
         <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-accent/15 text-accent">
           <Check className="h-6 w-6" />
         </div>
-        <h2 className="mb-3 font-display font-bold text-2xl text-primary">Thanks, {form.name.trim().split(" ")[0]} — we have your brief.</h2>
+        <h2 className="mb-3 font-display font-medium text-2xl text-primary">Thanks, {form.name.trim().split(" ")[0]} — we have your brief.</h2>
         <p className="mx-auto mb-6 max-w-md text-sm text-secondary">
           A member of our team will review your project and reply within one business day
           {form.preferredContact === "email" ? " by email" : form.preferredContact === "whatsapp" ? " on WhatsApp" : " with a call"}.
@@ -281,13 +281,13 @@ export function StartProjectFlow({ initialType = null, source, onDone }: StartPr
           </span>
           <span>Takes about 2 minutes</span>
         </div>
-        <div className="h-1 w-full overflow-hidden rounded-full bg-surface-2">
+        <div className="h-1 w-full overflow-hidden rounded-full bg-white/[0.06]">
           <div
             className="h-full rounded-full bg-gradient-accent transition-all duration-300"
             style={{ width: `${((step + 1) / STEP_TITLES.length) * 100}%` }}
           />
         </div>
-        <h2 className="mt-5 font-display font-bold text-xl text-primary sm:text-2xl">{STEP_TITLES[step]}</h2>
+        <h2 className="mt-5 font-display font-medium text-xl text-primary sm:text-2xl">{STEP_TITLES[step]}</h2>
       </div>
 
       {step === 0 && (
@@ -397,7 +397,7 @@ export function StartProjectFlow({ initialType = null, source, onDone }: StartPr
           {estimate && (
             <div className="rounded-2xl border border-accent/30 bg-accent/5 p-5">
               <p className="mb-1 text-xs font-mono uppercase tracking-wide text-accent">Preliminary estimate</p>
-              <p className="font-display font-bold text-2xl text-primary">
+              <p className="font-display font-medium text-2xl text-primary">
                 {formatInr(estimate.low)} – {formatInr(estimate.high)}
               </p>
               <p className="text-sm text-secondary">
@@ -412,7 +412,7 @@ export function StartProjectFlow({ initialType = null, source, onDone }: StartPr
 
           <BriefPanel state={brief} />
 
-          <div className="relative rounded-2xl border border-border bg-surface/60 p-5">
+          <div className="relative rounded-2xl border border-border glass p-5">
             <p className="mb-4 text-sm text-primary">Where should we send your reviewed plan?</p>
             <div className="grid gap-4 sm:grid-cols-2">
               <TextField id="name" label="Your name *" value={form.name} onChange={(v) => update("name", v)} autoComplete="name" />
@@ -472,7 +472,7 @@ export function StartProjectFlow({ initialType = null, source, onDone }: StartPr
           <button
             type="button"
             onClick={next}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary/85"
+            className="inline-flex items-center gap-2 rounded-lg bg-accent-2 px-6 py-2.5 text-sm font-semibold text-ink hover:bg-accent-2/85"
           >
             {step === 2 ? "See my plan" : "Continue"} <ArrowRight className="h-4 w-4" />
           </button>
@@ -481,7 +481,7 @@ export function StartProjectFlow({ initialType = null, source, onDone }: StartPr
             type="button"
             onClick={submit}
             disabled={submitting}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary/85 disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-lg bg-accent-2 px-6 py-2.5 text-sm font-semibold text-ink hover:bg-accent-2/85 disabled:opacity-60"
           >
             {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
             {submitting ? "Sending…" : "Send to Soonlay"}
@@ -495,7 +495,7 @@ export function StartProjectFlow({ initialType = null, source, onDone }: StartPr
 function BriefPanel({ state }: { state: BriefState }) {
   if (state.status === "loading" || state.status === "idle") {
     return (
-      <div className="flex items-center gap-3 rounded-2xl border border-border bg-surface/60 p-5 text-sm text-secondary">
+      <div className="flex items-center gap-3 rounded-2xl border border-border glass p-5 text-sm text-secondary">
         <Loader2 className="h-4 w-4 animate-spin text-accent" />
         Drafting your project plan — user roles, modules and MVP scope…
       </div>
@@ -503,18 +503,18 @@ function BriefPanel({ state }: { state: BriefState }) {
   }
   if (state.status === "unavailable") {
     return (
-      <div className="rounded-2xl border border-border bg-surface/60 p-5 text-sm text-secondary">
+      <div className="rounded-2xl border border-border glass p-5 text-sm text-secondary">
         Our team will prepare your detailed project plan by hand after you send this.
       </div>
     )
   }
   const { brief } = state
   return (
-    <div className="rounded-2xl border border-border bg-surface/60 p-5">
+    <div className="rounded-2xl border border-border glass p-5">
       <div className="mb-3 flex items-center gap-2 text-xs font-mono uppercase tracking-wide text-accent">
         <Sparkles className="h-3.5 w-3.5" /> Draft project brief
       </div>
-      <h3 className="font-display font-bold text-lg text-primary">{brief.projectName}</h3>
+      <h3 className="font-display font-medium text-lg text-primary">{brief.projectName}</h3>
       <p className="mb-4 text-sm text-secondary">{brief.summary}</p>
       <div className="grid gap-4 text-sm sm:grid-cols-2">
         <BriefList title="Users" items={brief.userRoles.map((r) => `${r.role} — ${r.needs}`)} />
@@ -548,7 +548,7 @@ function BriefList({ title, items }: { title: string; items: string[] }) {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-border bg-surface-2 px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent"
+  "w-full rounded-xl border border-border bg-white/[0.06] px-3 py-2.5 text-sm text-primary placeholder:text-muted outline-none focus:border-accent"
 
 function Field({ label, htmlFor, children }: { label: string; htmlFor?: string; children: ReactNode }) {
   return (
@@ -590,7 +590,7 @@ function Choice({
         compact ? "px-2 py-2 text-xs justify-center" : "px-3 py-2.5 text-sm",
         selected
           ? "border-accent bg-accent/10 text-primary"
-          : "border-border bg-surface-2/60 text-secondary hover:border-border-bright hover:text-primary"
+          : "border-border bg-white/[0.06] text-secondary hover:border-border-bright hover:text-primary"
       )}
     >
       {multi && (
