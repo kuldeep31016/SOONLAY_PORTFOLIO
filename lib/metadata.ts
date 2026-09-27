@@ -1,56 +1,38 @@
 import type { Metadata } from "next"
+import { SITE_NAME, SITE_URL } from "@/lib/site"
+
+const defaultTitle =
+  "Soonlay — Custom Software, App & SaaS Development Studio in India"
+const defaultDescription =
+  "Soonlay designs and builds web apps, mobile apps, SaaS platforms, AI features, and custom business software for startups and growing businesses. Get a scoped plan and quote for your project."
+
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION
 
 export const siteMetadata: Metadata = {
-  metadataBase: new URL("https://soonlay.tech"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Soonlay — Product Development Studio for Founders",
-    template: "%s | Soonlay"
+    default: defaultTitle,
+    template: `%s | ${SITE_NAME}`
   },
-  description:
-    "Soonlay is a product development studio that builds web apps, mobile apps, SaaS platforms, and AI products for startup founders. From idea to production.",
-  keywords: [
-    "Soonlay",
-    "soonlay.tech",
-    "product development studio",
-    "startup development",
-    "MVP development",
-    "SaaS development",
-    "web app development",
-    "mobile app development",
-    "AI product development",
-    "Next.js development",
-    "React development",
-    "software company India",
-    "startup tech partner",
-    "non-technical founders"
-  ],
-  authors: [{ name: "Soonlay", url: "https://soonlay.tech" }],
-  creator: "Soonlay",
-  publisher: "Soonlay",
+  description: defaultDescription,
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: "https://soonlay.tech",
-    siteName: "Soonlay",
-    title: "Soonlay — Product Development Studio for Founders",
-    description:
-      "We build web apps, mobile apps, SaaS platforms, and AI products for startup founders. From idea to production.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Soonlay — Product Development Studio"
-      }
-    ]
+    locale: "en_IN",
+    url: "/",
+    siteName: SITE_NAME,
+    title: defaultTitle,
+    description: defaultDescription
   },
   twitter: {
     card: "summary_large_image",
-    title: "Soonlay — Product Development Studio for Founders",
-    description:
-      "We build web apps, mobile apps, SaaS platforms, and AI products. From idea to production.",
-    images: ["/og-image.png"],
-    creator: "@soonlay"
+    title: defaultTitle,
+    description: defaultDescription,
+    site: "@SoonlayTech",
+    creator: "@SoonlayTech"
   },
   robots: {
     index: true,
@@ -63,11 +45,50 @@ export const siteMetadata: Metadata = {
       "max-snippet": -1
     }
   },
-  verification: {
-    google: "REPLACE_WITH_GOOGLE_SEARCH_CONSOLE_TOKEN"
-  },
-  alternates: {
-    canonical: "https://soonlay.tech"
+  ...(googleVerification ? { verification: { google: googleVerification } } : {})
+}
+
+interface PageMetadataInput {
+  title: string
+  description: string
+  path: string
+  absoluteTitle?: boolean
+  type?: "website" | "article"
+}
+
+export function pageMetadata({
+  title,
+  description,
+  path,
+  absoluteTitle = false,
+  type = "website"
+}: PageMetadataInput): Metadata {
+  const fullTitle = absoluteTitle ? title : `${title} | ${SITE_NAME}`
+  return {
+    title: absoluteTitle ? { absolute: title } : title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      type,
+      locale: "en_IN",
+      url: path,
+      siteName: SITE_NAME,
+      title: fullTitle,
+      description,
+      images: [ogImage]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: fullTitle,
+      description,
+      images: [ogImage.url]
+    }
   }
 }
 
+const ogImage = {
+  url: "/opengraph-image",
+  width: 1200,
+  height: 630,
+  alt: "Soonlay — custom software, app and SaaS development studio"
+}

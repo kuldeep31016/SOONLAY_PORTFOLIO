@@ -18,13 +18,13 @@ const baseClasses =
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-accent text-black font-semibold rounded-full hover:bg-accent/90",
+    "bg-primary text-white font-semibold rounded-lg hover:bg-primary/85",
   secondary:
-    "bg-surface border border-border text-primary rounded-full hover:border-border-bright",
+    "bg-surface border border-border-bright text-primary rounded-lg hover:border-primary/40",
   ghost:
     "bg-transparent text-secondary rounded-full hover:bg-surface/60 hover:text-primary",
   outline:
-    "bg-transparent border border-border text-primary rounded-full hover:border-border-bright"
+    "bg-transparent border border-border-bright text-primary rounded-lg hover:border-primary/40"
 }
 
 const sizeClasses: Record<Size, string> = {

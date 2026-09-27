@@ -1,18 +1,22 @@
 import Link from "next/link"
+import { ApplicationForm } from "@/components/careers/ApplicationForm"
 import {
   ArrowLeft,
+  ArrowUpRight,
   BriefcaseBusiness,
   Building2,
   Check,
   Clock3,
-  ExternalLink,
   Gift,
+  GraduationCap,
   ListChecks,
   MapPin,
   Sparkles,
+  Star,
+  Wrench,
   type LucideIcon
 } from "lucide-react"
-import { Badge } from "@/components/ui/Badge"
+import { PageHero } from "@/components/ui/PageHero"
 import type { PublicJob } from "@/lib/careers/types"
 
 interface JobDetailProps {
@@ -32,6 +36,9 @@ interface DetailSectionProps {
   emptyMessage: string
 }
 
+const applyButtonClasses =
+  "group inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-7 py-3.5 text-[15px] font-semibold text-white shadow-lg shadow-black/10 transition-colors hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+
 function safeApplicationUrl(value: string): string | null {
   const url = value.trim()
 
@@ -43,6 +50,19 @@ function safeApplicationUrl(value: string): string | null {
   } catch {
     return null
   }
+}
+
+function SectionTitle({ icon: Icon, children }: { icon: LucideIcon; children: string }) {
+  return (
+    <div className="mb-5 flex items-center gap-3">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-surface-2 text-accent">
+        <Icon className="h-[18px] w-[18px]" strokeWidth={1.6} aria-hidden="true" />
+      </span>
+      <h2 className="font-display text-xl font-bold tracking-[-0.015em] text-primary">
+        {children}
+      </h2>
+    </div>
+  )
 }
 
 function PlainText({ text, emptyMessage }: { text: string; emptyMessage: string }) {
@@ -60,7 +80,7 @@ function PlainText({ text, emptyMessage }: { text: string; emptyMessage: string 
       {paragraphs.map((paragraph, index) => (
         <p
           key={`${paragraph}-${index}`}
-          className="whitespace-pre-wrap text-sm leading-relaxed text-secondary sm:text-base"
+          className="whitespace-pre-wrap break-words text-base leading-relaxed text-secondary"
         >
           {paragraph}
         </p>
@@ -71,27 +91,23 @@ function PlainText({ text, emptyMessage }: { text: string; emptyMessage: string 
 
 function DetailSection({
   title,
-  icon: Icon,
+  icon,
   items,
   emptyMessage
 }: DetailSectionProps) {
   return (
-    <section className="card-surface bg-surface/70 p-6 sm:p-8">
-      <div className="mb-5 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
-          <Icon className="h-5 w-5" aria-hidden="true" />
-        </div>
-        <h2 className="font-display text-lg text-primary sm:text-xl">{title}</h2>
-      </div>
+    <section className="py-8 sm:py-10">
+      <SectionTitle icon={icon}>{title}</SectionTitle>
       {items.length > 0 ? (
-        <ul className="space-y-3">
+        <ul className="space-y-3.5">
           {items.map((item, index) => (
             <li key={`${item}-${index}`} className="flex gap-3">
-              <Check
-                className="mt-1 h-4 w-4 shrink-0 text-accent"
-                aria-hidden="true"
-              />
-              <span className="text-sm leading-relaxed text-secondary">{item}</span>
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+                <Check className="h-3 w-3" strokeWidth={2.5} aria-hidden="true" />
+              </span>
+              <span className="min-w-0 break-words text-base leading-relaxed text-secondary">
+                {item}
+              </span>
             </li>
           ))}
         </ul>
@@ -104,6 +120,7 @@ function DetailSection({
 
 export function JobDetail({ job }: JobDetailProps) {
   const applicationUrl = safeApplicationUrl(job.applicationUrl)
+  const summary = job.shortDescription.trim()
   const metaItems: MetaItem[] = [
     { icon: MapPin, label: "Location", value: job.location },
     { icon: Building2, label: "Department", value: job.department },
@@ -113,124 +130,129 @@ export function JobDetail({ job }: JobDetailProps) {
       value: job.employmentType
     }
   ]
+  if (job.experienceLevel) {
+    metaItems.push({
+      icon: GraduationCap,
+      label: "Experience",
+      value: job.experienceLevel
+    })
+  }
 
   return (
-    <section className="relative isolate overflow-hidden bg-gradient-dark py-20 md:py-24">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="mesh-gradient" />
-        <div className="absolute -right-32 top-8 h-80 w-80 rounded-full bg-accent-2/10 blur-3xl" />
-      </div>
-
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Link
-          href="/careers"
-          className="inline-flex items-center gap-2 text-xs text-secondary transition-colors hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Back to open positions
-        </Link>
-
-        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-12">
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-3">
-              {job.featured && <Badge>Featured</Badge>}
-              <span className="font-mono text-[0.7rem] uppercase tracking-wide text-muted">
-                {job.department}
-              </span>
-            </div>
-            <h1 className="mt-4 font-display text-3xl leading-tight tracking-tight text-primary sm:text-4xl md:text-5xl">
-              {job.title}
-            </h1>
-            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 font-mono text-[0.7rem] uppercase tracking-wide text-muted">
-              {metaItems.map((item) => (
-                <span key={item.label} className="inline-flex items-center gap-2">
-                  <item.icon className="h-4 w-4 text-accent" aria-hidden="true" />
-                  <span>{item.label}</span>
-                  <span className="text-secondary">{item.value}</span>
-                </span>
-              ))}
-            </div>
-            {job.experienceLevel && (
-              <p className="mt-4 font-mono text-[0.7rem] uppercase tracking-wide text-muted">
-                Experience:{" "}
-                <span className="text-secondary">{job.experienceLevel}</span>
-              </p>
-            )}
-
-            <div className="mt-10 space-y-6">
-              <section className="card-surface bg-surface/70 p-6 sm:p-8">
-                <div className="mb-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
-                    <BriefcaseBusiness
-                      className="h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <h2 className="font-display text-lg text-primary sm:text-xl">
-                    About this role
-                  </h2>
-                </div>
-                <PlainText
-                  text={job.description}
-                  emptyMessage="No description provided for this role."
-                />
-              </section>
-
-              <DetailSection
-                title="Responsibilities"
-                icon={ListChecks}
-                items={job.responsibilities}
-                emptyMessage="No responsibilities listed for this role."
+    <>
+      <PageHero
+        size="md"
+        badge={job.department}
+        breadcrumbs={[
+          { name: "Careers", href: "/careers" },
+          { name: job.title, href: `/careers/${job.slug}` }
+        ]}
+        title={<span className="break-words">{job.title}</span>}
+        description={summary || undefined}
+      >
+        <ul className="mt-8 flex flex-wrap gap-2">
+          {job.featured && (
+            <li className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1.5 text-sm font-semibold text-accent">
+              <Star className="h-3.5 w-3.5" aria-hidden="true" />
+              Featured
+            </li>
+          )}
+          {metaItems.map((item) => (
+            <li
+              key={item.label}
+              className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-secondary"
+            >
+              <item.icon className="h-4 w-4 shrink-0 text-accent" strokeWidth={1.6} aria-hidden="true" />
+              <span className="sr-only">{item.label}:</span>
+              <span className="truncate">{item.value}</span>
+            </li>
+          ))}
+        </ul>
+        {applicationUrl && (
+          <div className="mt-8 lg:hidden">
+            <a
+              href={applicationUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              referrerPolicy="no-referrer"
+              className={`${applyButtonClasses} w-full sm:w-auto`}
+            >
+              Apply now
+              <ArrowUpRight
+                className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                aria-hidden="true"
               />
-              <DetailSection
-                title="Requirements"
-                icon={Check}
-                items={job.requirements}
-                emptyMessage="No requirements listed for this role."
-              />
-              <DetailSection
-                title="Nice to have"
-                icon={Sparkles}
-                items={job.niceToHave}
-                emptyMessage="No nice-to-have items listed for this role."
-              />
-              <DetailSection
-                title="Benefits"
-                icon={Gift}
-                items={job.benefits}
-                emptyMessage="No benefits listed for this role."
-              />
-
-              <section className="card-surface bg-surface/70 p-6 sm:p-8">
-                <h2 className="font-display text-lg text-primary sm:text-xl">
-                  Skills
-                </h2>
-                {job.skills.length > 0 ? (
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {job.skills.map((skill, index) => (
-                      <span
-                        key={`${skill}-${index}`}
-                        className="rounded-full border border-border bg-surface-2 px-3 py-1.5 font-mono text-[0.7rem] text-secondary"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="mt-4 text-sm text-muted">
-                    No skills listed for this role.
-                  </p>
-                )}
-              </section>
-            </div>
+            </a>
           </div>
+        )}
+      </PageHero>
+
+      <section className="bg-background py-12 md:py-16">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12 lg:px-8">
+          <article className="min-w-0 divide-y divide-border rounded-2xl border border-border bg-surface p-6 sm:p-10">
+            <section className="pb-8 sm:pb-10">
+              <SectionTitle icon={BriefcaseBusiness}>About this role</SectionTitle>
+              <PlainText
+                text={job.description}
+                emptyMessage="No description provided for this role."
+              />
+            </section>
+
+            <DetailSection
+              title="Responsibilities"
+              icon={ListChecks}
+              items={job.responsibilities}
+              emptyMessage="No responsibilities listed for this role."
+            />
+            <DetailSection
+              title="Requirements"
+              icon={Check}
+              items={job.requirements}
+              emptyMessage="No requirements listed for this role."
+            />
+            <DetailSection
+              title="Nice to have"
+              icon={Sparkles}
+              items={job.niceToHave}
+              emptyMessage="No nice-to-have items listed for this role."
+            />
+            <DetailSection
+              title="Benefits"
+              icon={Gift}
+              items={job.benefits}
+              emptyMessage="No benefits listed for this role."
+            />
+
+            <section className="pt-8 sm:pt-10">
+              <SectionTitle icon={Wrench}>Skills</SectionTitle>
+              {job.skills.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {job.skills.map((skill, index) => (
+                    <span
+                      key={`${skill}-${index}`}
+                      className="rounded-md border border-border bg-surface-2 px-3 py-1.5 text-sm text-secondary"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted">
+                  No skills listed for this role.
+                </p>
+              )}
+            </section>
+          </article>
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
-            <div className="card-surface bg-surface/90 p-6 sm:p-7">
-              <h2 className="font-display text-lg text-primary">Apply now</h2>
-              <p className="mt-3 text-sm leading-relaxed text-secondary">
-                Interested in this role? Continue to the official application
-                page for this position.
+            <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm sm:p-7">
+              <h2 className="font-display text-xl font-bold tracking-[-0.015em] text-primary">
+                Apply for this role
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-secondary">
+                {applicationUrl
+                  ? "Interested in this role? Continue to the official application page for this position."
+                  : "Interested in this role? Send us your resume and a short note."}
               </p>
               {applicationUrl ? (
                 <a
@@ -238,25 +260,58 @@ export function JobDetail({ job }: JobDetailProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   referrerPolicy="no-referrer"
-                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-black transition-colors hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className={`${applyButtonClasses} mt-6 w-full`}
                 >
                   Apply Now
-                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  <ArrowUpRight
+                    className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
                 </a>
               ) : (
-                <p className="mt-6 rounded-full border border-border bg-surface-2 px-4 py-2.5 text-center text-xs text-muted">
-                  Application link coming soon
-                </p>
+                <a href="#apply" className={`${applyButtonClasses} mt-6 w-full`}>
+                  Apply Now
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                </a>
               )}
-              <div className="mt-6 space-y-2 border-t border-border pt-5 font-mono text-[0.7rem] uppercase tracking-wide text-muted">
-                <p>{job.department}</p>
-                <p>{job.employmentType}</p>
-                <p>{job.location}</p>
-              </div>
+
+              <dl className="mt-6 space-y-3 border-t border-border pt-6 text-sm">
+                {metaItems.map((item) => (
+                  <div key={item.label} className="flex items-start justify-between gap-4">
+                    <dt className="inline-flex shrink-0 items-center gap-2 text-muted">
+                      <item.icon className="h-4 w-4 text-accent" strokeWidth={1.6} aria-hidden="true" />
+                      {item.label}
+                    </dt>
+                    <dd className="min-w-0 break-words text-right font-medium text-primary">
+                      {item.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
+
+            <Link
+              href="/careers"
+              className="mt-4 inline-flex items-center gap-2 px-1 text-sm font-medium text-secondary transition-colors hover:text-accent"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Back to open positions
+            </Link>
           </aside>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {!applicationUrl && (
+        <section id="apply" className="scroll-mt-24 border-t border-border bg-surface-2/40 py-16 md:py-20">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <h2 className="font-display text-3xl font-semibold tracking-[-0.02em] text-primary">
+              Apply for {job.title}
+            </h2>
+            <p className="mb-8 mt-2 text-secondary">We read every application and reply if there&apos;s a fit.</p>
+            <ApplicationForm jobSlug={job.slug} />
+          </div>
+        </section>
+      )}
+    </>
   )
 }

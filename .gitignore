@@ -32,3 +32,6 @@ pnpm-debug.log*
 .vercel
 *.tsbuildinfo
 
+
+# Prospect research (contains third-party business data; keep out of git)
+growth/private/

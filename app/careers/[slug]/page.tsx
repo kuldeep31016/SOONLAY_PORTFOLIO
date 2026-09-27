@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { SITE_URL } from "@/lib/site"
 import { notFound } from "next/navigation"
 import { Navbar } from "@/components/layout/Navbar"
 import { Footer } from "@/components/layout/Footer"
@@ -25,7 +26,7 @@ export async function generateMetadata({
     }
   }
 
-  const canonical = `https://soonlay.tech/careers/${job.slug}`
+  const canonical = `${SITE_URL}/careers/${job.slug}`
   const description = job.shortDescription.trim() || job.description.trim()
 
   return {
@@ -38,15 +39,7 @@ export async function generateMetadata({
       siteName: "Soonlay",
       title: `${job.title} — Careers at Soonlay`,
       description:
-        description || `Open position at Soonlay: ${job.title}.`,
-      images: [
-        {
-          url: "/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: `${job.title} at Soonlay`
-        }
-      ]
+        description || `Open position at Soonlay: ${job.title}.`
     }
   }
 }
@@ -59,7 +52,7 @@ export default async function JobPage({ params }: JobPageProps) {
     notFound()
   }
 
-  const url = `https://soonlay.tech/careers/${job.slug}`
+  const url = `${SITE_URL}/careers/${job.slug}`
   const isRemote = /remote/i.test(job.location)
   const jobPostingSchema = {
     "@context": "https://schema.org",
@@ -76,7 +69,7 @@ export default async function JobPage({ params }: JobPageProps) {
     hiringOrganization: {
       "@type": "Organization",
       name: "Soonlay",
-      sameAs: "https://soonlay.tech"
+      sameAs: SITE_URL
     },
     jobLocationType: isRemote ? "TELECOMMUTE" : undefined,
     jobLocation: {

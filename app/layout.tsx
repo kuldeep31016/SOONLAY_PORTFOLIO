@@ -1,16 +1,18 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google"
+import { Fraunces, DM_Sans, JetBrains_Mono } from "next/font/google"
 import { siteMetadata } from "@/lib/metadata"
 import { organizationSchema, websiteSchema } from "@/lib/schema"
 import { Analytics } from "@vercel/analytics/react"
 import { ReactNode } from "react"
 import { ContactModalProvider } from "@/components/layout/ContactModalContext"
+import { JsonLd } from "@/components/ui/JsonLd"
+import { RevealObserver } from "@/components/ui/RevealObserver"
 
-const syne = Syne({
+const display = Fraunces({
   subsets: ["latin"],
-  weight: ["700", "800"],
-  variable: "--font-syne",
+  axes: ["opsz", "SOFT"],
+  variable: "--font-display",
   display: "swap"
 })
 
@@ -28,26 +30,25 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap"
 })
 
+
 export const metadata: Metadata = siteMetadata
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
+      className={`${display.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.setAttribute('data-js','')" }} />
+      </head>
       <body className="min-h-screen bg-background text-primary">
-        <script
-          type="application/ld+json"
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify([organizationSchema, websiteSchema])
-          }}
-        />
+        <JsonLd data={[organizationSchema, websiteSchema]} />
         <ContactModalProvider>
           {children}
         </ContactModalProvider>
+        <RevealObserver />
         <Analytics />
       </body>
     </html>

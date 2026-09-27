@@ -13,7 +13,7 @@ The public site owns the Firestore datastore and the read/write API. The admin p
 
 ## About
 
-Soonlay turns raw ideas into production-ready software. From MVP to full-scale platform, we engineer the systems your product needs to launch and grow. Trusted by founders in 5+ countries.
+Soonlay turns raw ideas into production-ready software. From MVP to full-scale platform, we engineer the systems your product needs to launch and grow.
 
 ## Pages
 
@@ -163,7 +163,7 @@ The portal is a separate Next.js app in `admin/`.
 - **Enumeration:** an unknown email still runs a full scrypt verification against a fixed dummy hash, and returns the identical 401 body as a wrong password, so the endpoint is not a user-enumeration oracle.
 - **Authorization:** a valid signature is not enough; the token's email must also appear in `CAREERS_ADMIN_EMAILS`, which must be set in **both** apps.
 - **Preview:** the portal renders private previews in a sandboxed iframe against `/careers/preview/{slug}?token=…`.
-- **Applications:** each job stores an external HTTPS `applicationUrl`; the public page links out. Soonlay does not collect or store applications.
+- **Applications:** a job can store an external HTTPS `applicationUrl`, and the public page links out. Otherwise, and for general applications, `/api/careers/apply` validates the form and resume (PDF/Word, ≤5 MB), records the details (not the file) in the Firestore `applications` collection, and emails the resume to `CAREERS_NOTIFY_EMAILS` (falling back to `LEAD_NOTIFY_EMAILS`).
 
 ## Deployment
 
