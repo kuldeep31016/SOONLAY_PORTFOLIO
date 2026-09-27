@@ -4,6 +4,8 @@ import { Navbar } from "@/components/layout/Navbar"
 import { Footer } from "@/components/layout/Footer"
 import { CtaBand } from "@/components/sections/CtaBand"
 import { HowWeWork } from "@/components/sections/HowWeWork"
+import { FlowDiagram } from "@/components/sections/FlowDiagram"
+import { ServiceVisual } from "@/components/sections/ServiceVisual"
 import { ButtonLink } from "@/components/ui/ButtonLink"
 import { JsonLd } from "@/components/ui/JsonLd"
 import { Highlight, PageHero } from "@/components/ui/PageHero"
@@ -71,28 +73,14 @@ export function ServiceDetail({ page }: { page: ServicePage }) {
               </ButtonLink>
             </>
           }
-          aside={
-            <div className="rounded-2xl border border-border bg-surface p-7 shadow-sm">
-              <p className="mb-5 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-muted">
-                {page.secondary.title}
-              </p>
-              <CheckList items={page.secondary.items} />
-            </div>
-          }
+          aside={<ServiceVisual kind={page.visual} />}
         />
 
         <section className="bg-background py-20 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <SectionHeading badge={page.navTitle} heading={page.primary.title} />
-            <div
-              className={`mt-10 grid gap-4 sm:grid-cols-2 ${page.primary.items.length === 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}
-            >
-              {page.primary.items.map((item, index) => (
-                <div key={item} data-reveal className="rounded-xl border border-border bg-surface p-6">
-                  <span className="font-display text-sm font-bold text-accent">0{index + 1}</span>
-                  <p className="mt-3 text-[15px] leading-relaxed text-primary">{item}</p>
-                </div>
-              ))}
+            <div className="mt-10">
+              <FlowDiagram steps={page.flow} />
             </div>
           </div>
         </section>

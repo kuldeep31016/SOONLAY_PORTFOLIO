@@ -1,33 +1,6 @@
-import { ClipboardCheck, Code2, Handshake, LayoutDashboard, Layers, LifeBuoy, Rocket, Search } from "lucide-react"
+import { ClipboardCheck, Handshake, LayoutDashboard, Layers } from "lucide-react"
+import { ProcessSteps } from "@/components/sections/ProcessSteps"
 import { SectionHeading } from "@/components/ui/SectionHeading"
-
-const steps = [
-  {
-    icon: Search,
-    title: "Discover",
-    body: "We learn how your business works today, who the users are, and what outcome the software must deliver."
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Scope",
-    body: "A written scope with user roles, modules, milestones, timeline and price — agreed before any build work starts."
-  },
-  {
-    icon: Code2,
-    title: "Build",
-    body: "We design and build in milestones, with working demos along the way so you can give feedback early."
-  },
-  {
-    icon: Rocket,
-    title: "Launch",
-    body: "We deploy to production, publish to the app stores if needed, and hand over code and accounts in your name."
-  },
-  {
-    icon: LifeBuoy,
-    title: "Support",
-    body: "Maintenance, fixes and new features after launch, as your users and business grow."
-  }
-]
 
 const reasons = [
   {
@@ -69,28 +42,15 @@ export function HowWeWork() {
           action={{ label: "Start with a free project plan", href: "/start-project" }}
         />
 
-        <ol className="relative mt-14 grid gap-6 md:grid-cols-5 md:gap-4">
-          <span aria-hidden className="absolute left-0 right-0 top-6 hidden h-px bg-border md:block" />
-          {steps.map((step, index) => (
-            <li key={step.title} data-reveal style={{ ["--reveal-delay" as string]: `${index * 90}ms` }} className="relative flex gap-4 md:block">
-              <span className="relative z-10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-border bg-surface text-accent shadow-sm">
-                <step.icon className="h-5 w-5" strokeWidth={1.6} />
-              </span>
-              <div className="md:mt-5 md:pr-4">
-                <p className="text-xs font-semibold text-muted">Step 0{index + 1}</p>
-                <h3 className="mt-1 font-display text-lg font-bold text-primary">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-secondary">{step.body}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
+        <div data-reveal className="mt-14">
+          <ProcessSteps />
+        </div>
 
-        <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {reasons.map((reason, index) => (
-            <div key={reason.title} data-reveal style={{ ["--reveal-delay" as string]: `${index * 90}ms` }} className="rounded-xl border border-border bg-background p-6">
-              <reason.icon className="mb-4 h-6 w-6 text-accent" strokeWidth={1.6} />
-              <h3 className="font-semibold text-primary">{reason.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-secondary">{reason.body}</p>
+            <div key={reason.title} data-reveal style={{ ["--reveal-delay" as string]: `${index * 90}ms` }} className="flex items-center gap-3 rounded-xl border border-border bg-background px-5 py-4">
+              <reason.icon className="h-5 w-5 flex-shrink-0 text-accent" strokeWidth={1.6} />
+              <h3 className="text-[15px] font-semibold text-primary">{reason.title}</h3>
             </div>
           ))}
         </div>

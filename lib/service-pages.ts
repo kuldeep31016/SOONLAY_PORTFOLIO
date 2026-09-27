@@ -1,4 +1,5 @@
 import type { ProductType } from "@/lib/leads/options"
+import type { ServiceVisualKind } from "@/components/sections/ServiceVisual"
 
 export interface ServicePage {
   slug: string
@@ -9,6 +10,8 @@ export interface ServicePage {
   heading: [string, string]
   intro: string
   projectType: ProductType
+  visual: ServiceVisualKind
+  flow: string[]
   primary: { title: string; items: string[] }
   secondary: { title: string; items: string[] }
   fit: { title: string; items: string[] }
@@ -29,6 +32,8 @@ export const servicePages: ServicePage[] = [
     intro:
       "We design and build production-grade web applications tailored to your product vision — fast, secure, and ready to scale with your users. You get a clean, maintainable codebase using Next.js, React, and TypeScript.",
     projectType: "web-app",
+    visual: "web",
+    flow: ["A SaaS or platform idea", "A prototype to rebuild", "Dashboards & internal tools", "UX + architecture in one team"],
     primary: {
       title: "When you need this",
       items: [
@@ -83,6 +88,8 @@ export const servicePages: ServicePage[] = [
     intro:
       "We build mobile apps that feel native, using React Native and a modern backend — from consumer apps to internal tools.",
     projectType: "mobile-app",
+    visual: "mobile",
+    flow: ["Smooth onboarding", "Works offline", "Secure login & APIs", "Live on the App Store & Play Store"],
     primary: {
       title: "What we focus on",
       items: [
@@ -128,6 +135,8 @@ export const servicePages: ServicePage[] = [
     intro:
       "We build SaaS products that are subscription-ready, multi-tenant, and designed to handle growth — not just a handful of users.",
     projectType: "saas",
+    visual: "saas",
+    flow: ["Workspaces & roles", "Subscriptions & billing", "Customer analytics", "Admin tools"],
     primary: {
       title: "Typical SaaS features we build",
       items: [
@@ -173,6 +182,8 @@ export const servicePages: ServicePage[] = [
     intro:
       "We help you turn AI from buzzword into working product — carefully designed around your data, workflows, and users.",
     projectType: "ai",
+    visual: "ai",
+    flow: ["Chatbots & assistants", "Copilots in your tools", "Search over your documents", "AI-powered automations"],
     primary: {
       title: "What we build",
       items: [
@@ -217,6 +228,8 @@ export const servicePages: ServicePage[] = [
     intro:
       "When off-the-shelf tools don't fit, we design and build systems that follow your workflows instead of forcing you to change them.",
     projectType: "internal-tool",
+    visual: "business",
+    flow: ["One dashboard for all your data", "Spreadsheets become workflows", "Your own CRM", "Inventory, billing & purchase orders", "Booking & customer portals", "Hardware & IoT backends"],
     primary: {
       title: "Examples of custom work",
       items: [
@@ -264,6 +277,8 @@ export const servicePages: ServicePage[] = [
     intro:
       "You have the idea. We turn it into a lean, launch-ready product that proves there is demand — without overbuilding.",
     projectType: "mvp",
+    visual: "mvp",
+    flow: ["Non-technical founders", "Teams who validated by hand", "Founders preparing to pitch", "Anyone avoiding wasted months"],
     primary: {
       title: "Who this is for",
       items: [
