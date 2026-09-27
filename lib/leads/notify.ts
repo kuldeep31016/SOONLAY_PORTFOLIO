@@ -1,6 +1,8 @@
 import "server-only"
 
 import nodemailer from "nodemailer"
+import { leadConfirmation } from "@/lib/email/confirmation"
+import { CONTACT_EMAIL } from "@/lib/site"
 import { formatInr, type PreliminaryEstimate } from "./estimate"
 import {
   budgets,
@@ -35,6 +37,30 @@ function recipients(): string {
 
 export function isEmailConfigured(): boolean {
   return Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS)
+}
+
+function transport() {
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+  })
+}
+
+/** Sends the visitor an acknowledgement so they know the request arrived. */
+export async function sendLeadConfirmation(lead: Omit<LeadInput, "fax">): Promise<void> {
+  const email = leadConfirmation({
+    name: lead.name,
+    productType: labelFor(productTypes, lead.productType),
+    timeline: labelFor(timelines, lead.timeline),
+    budget: labelFor(budgets, lead.budget),
+    contactMethod: labelFor(contactMethods, lead.preferredContact)
+  })
+  await transport().sendMail({
+    from: `Soonlay <${process.env.EMAIL_USER}>`,
+    to: lead.email,
+    replyTo: CONTACT_EMAIL,
+    ...email
+  })
 }
 
 export async function sendLeadNotification(
@@ -109,12 +135,7 @@ export async function sendLeadNotification(
       <p style="white-space:pre-wrap;background:#f3fbf7;padding:12px;border-radius:6px">${escapeHtml(briefText)}</p>
     </div>`
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
-  })
-
-  await transporter.sendMail({
+  await transport().sendMail({
     from: process.env.EMAIL_USER,
     to: recipients(),
     replyTo: lead.email,

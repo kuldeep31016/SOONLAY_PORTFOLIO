@@ -2,6 +2,8 @@ import "server-only"
 
 import nodemailer from "nodemailer"
 import { z } from "zod"
+import { applicationConfirmation } from "@/lib/email/confirmation"
+import { CONTACT_EMAIL } from "@/lib/site"
 import { APPLICATION_AREAS, MAX_RESUME_MB } from "./areas"
 
 export const MAX_RESUME_BYTES = MAX_RESUME_MB * 1024 * 1024
@@ -121,5 +123,21 @@ export async function sendApplicationEmail(
         <p style="color:#666;font-size:12px">Resume attached: ${escapeHtml(resume.filename)}</p>
       </div>`,
     attachments: [{ filename: resume.filename, content: resume.content, contentType: resume.contentType }]
+  })
+}
+
+/** Sends the applicant an acknowledgement so they know the application arrived. */
+export async function sendApplicationConfirmation(
+  application: Pick<ApplicationInput, "name" | "email" | "area">
+): Promise<void> {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+  })
+  await transporter.sendMail({
+    from: `Soonlay <${process.env.EMAIL_USER}>`,
+    to: application.email,
+    replyTo: CONTACT_EMAIL,
+    ...applicationConfirmation({ name: application.name, area: application.area })
   })
 }

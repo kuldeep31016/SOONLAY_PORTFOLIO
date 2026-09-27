@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { preliminaryEstimate } from "@/lib/leads/estimate"
-import { isEmailConfigured, sendLeadNotification } from "@/lib/leads/notify"
+import { isEmailConfigured, sendLeadConfirmation, sendLeadNotification } from "@/lib/leads/notify"
 import { prioritizeLead } from "@/lib/leads/qualify"
 import { clientKey, isRateLimited } from "@/lib/leads/rate-limit"
 import { leadSchema } from "@/lib/leads/schema"
@@ -59,6 +59,16 @@ export async function POST(request: Request) {
       { error: "We couldn't submit your request. Please email soonlay.tech@gmail.com." },
       { status: 500 }
     )
+  }
+
+  if (isEmailConfigured()) {
+    try {
+      await sendLeadConfirmation(lead)
+    } catch (error) {
+      // The lead is already saved and the team notified; a failed
+      // acknowledgement must not turn a successful submission into an error.
+      console.error("[leads] failed to send confirmation", error)
+    }
   }
 
   return NextResponse.json({ ok: true, estimate })

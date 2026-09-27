@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
-const { add, sendApplicationEmail, isEmailConfigured } = vi.hoisted(() => ({
+const { add, sendApplicationEmail, sendApplicationConfirmation, isEmailConfigured } = vi.hoisted(() => ({
   add: vi.fn(),
   sendApplicationEmail: vi.fn(),
+  sendApplicationConfirmation: vi.fn(),
   isEmailConfigured: vi.fn()
 }))
 
@@ -12,7 +13,7 @@ vi.mock("@/lib/careers/firebase", () => ({
 vi.mock("@/lib/leads/notify", () => ({ isEmailConfigured }))
 vi.mock("@/lib/careers/application", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/lib/careers/application")>()
-  return { ...actual, sendApplicationEmail }
+  return { ...actual, sendApplicationEmail, sendApplicationConfirmation }
 })
 
 import { POST } from "@/app/api/careers/apply/route"
@@ -38,6 +39,7 @@ describe("POST /api/careers/apply", () => {
   beforeEach(() => {
     add.mockReset().mockResolvedValue({ id: "app-1" })
     sendApplicationEmail.mockReset().mockResolvedValue(undefined)
+    sendApplicationConfirmation.mockReset().mockResolvedValue(undefined)
     isEmailConfigured.mockReset().mockReturnValue(true)
   })
 
@@ -48,6 +50,14 @@ describe("POST /api/careers/apply", () => {
     const [, resume, recordId] = sendApplicationEmail.mock.calls[0]
     expect(resume.filename).toBe("resume.pdf")
     expect(recordId).toBe("app-1")
+    expect(sendApplicationConfirmation).toHaveBeenCalledOnce()
+    expect(sendApplicationConfirmation.mock.calls[0][0].email).toBe(valid.email)
+  })
+
+  it("still succeeds when the confirmation email fails", async () => {
+    sendApplicationConfirmation.mockRejectedValue(new Error("smtp down"))
+    const response = await POST(request(valid, new File([PDF], "resume.pdf", { type: "application/pdf" })))
+    expect(response.status).toBe(200)
   })
 
   it("rejects a file that only pretends to be a PDF", async () => {

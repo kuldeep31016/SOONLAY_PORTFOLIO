@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server"
 import { FieldValue } from "firebase-admin/firestore"
 import { getFirestore } from "@/lib/careers/firebase"
-import { applicationSchema, readResume, sendApplicationEmail } from "@/lib/careers/application"
+import {
+  applicationSchema,
+  readResume,
+  sendApplicationConfirmation,
+  sendApplicationEmail
+} from "@/lib/careers/application"
 import { isEmailConfigured } from "@/lib/leads/notify"
 import { clientKey, isRateLimited } from "@/lib/leads/rate-limit"
 
@@ -77,6 +82,12 @@ export async function POST(request: Request) {
       { error: "We couldn't send your application. Please email soonlay.tech@gmail.com." },
       { status: 500 }
     )
+  }
+
+  try {
+    await sendApplicationConfirmation(application)
+  } catch (error) {
+    console.error("[careers/apply] failed to send confirmation", error)
   }
 
   return NextResponse.json({ ok: true })

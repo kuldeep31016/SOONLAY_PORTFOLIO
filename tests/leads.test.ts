@@ -1,13 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
-const { saveLead, sendLeadNotification, isEmailConfigured } = vi.hoisted(() => ({
+const { saveLead, sendLeadNotification, sendLeadConfirmation, isEmailConfigured } = vi.hoisted(() => ({
   saveLead: vi.fn(),
   sendLeadNotification: vi.fn(),
+  sendLeadConfirmation: vi.fn(),
   isEmailConfigured: vi.fn()
 }))
 
 vi.mock("@/lib/leads/store", () => ({ saveLead }))
-vi.mock("@/lib/leads/notify", () => ({ sendLeadNotification, isEmailConfigured }))
+vi.mock("@/lib/leads/notify", () => ({ sendLeadNotification, sendLeadConfirmation, isEmailConfigured }))
 
 import { POST } from "@/app/api/leads/route"
 import { formatInr, preliminaryEstimate } from "@/lib/leads/estimate"
@@ -87,7 +88,21 @@ describe("POST /api/leads", () => {
   beforeEach(() => {
     saveLead.mockReset().mockResolvedValue("lead-123")
     sendLeadNotification.mockReset().mockResolvedValue(undefined)
+    sendLeadConfirmation.mockReset().mockResolvedValue(undefined)
     isEmailConfigured.mockReset().mockReturnValue(true)
+  })
+
+  it("sends the visitor a confirmation email", async () => {
+    const response = await POST(request(validLead))
+    expect(response.status).toBe(200)
+    expect(sendLeadConfirmation).toHaveBeenCalledOnce()
+    expect(sendLeadConfirmation.mock.calls[0][0].email).toBe(validLead.email)
+  })
+
+  it("still succeeds when the confirmation email fails", async () => {
+    sendLeadConfirmation.mockRejectedValue(new Error("smtp down"))
+    const response = await POST(request(validLead))
+    expect(response.status).toBe(200)
   })
 
   it("stores and emails a valid lead", async () => {
@@ -111,6 +126,7 @@ describe("POST /api/leads", () => {
     expect(response.status).toBe(200)
     expect(saveLead).not.toHaveBeenCalled()
     expect(sendLeadNotification).not.toHaveBeenCalled()
+    expect(sendLeadConfirmation).not.toHaveBeenCalled()
   })
 
   it("still succeeds when only email delivery works", async () => {
@@ -125,6 +141,7 @@ describe("POST /api/leads", () => {
     isEmailConfigured.mockReturnValue(false)
     const response = await POST(request(validLead))
     expect(response.status).toBe(500)
+    expect(sendLeadConfirmation).not.toHaveBeenCalled()
   })
 
   it("rate limits repeated submissions from one address", async () => {
