@@ -41,6 +41,38 @@ function Column({ title, links }: { title: string; links: { href: string; label:
   )
 }
 
+function ServicesColumn() {
+  return (
+    <div data-reveal className="group relative">
+      <h3 className="mb-4 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-muted">Services</h3>
+      <ul className="space-y-3">
+        {serviceLinks.map((service) => (
+          <li key={service.href}>
+            <Link href={service.href} className="text-sm text-secondary transition-colors hover:text-primary">
+              {service.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <div className="invisible absolute bottom-full left-0 z-30 w-[min(88vw,440px)] translate-y-2 pb-4 opacity-0 transition-all duration-500 [transition-timing-function:var(--ease-spring)] group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+        <div className="grid gap-1 rounded-[1.6rem] bg-[#0c1a17]/95 p-2 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.7)] ring-1 ring-white/10 backdrop-blur-2xl">
+          {serviceLinks.map((service, index) => (
+            <Link
+              key={service.href}
+              href={service.href}
+              style={{ transitionDelay: `${index * 40}ms` }}
+              className="rounded-2xl p-3.5 opacity-0 transition-all duration-500 [transition-timing-function:var(--ease-spring)] hover:bg-white/[0.07] group-focus-within:opacity-100 group-hover:opacity-100"
+            >
+              <p className="text-sm font-medium text-primary">{service.title}</p>
+              <p className="mt-0.5 text-xs text-muted">{service.body}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function Footer() {
   const year = new Date().getFullYear()
 
@@ -78,7 +110,7 @@ export function Footer() {
             </div>
           </div>
           <Column title="Company" links={company} />
-          <Column title="Services" links={serviceLinks.map((s) => ({ href: s.href, label: s.title }))} />
+          <ServicesColumn />
           <Column title="Resources" links={resources} />
         </div>
 
