@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight, Images, X } from "lucide-react"
+import { ChevronLeft, ChevronRight, Images, Play, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { SectionHeading } from "@/components/ui/SectionHeading"
 import { ProjectPreview } from "@/components/ui/ProjectPreview"
@@ -24,13 +24,18 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
 
   useEffect(() => {
     if (!lightbox) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = "hidden"
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") setLightbox(null)
       if (event.key === "ArrowRight") step(1)
       if (event.key === "ArrowLeft") step(-1)
     }
     window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
+    return () => {
+      document.body.style.overflow = previous
+      window.removeEventListener("keydown", onKey)
+    }
   }, [lightbox, step])
 
   return (
@@ -86,7 +91,7 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
                   type="button"
                   onClick={() => setLightbox({ project, index: 0 })}
                   className="relative aspect-[16/11] w-full overflow-hidden bg-white/[0.06]"
-                  aria-label={`View ${project.title} screenshots`}
+                  aria-label={project.preview ? `Watch ${project.title} preview` : `View ${project.title} screenshots`}
                 >
                   {project.preview ? (
                     <ProjectPreview
@@ -122,7 +127,15 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
                     onClick={() => setLightbox({ project, index: 0 })}
                     className="mt-auto inline-flex items-center gap-2 self-start pt-5 text-sm font-semibold text-primary transition-colors hover:text-accent"
                   >
-                    <Images className="h-4 w-4 text-accent" /> View screenshots
+                    {project.preview ? (
+                      <>
+                        <Play className="h-4 w-4 fill-current text-accent" /> Watch preview
+                      </>
+                    ) : (
+                      <>
+                        <Images className="h-4 w-4 text-accent" /> View screenshots
+                      </>
+                    )}
                   </button>
                 </div>
               </article>
@@ -135,7 +148,7 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={`${lightbox.project.title} screenshots`}
+          aria-label={lightbox.project.preview ? `${lightbox.project.title} preview` : `${lightbox.project.title} screenshots`}
           className="fixed inset-0 z-50 flex items-center justify-center bg-[#030a09]/80 px-3 backdrop-blur-xl sm:px-8"
           onClick={() => setLightbox(null)}
         >
@@ -147,39 +160,64 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
           >
             <X className="h-5 w-5" />
           </button>
-          <div className="relative w-full max-w-5xl" onClick={(event) => event.stopPropagation()}>
-            <div className="mb-3 flex items-center justify-between text-primary">
-              <span className="font-display text-lg font-medium">{lightbox.project.title}</span>
-              <span className="text-sm text-secondary">
-                {lightbox.index + 1} / {lightbox.project.images.length}
-              </span>
-            </div>
-            <div className="glass-strong relative aspect-[16/10] w-full overflow-hidden rounded-[1.75rem]">
-              <Image
-                src={lightbox.project.images[lightbox.index]}
-                alt={`${lightbox.project.title} screenshot ${lightbox.index + 1}`}
-                fill
-                className="object-contain p-3 drop-shadow-[0_24px_48px_rgba(0,0,0,0.55)] sm:p-5"
-                sizes="(min-width:1280px) 1000px, 100vw"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => step(-1)}
-              className="absolute left-2 top-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-accent-2 text-ink shadow-lg sm:-left-6"
-              aria-label="Previous image"
+          {lightbox.project.preview ? (
+            <div
+              className="relative w-full"
+              style={{ maxWidth: "min(64rem, calc((100svh - 150px) * 16 / 11))" }}
+              onClick={(event) => event.stopPropagation()}
             >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => step(1)}
-              className="absolute right-2 top-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-accent-2 text-ink shadow-lg sm:-right-6"
-              aria-label="Next image"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
+              <div className="mb-3 text-primary">
+                <span className="font-display text-lg font-medium">{lightbox.project.title}</span>
+              </div>
+              <div className="relative aspect-[16/11] w-full overflow-hidden rounded-[1.75rem] bg-black shadow-[0_60px_140px_-30px_rgba(0,0,0,0.9)] ring-1 ring-white/10">
+                <video
+                  key={lightbox.project.preview}
+                  src={`/video/work/${lightbox.project.preview}-hd.mp4`}
+                  poster={`/video/work/${lightbox.project.preview}.jpg`}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  controls
+                  className="h-full w-full"
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="relative w-full max-w-5xl" onClick={(event) => event.stopPropagation()}>
+              <div className="mb-3 flex items-center justify-between text-primary">
+                <span className="font-display text-lg font-medium">{lightbox.project.title}</span>
+                <span className="text-sm text-secondary">
+                  {lightbox.index + 1} / {lightbox.project.images.length}
+                </span>
+              </div>
+              <div className="glass-strong relative aspect-[16/10] w-full overflow-hidden rounded-[1.75rem]">
+                <Image
+                  src={lightbox.project.images[lightbox.index]}
+                  alt={`${lightbox.project.title} screenshot ${lightbox.index + 1}`}
+                  fill
+                  className="object-contain p-3 drop-shadow-[0_24px_48px_rgba(0,0,0,0.55)] sm:p-5"
+                  sizes="(min-width:1280px) 1000px, 100vw"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => step(-1)}
+                className="absolute left-2 top-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-accent-2 text-ink shadow-lg sm:-left-6"
+                aria-label="Previous image"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => step(1)}
+                className="absolute right-2 top-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-accent-2 text-ink shadow-lg sm:-right-6"
+                aria-label="Next image"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          )}
         </div>
       )}
     </section>
