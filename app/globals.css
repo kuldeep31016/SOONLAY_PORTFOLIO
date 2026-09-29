@@ -450,3 +450,23 @@ a:focus-visible .link-underline::after {
     animation: none;
   }
 }
+
+/* "Watch the film" play button: a slow ring that invites a click. */
+.film-ring::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 9999px;
+  border: 1px solid rgba(159, 230, 205, 0.55);
+  animation: film-ring 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes film-ring {
+  0% { transform: scale(1); opacity: 0.8; }
+  70%, 100% { transform: scale(1.55); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film-ring::after { animation: none; opacity: 0; }
+}

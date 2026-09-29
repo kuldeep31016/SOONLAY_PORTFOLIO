@@ -1,10 +1,10 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
-import { ArrowRight, ArrowUpRight, Briefcase, Cpu, Globe, Layers, Smartphone } from "lucide-react"
+import { ArrowRight, Briefcase, Cpu, Globe, Layers, Smartphone } from "lucide-react"
 import { Badge } from "@/components/ui/Badge"
 import { AnimatedWords } from "@/components/ui/AnimatedWords"
+import { FilmPlayer } from "@/components/ui/FilmPlayer"
 import { useContactModal } from "@/components/layout/ContactModalContext"
 
 const capabilities = [
@@ -64,10 +64,7 @@ export function Hero() {
                 <ArrowRight className="h-4 w-4" />
               </span>
             </button>
-            <Link href="/work" className="group inline-flex items-center gap-2 self-start py-3 text-base font-semibold text-primary">
-              <span className="link-underline">See Our Work</span>
-              <ArrowUpRight className="h-4 w-4 transition-transform duration-500 [transition-timing-function:var(--ease-spring)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </Link>
+            <FilmPlayer />
           </div>
 
           <p

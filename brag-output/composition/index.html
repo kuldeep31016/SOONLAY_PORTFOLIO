@@ -12,7 +12,7 @@
         --surface: #0e1c19;
         --text: #eaf2ef;
         --secondary: #a9bcb6;
-        --muted: #7f948d;
+        --muted: #8a9e97;
         --accent: #9fe6cd;
         --accent-deep: #5fbfa3;
         --coral: #ff6b4a;
@@ -110,18 +110,21 @@
       #words { position: absolute; left: 1300px; top: 330px; }
       #words div { font-size: 96px; line-height: 1.12; opacity: 0; }
 
-      /* Scene 4: real products */
-      #device { position: absolute; left: 340px; top: 140px; width: 1240px; height: 720px; background: #0b1614; opacity: 0;
-        clip-path: inset(0px 0px 0px 0px round 18px); }
-      #device-edge { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
-      #device .bar-top { position: absolute; left: 0; right: 0; top: 0; height: 36px; background: #0d1a17; border-bottom: 1px solid rgba(234, 242, 239, 0.08); display: flex; align-items: center; gap: 7px; padding-left: 16px; z-index: 2; }
-      #device .bar-top .dot { width: 9px; height: 9px; }
-      .shot { position: absolute; left: 0; right: 0; top: 36px; bottom: 0; background-size: cover; background-position: 50% 0%; opacity: 0; transform-origin: 50% 20%; }
-      .shot.mobile { left: 430px; top: 23px; width: 380px; height: 674px; right: auto; bottom: auto; background-position: 50% 50%; }
-      .shot.ai { background-position: 0% 0%; transform-origin: 8% 30%; }
-      .prod-label { position: absolute; left: 0; right: 0; top: 890px; text-align: center; opacity: 0; }
-      .prod-label .label { display: block; margin-bottom: 10px; }
-      .prod-label .name { font-family: var(--display); font-weight: 400; font-size: 40px; letter-spacing: -0.01em; }
+      /* Scene 4: the promise */
+      #promise { position: absolute; inset: 0; }
+      #p-you { top: 262px; font-size: 88px; opacity: 0; }
+      #p-we { top: 372px; font-size: 88px; opacity: 0; color: var(--secondary); }
+      #p-line { position: absolute; left: 330px; top: 640px; width: 1260px; height: 1.5px; background: rgba(159, 230, 205, 0.55); transform-origin: 0 50%; }
+      #p-head { position: absolute; left: 330px; top: 641px; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: #f4fbf8;
+        box-shadow: 0 0 16px 5px rgba(159, 230, 205, 0.55); opacity: 0; }
+      .p-node { position: absolute; top: 641px; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; border: 1.5px solid rgba(159, 230, 205, 0.6); background: var(--bg); opacity: 0; }
+      .p-node i { position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px 4px rgba(159, 230, 205, 0.5); opacity: 0; }
+      .p-step { position: absolute; top: 676px; width: 380px; margin-left: -190px; text-align: center; opacity: 0; }
+      .p-step small { display: block; font-size: 14px; letter-spacing: 0.3em; color: var(--muted); margin-bottom: 10px; }
+      .p-step span { font-size: 26px; color: var(--text); }
+      .p-step.key span { color: var(--accent); }
+      #p-proof { top: 430px; font-size: 104px; opacity: 0; }
+      .coral-italic { font-style: italic; color: var(--coral); }
 
       /* Scene 5 */
       #brand { position: absolute; inset: 0; opacity: 0; }
@@ -146,8 +149,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="26" data-width="1920" data-height="1080">
-      <div id="film" class="clip" data-start="0" data-duration="26" data-track-index="0">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="26.9" data-width="1920" data-height="1080">
+      <div id="film" class="clip" data-start="0" data-duration="26.9" data-track-index="0">
         <div id="haze-teal"></div>
         <div id="haze-coral"></div>
 
@@ -231,15 +234,6 @@
             </div>
           </div>
 
-          <!-- Scene 4 device -->
-          <div id="device">
-            <div class="bar-top" id="device-bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-            <div class="shot web" id="shot-0"></div>
-            <div class="shot mobile" id="shot-1"></div>
-            <div class="shot dashboard" id="shot-2"></div>
-            <div class="shot ai" id="shot-3"></div>
-            <svg id="device-edge" viewBox="0 0 1240 720"><rect id="edge-rect" x="0.5" y="0.5" width="1239" height="719" rx="18" fill="none" stroke="rgba(234,242,239,0.22)" /></svg>
-          </div>
         </div>
 
         <!-- Scene 3 overlays (not in camera) -->
@@ -253,7 +247,15 @@
         <!-- Captions -->
         <div id="s1-text" class="caption display"></div>
         <div id="s2-text" class="caption display"></div>
-        <div id="prod-labels"></div>
+        <!-- Scene 4: the promise -->
+        <div id="promise">
+          <div id="p-you" class="caption display"></div>
+          <div id="p-we" class="caption display"></div>
+          <div id="p-line"></div>
+          <div id="p-steps"></div>
+          <div id="p-head"></div>
+          <div id="p-proof" class="caption display"></div>
+        </div>
 
         <!-- Scene 5 -->
         <div id="brand">
@@ -273,7 +275,7 @@
         <div id="grain"></div>
       </div>
 
-      <audio id="score" class="clip" data-start="0" data-duration="26" data-track-index="1" data-volume="1" src="assets/audio/score.wav"></audio>
+      <audio id="score" class="clip" data-start="0" data-duration="26.9" data-track-index="1" data-volume="1" src="assets/audio/score.wav"></audio>
     </div>
 
     <script>
@@ -304,9 +306,13 @@
         $("#cta-url").textContent = T.url;
         $("#brand-logo").src = F.logo;
         $("#cta-logo").src = F.logo;
-        F.products.forEach((p, i) => { $("#shot-" + i).style.backgroundImage = `url(${p.img})`; });
-        $("#prod-labels").innerHTML = F.products
-          .map((p, i) => `<div class="prod-label" id="pl-${i}"><span class="label">${p.tag}</span><span class="name">${p.name}</span></div>`)
+        const PR = T.promise;
+        const NODE_X = PR.steps.map((_, i) => 330 + (1260 * i) / (PR.steps.length - 1));
+        $("#p-you").innerHTML = rich(PR.you);
+        $("#p-we").textContent = PR.we;
+        $("#p-proof").innerHTML = `${PR.proof[0]}<span class="coral-italic">${PR.proof[1]}</span>${PR.proof[2]}`;
+        $("#p-steps").innerHTML = PR.steps
+          .map((st, i) => `<div class="p-node" id="pn-${i}" style="left:${NODE_X[i]}px"><i></i></div><div class="p-step${i === 1 ? " key" : ""}" id="ps-${i}" style="left:${NODE_X[i]}px"><small>0${i + 1}</small><span>${st}</span></div>`)
           .join("");
         $("#code").innerHTML = [
           'GET  /api/bookings        200  18ms',
@@ -359,14 +365,14 @@
 
         // ===== Scene 1: THE IDEA =====
         const a = S.idea;
-        tl.fromTo("#spark", { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.9, ease: E.out }, a + 0.25);
-        tl.to("#spark", { scale: 1.35, duration: 0.8, ease: E.soft, yoyo: true, repeat: 1 }, a + 1.1);
-        tl.fromTo("#s1-text", { opacity: 0, y: 18, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.1 }, a + 0.8);
+        tl.fromTo("#spark", { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.6, ease: E.out }, a + 0.1);
+        tl.to("#spark", { scale: 1.35, duration: 0.7, ease: E.soft, yoyo: true, repeat: 1 }, a + 0.8);
+        tl.fromTo("#s1-text", { opacity: 0, y: 18, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.0 }, a + 0.45);
         // Top edge grows out of the spark
         gsap.set("#e-top", { left: 400, top: 540, width: 1120, height: 1.5, scaleX: 0, transformOrigin: "50% 50%" });
-        tl.to("#e-top", { scaleX: 1, duration: 1.1, ease: E.expo }, a + 2.0);
-        tl.to("#spark", { opacity: 0, duration: 0.5 }, a + 2.4);
-        tl.to("#s1-text", { opacity: 0, y: -12, filter: "blur(6px)", duration: 0.5, ease: "power2.in" }, a + 2.75);
+        tl.to("#e-top", { scaleX: 1, duration: 1.1, ease: E.expo }, a + 1.8);
+        tl.to("#spark", { opacity: 0, duration: 0.5 }, a + 2.2);
+        tl.to("#s1-text", { opacity: 0, y: -12, filter: "blur(6px)", duration: 0.5, ease: "power2.in" }, a + 2.55);
 
         // ===== Scene 2: FROM IDEA TO INTERFACE =====
         const b = S.interface;
@@ -429,33 +435,28 @@
         tl.to(["#ui", "#plane-api", "#plane-data"], { opacity: 0, duration: 0.6, ease: "power2.in" }, c + 4.45);
         tl.to(["#wires", "#ll-0", "#ll-1", "#ll-2", "#code", "#words"], { opacity: 0, duration: 0.5, ease: "power2.in" }, c + 4.45);
 
-        // ===== Scene 4: REAL PRODUCTS =====
-        const d = S.products;
-        const seg = F.scenes.find((s) => s.id === "products").duration / 4.1; // four products, last one shorter before the collapse
-        const SIZES = { web: [1240, 720, 18], mobile: [380, 674, 34], dashboard: [1240, 720, 18], ai: [1240, 720, 18] };
-        const inset = ([w, h, r]) => `inset(${(720 - h) / 2}px ${(1240 - w) / 2}px ${(720 - h) / 2}px ${(1240 - w) / 2}px round ${r}px)`;
-        const rect = ([w, h, r]) => ({ x: (1240 - w) / 2 + 0.5, y: (720 - h) / 2 + 0.5, width: w - 1, height: h - 1, rx: r });
-        tl.fromTo("#device", { opacity: 0, scale: 0.92, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: E.out }, d);
-        F.products.forEach((p, i) => {
-          const t = d + i * seg;
-          const [w, h, r] = SIZES[p.kind];
-          if (i > 0) {
-            tl.to("#device", { clipPath: inset([w, h, r]), duration: 0.75, ease: E.expo }, t - 0.2);
-            tl.to("#edge-rect", { attr: rect([w, h, r]), duration: 0.75, ease: E.expo }, t - 0.2);
-          }
-          tl.to("#device-bar", { opacity: p.kind === "mobile" ? 0 : 1, duration: 0.3 }, t - 0.1);
-          tl.fromTo("#shot-" + i, { opacity: 0 }, { opacity: 1, duration: 0.55, ease: E.soft }, t + (i ? 0.05 : 0.1));
-          tl.fromTo("#shot-" + i, { scale: p.kind === "ai" ? 1.0 : 1.02 }, { scale: p.kind === "ai" ? 1.45 : 1.09, duration: seg + 0.6, ease: "none" }, t);
-          if (i < F.products.length - 1) tl.to("#shot-" + i, { opacity: 0, duration: 0.45, ease: E.soft }, t + seg - 0.15);
-          // Label for this product
-          tl.fromTo("#pl-" + i, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.45 }, t + 0.1);
-          tl.to("#pl-" + i, { opacity: 0, duration: 0.25 }, i === F.products.length - 1 ? S.brand - 0.45 : t + seg - 0.3);
+        // ===== Scene 4: THE PROMISE (real process, no invented claims) =====
+        const d = S.promise;
+        const LINE = 1.5; // seconds for the process line to draw
+        gsap.set("#p-line", { scaleX: 0 });
+        tl.fromTo("#p-you", { opacity: 0, y: 16, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8 }, d + 0.25);
+        tl.fromTo("#p-we", { opacity: 0, y: 16, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8 }, d + 1.1);
+        tl.to("#p-line", { scaleX: 1, duration: LINE, ease: "none" }, d + 1.45);
+        tl.fromTo("#p-head", { opacity: 0, x: 0 }, { opacity: 1, duration: 0.2 }, d + 1.45);
+        tl.to("#p-head", { x: 1260, duration: LINE, ease: "none" }, d + 1.45);
+        tl.to("#p-head", { opacity: 0, duration: 0.3 }, d + 1.45 + LINE);
+        PR.steps.forEach((_, i) => {
+          const t = d + 1.45 + (LINE * i) / (PR.steps.length - 1);
+          tl.fromTo("#pn-" + i, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, t - 0.05);
+          tl.fromTo("#pn-" + i + " i", { opacity: 0 }, { opacity: 1, duration: 0.3 }, t);
+          tl.fromTo("#ps-" + i, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.45 }, t + 0.05);
         });
-        tl.fromTo("#device", { x: 36 }, { x: -36, duration: seg * 4, ease: "none" }, d); // slow horizontal tracking
+        tl.to(["#p-you", "#p-we", "#p-line", "#p-steps"], { opacity: 0, y: -10, duration: 0.45, ease: "power2.in" }, d + 3.8);
+        tl.fromTo("#p-proof", { opacity: 0, y: 18, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.85 }, d + 4.1);
+        tl.to("#p-proof", { opacity: 0, filter: "blur(8px)", duration: 0.35, ease: "power2.in" }, S.brand - 0.5);
+
         // Collapse back into a point of light (callback to scene 1)
         const col = S.brand - 0.35;
-        tl.to("#device", { clipPath: inset([10, 10, 5]), opacity: 0, duration: 0.55, ease: "power4.in" }, col);
-        tl.to("#edge-rect", { attr: rect([10, 10, 5]), duration: 0.55, ease: "power4.in" }, col);
         tl.set("#spark", { opacity: 0, scale: 0.4 }, col + 0.3);
         tl.to("#spark", { opacity: 1, scale: 1.4, duration: 0.25 }, col + 0.35);
         tl.to("#spark", { opacity: 0, scale: 3, duration: 0.6, ease: "power2.out" }, col + 0.6);
@@ -474,11 +475,11 @@
 
         // ===== Scene 6: CTA =====
         const f = S.cta;
-        tl.fromTo("#question", { opacity: 0, y: 16, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8 }, f + 0.15);
-        tl.to("#question", { opacity: 0, y: -14, filter: "blur(6px)", duration: 0.45, ease: "power2.in" }, f + 1.15);
-        tl.fromTo("#answer", { opacity: 0, y: 18, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8 }, f + 1.4);
-        tl.fromTo("#cta-lockup", { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: 0.7 }, f + 1.9);
-        tl.fromTo("#cta-row", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.7 }, f + 2.05);
+        tl.fromTo("#question", { opacity: 0, y: 16, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8 }, f + 0.1);
+        tl.to("#question", { opacity: 0, y: -14, filter: "blur(6px)", duration: 0.45, ease: "power2.in" }, f + 1.05);
+        tl.fromTo("#answer", { opacity: 0, y: 18, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8 }, f + 1.25);
+        tl.fromTo("#cta-lockup", { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: 0.7 }, f + 1.65);
+        tl.fromTo("#cta-row", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.7 }, f + 1.8);
         tl.to({}, { duration: 0.01 }, END - 0.01); // pin timeline length
 
         window.__timelines = window.__timelines || {};

@@ -18,7 +18,7 @@ from scipy.signal import butter, fftconvolve, sosfilt
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 cfg_src = (ROOT / "config.js").read_text()
-FILM = json.loads(re.search(r"window\.FILM\s*=\s*(\{.*\})", cfg_src, re.S).group(1))
+FILM = json.loads(re.search(r"^window\.FILM\s*=\s*(\{.*\})", cfg_src, re.S | re.M).group(1))
 
 SR = 48000
 S = {}
@@ -81,7 +81,7 @@ def ramp(points):
 
 
 # ---------------------------------------------------------------- drone
-d_amp = ramp([(0, 0), (2.5, 0.55), (S["build"], 0.7), (S["brand"] - 0.4, 0.85), (S["brand"] - 0.05, 0.15),
+d_amp = ramp([(0, 0), (2.5, 0.32), (S["interface"], 0.4), (S["build"], 0.62), (S["brand"] - 0.4, 0.85), (S["brand"] - 0.05, 0.15),
               (S["brand"] + 0.75, 0.9), (S["cta"], 0.7), (END - 1.2, 0.5), (END, 0)])
 lfo = 1 + 0.08 * np.sin(2 * np.pi * 0.11 * t)
 drone = (0.55 * np.sin(2 * np.pi * note("D2") / 2 * t)  # sub D1
@@ -95,13 +95,13 @@ CHORDS = [
     (S["idea"], ["D3", "A3", "F4"]),
     (S["interface"], ["D3", "A3", "E4", "F4"]),
     (S["build"], ["Bb2", "F3", "A3", "D4"]),
-    (S["products"], ["G2", "D3", "Bb3", "C4", "F4"]),
-    (S["products"] + 2.7, ["A2", "E3", "G3", "D4", "E4"]),
+    (S["promise"], ["G2", "D3", "Bb3", "C4", "F4"]),
+    (S["promise"] + 4.1, ["A2", "E3", "G3", "D4", "E4"]),
     (S["brand"] + 0.75, ["D2", "A2", "F3", "C4", "E4", "A4"]),
     (S["cta"] + 1.4, ["F2", "C3", "A3", "E4", "G4"]),
 ]
 bright = ramp([(0, 0.05), (S["build"], 0.25), (S["brand"] - 0.4, 0.5), (S["brand"] + 0.75, 0.9), (END, 0.6)])
-pad_amp = ramp([(0, 0), (1.5, 0.25), (S["interface"], 0.35), (S["products"], 0.5), (S["brand"] - 0.4, 0.6),
+pad_amp = ramp([(0, 0), (1.5, 0.15), (S["interface"], 0.25), (S["promise"], 0.5), (S["brand"] - 0.4, 0.6),
                 (S["brand"] - 0.05, 0.0), (S["brand"] + 0.7, 0.0), (S["brand"] + 1.4, 0.95), (S["cta"], 0.7), (END - 1.0, 0.45), (END, 0)])
 pad = np.zeros(N)
 for idx, (start, chord) in enumerate(CHORDS):
@@ -150,7 +150,7 @@ while tb < pulse_stop:
     add(kick(), tb, 0.22 + 0.28 * prog, 0)
     if tb >= S["build"] + 0.9:
         add(hat(), tb + beat / 2, 0.035 + 0.05 * prog, 0.35 if k % 2 else -0.35)
-    if tb >= S["products"] and k % 4 == 2:
+    if tb >= S["promise"] and k % 4 == 2:
         add(bandpass(rng.standard_normal(int(0.12 * SR)), 900, 3000) * np.exp(-np.arange(int(0.12 * SR)) / SR * 40), tb, 0.05, 0.2)
     tb += beat
     k += 1
@@ -202,12 +202,13 @@ def bell(freq, dur=3.0):
     return sum(a * np.sin(2 * np.pi * freq * m * tt) * np.exp(-tt * dcy) for m, a, dcy in partials) * (1 - np.exp(-tt * 400))
 
 
-a, b, c, d, e, f = (S[k] for k in ("idea", "interface", "build", "products", "brand", "cta"))
+a, b, c, d, e, f = (S[k] for k in ("idea", "interface", "build", "promise", "brand", "cta"))
 
 # Scene 1 — spark shimmer and the first line
-add(tick(5200, 0.4, 9) * 0.5, a + 0.25, 0.05, 0)
-add(whoosh(1.2, up=True, lo=800, hi=6000), a + 1.95, 0.05, 0)
-add(tick(2600), a + 2.0, 0.07, 0)
+add(tick(5200, 0.5, 8) * 0.6, a + 0.1, 0.07, 0)
+add(kick(0.9, 55, 32), a + 0.1, 0.12, 0)
+add(whoosh(1.2, up=True, lo=800, hi=6000), a + 1.75, 0.05, 0)
+add(tick(2600), a + 1.8, 0.07, 0)
 # Scene 2 — interface assembles
 add(whoosh(0.8, lo=400, hi=2500), b - 0.2, 0.06, 0)
 for i, o in enumerate([1.05, 1.25, 1.45, 1.6, 1.76, 1.92, 2.0, 2.15]):
@@ -226,12 +227,15 @@ for i in range(3):
 for o in (0, 1.1, 2.2):
     for off, pan in ((2.0, -0.2), (2.4, 0.3), (2.65, 0)):
         add(tick(4200, 0.02, 200), c + off + o, 0.03, pan)
-# Scene 4 — products morph
-seg = next(sc["duration"] for sc in FILM["scenes"] if sc["id"] == "products") / 4.1
-add(whoosh(0.9, lo=300, hi=3000), d - 0.05, 0.08, 0)
-for i in range(1, 4):
-    add(whoosh(0.75, lo=250, hi=3500), d + i * seg - 0.25, 0.1, -0.3 if i % 2 else 0.3)
-    add(click(1300), d + i * seg + 0.05, 0.07, 0)
+# Scene 4 — the promise: one call, a preview, scope, launch
+add(tick(2400, 0.25, 14), d + 0.25, 0.05, -0.1)  # "You bring the idea."
+add(tick(1800, 0.3, 12), d + 1.1, 0.05, 0.1)     # "We bring the rest."
+add(whoosh(1.6, up=True, lo=300, hi=2600), d + 1.4, 0.045, 0)  # line draws
+for i, nt in enumerate(["D5", "F5", "A5", "C6"]):  # rising chime per step
+    add(bell(note(nt), 1.6), d + 1.45 + 1.5 * i / 3, 0.035, -0.45 + 0.3 * i)
+add(boom(1.6), d + 4.1, 0.22, 0)                  # "See it working before you commit."
+add(bell(note("D5"), 2.2), d + 4.1, 0.03, 0)
+
 # Collapse into the spark, then silence
 col = e - 0.35
 add(whoosh(0.6, up=True, lo=500, hi=9000), col - 0.05, 0.1, 0)
