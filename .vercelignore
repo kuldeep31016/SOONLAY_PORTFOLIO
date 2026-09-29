@@ -1,0 +1,4 @@
+# Brand film sources and rendered masters are not needed to build the site
+# (the website uses public/video/).
+brag-output/
+videos/

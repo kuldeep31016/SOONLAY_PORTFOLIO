@@ -6,4 +6,5 @@
 - Tone: cinematic, restrained toward polished. No invented claims, clients or numbers. The illustrative UI in scene 2 is generic ("app.yourproduct.com") and is not presented as client work.
 - Storyboard and audio arc: see brag-plan.md.
 - Editing: `config.js` holds text, colours, logo, product list, scene durations and the soundtrack path. `audio/score.py` regenerates the original score from the same config, so cues stay in sync.
-- Rebuild: `python3 audio/score.py && npx hyperframes@0.8.91 render -f 30 -q high -o ../brag.mp4`
+- Rebuild: `python3 audio/score.py && npx hyperframes@0.8.91 render -f 30 -q high -o ../../videos/website/soonlay-film-16x9.mp4`
+- Rendered videos for every platform live in `videos/` (see videos/README.md).

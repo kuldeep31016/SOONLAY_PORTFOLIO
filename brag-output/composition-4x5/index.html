@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1350" />
+    <link rel="stylesheet" href="assets/fonts/fonts.css" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="config.js"></script>
+    <style>
+      :root {
+        --bg: #07110f;
+        --surface: #0e1c19;
+        --text: #eaf2ef;
+        --secondary: #a9bcb6;
+        --muted: #8a9e97;
+        --accent: #9fe6cd;
+        --accent-deep: #5fbfa3;
+        --coral: #ff6b4a;
+        --hair: rgba(234, 242, 239, 0.16);
+        --display: "Fraunces", Georgia, serif;
+        --sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1350px; overflow: hidden; background: #050c0b; }
+      #root { position: relative; width: 1080px; height: 1350px; overflow: hidden; background: #050c0b; font-family: var(--sans); color: var(--text); }
+      .clip { position: absolute; inset: 0; }
+      .abs { position: absolute; }
+      .center { left: 50%; top: 50%; }
+
+      /* Atmosphere */
+      #haze-teal { position: absolute; inset: -20%; background: radial-gradient(ellipse 45% 40% at 50% 48%, rgba(46, 104, 94, 0.55), transparent 70%); opacity: 0; }
+      #haze-coral { position: absolute; inset: 0; background: radial-gradient(ellipse 38% 30% at 96% 104%, rgba(255, 107, 74, 0.28), transparent 70%); opacity: 0; }
+      #vignette { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 70% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.72) 100%); pointer-events: none; }
+      #grain { position: absolute; inset: 0; opacity: 0.07; mix-blend-mode: overlay; pointer-events: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='7'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+
+      /* The landscape stage (1920x1080) as a "world", scaled 0.8 and centred at (540, 700). */
+      #world { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 960px 540px; transform: translate(-420px, 160px) scale(0.8); }
+      #cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+
+      /* Typography */
+      .display { font-family: var(--display); font-weight: 400; letter-spacing: -0.012em; font-optical-sizing: auto; font-variation-settings: "SOFT" 0; }
+      .accent-italic { font-style: italic; color: var(--accent); }
+      .label { font-family: var(--sans); font-size: 15px; font-weight: 500; letter-spacing: 0.32em; text-transform: uppercase; color: var(--secondary); }
+      .caption { position: absolute; left: 0; right: 0; text-align: center; }
+
+      /* Scene 1 */
+      #spark { position: absolute; left: 960px; top: 540px; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #f4fbf8;
+        box-shadow: 0 0 18px 6px rgba(159, 230, 205, 0.55), 0 0 80px 24px rgba(159, 230, 205, 0.18); opacity: 0; }
+      .edge { position: absolute; background: rgba(234, 242, 239, 0.55); box-shadow: 0 0 10px rgba(159, 230, 205, 0.35); }
+      #s1-text { top: 780px; font-size: 56px; opacity: 0; }
+
+      /* Scene 2: product interface */
+      #ui { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 960px 520px; }
+      #frame { position: absolute; left: 400px; top: 200px; width: 1120px; height: 640px; border-radius: 18px; overflow: hidden;
+        background: linear-gradient(160deg, rgba(20, 38, 34, 0.92), rgba(9, 20, 18, 0.94)); border: 1px solid var(--hair);
+        box-shadow: 0 60px 120px -40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.06); opacity: 0; }
+      .chrome { position: absolute; left: 0; right: 0; top: 0; height: 44px; border-bottom: 1px solid rgba(234, 242, 239, 0.08); display: flex; align-items: center; gap: 8px; padding-left: 18px; }
+      .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(234, 242, 239, 0.18); }
+      .url { margin-left: 22px; height: 24px; width: 360px; border-radius: 12px; background: rgba(234, 242, 239, 0.06); font-size: 12px; color: var(--muted); display: flex; align-items: center; padding-left: 14px; letter-spacing: 0.02em; }
+      .side { position: absolute; left: 0; top: 44px; bottom: 0; width: 220px; border-right: 1px solid rgba(234, 242, 239, 0.08); padding: 22px 16px; }
+      .brandmark { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg, #c8f2e2, #5fbfa3); margin-bottom: 26px; }
+      .nav { height: 34px; border-radius: 9px; display: flex; align-items: center; padding-left: 12px; font-size: 14px; color: var(--secondary); margin-bottom: 6px; }
+      .nav.on { background: rgba(159, 230, 205, 0.1); color: var(--text); }
+      .nav i { width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid currentColor; margin-right: 12px; opacity: 0.7; }
+      .main { position: absolute; left: 220px; right: 0; top: 44px; bottom: 0; padding: 26px 30px; }
+      .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+      .head h4 { font-family: var(--display); font-weight: 400; font-size: 28px; letter-spacing: -0.01em; }
+      .head small { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; font-family: var(--sans); }
+      .btn { height: 36px; padding: 0 16px; border-radius: 18px; background: var(--accent); color: #051210; font-size: 13px; font-weight: 600; display: flex; align-items: center; }
+      .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
+      .stat { height: 96px; border-radius: 14px; background: rgba(234, 242, 239, 0.04); border: 1px solid rgba(234, 242, 239, 0.07); padding: 16px 18px; }
+      .stat span { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+      .stat b { display: block; font-family: var(--display); font-weight: 400; font-size: 32px; margin-top: 8px; letter-spacing: -0.01em; }
+      .lower { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; }
+      .card { border-radius: 14px; background: rgba(234, 242, 239, 0.04); border: 1px solid rgba(234, 242, 239, 0.07); padding: 16px 18px; height: 330px; position: relative; }
+      .card h5 { font-size: 13px; font-weight: 500; color: var(--secondary); }
+      .row { display: flex; align-items: center; justify-content: space-between; height: 52px; border-bottom: 1px solid rgba(234, 242, 239, 0.06); font-size: 13px; }
+      .row .who { display: flex; align-items: center; gap: 10px; }
+      .avatar { width: 26px; height: 26px; border-radius: 50%; background: rgba(159, 230, 205, 0.18); }
+      .bar { height: 8px; border-radius: 4px; background: rgba(234, 242, 239, 0.14); }
+      .chip { font-size: 11px; padding: 4px 9px; border-radius: 10px; background: rgba(159, 230, 205, 0.12); color: var(--accent); }
+      .chip.warm { background: rgba(255, 107, 74, 0.12); color: #ff9a82; }
+
+      #phone { position: absolute; left: 1250px; top: 760px; width: 280px; height: 570px; border-radius: 40px; padding: 10px;
+        background: linear-gradient(160deg, #1b2e2a, #0b1614); border: 1px solid rgba(234, 242, 239, 0.18);
+        box-shadow: 0 50px 100px -30px rgba(0, 0, 0, 0.85); opacity: 0; }
+      .screen { width: 100%; height: 100%; border-radius: 31px; background: #0a1614; overflow: hidden; padding: 38px 16px 16px; position: relative; }
+      .screen h6 { font-family: var(--display); font-weight: 400; font-size: 24px; margin-bottom: 16px; }
+      .pcard { border-radius: 16px; background: rgba(234, 242, 239, 0.05); border: 1px solid rgba(234, 242, 239, 0.07); padding: 14px; margin-bottom: 10px; }
+      .pcard .t { font-size: 13px; color: var(--text); margin-bottom: 8px; }
+      .pnav { position: absolute; left: 16px; right: 16px; bottom: 16px; height: 50px; border-radius: 25px; background: rgba(234, 242, 239, 0.06); display: flex; justify-content: space-around; align-items: center; }
+      .pnav i { width: 18px; height: 18px; border-radius: 6px; border: 1.5px solid var(--secondary); opacity: 0.6; }
+      .pnav i.on { border-color: var(--accent); opacity: 1; }
+
+      #s2-text { top: 250px; font-size: 58px; opacity: 0; }
+
+      /* Scene 3: architecture */
+      .plane { position: absolute; left: 400px; top: 200px; width: 1120px; height: 640px; border-radius: 18px; border: 1px solid rgba(159, 230, 205, 0.28);
+        background: linear-gradient(160deg, rgba(20, 44, 39, 0.9), rgba(8, 18, 16, 0.92)); opacity: 0; padding: 60px; }
+      .endpoints { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-top: 30px; }
+      .ep { height: 110px; border-radius: 16px; border: 1px solid rgba(234, 242, 239, 0.12); display: flex; align-items: center; gap: 22px; padding: 0 30px; font-size: 34px; font-family: ui-monospace, Menlo, monospace; color: var(--text); }
+      .ep em { font-style: normal; font-size: 24px; padding: 6px 14px; border-radius: 10px; background: rgba(159, 230, 205, 0.14); color: var(--accent); }
+      .tables { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; margin-top: 30px; }
+      .tbl { height: 380px; border-radius: 16px; border: 1px solid rgba(234, 242, 239, 0.12); padding: 24px; font-family: ui-monospace, Menlo, monospace; font-size: 26px; color: var(--accent); }
+      .tbl .bar { margin-top: 26px; height: 12px; }
+      .plane-title { font-family: var(--sans); font-size: 30px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--secondary); }
+      #wires { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+      .layer-label { position: absolute; left: 64px; display: flex; align-items: center; gap: 14px; opacity: 0; }
+      .layer-label::before { content: ""; width: 36px; height: 1px; background: rgba(234, 242, 239, 0.4); }
+      #code { position: absolute; left: 0; right: 0; text-align: center; top: 170px; font-family: ui-monospace, Menlo, monospace; font-size: 18px; line-height: 1.8; color: rgba(169, 188, 182, 0.55); opacity: 0; }
+      #words { position: absolute; left: 0; right: 0; top: 1130px; display: flex; justify-content: center; gap: 30px; }
+      #words div { font-size: 78px; line-height: 1.12; opacity: 0; }
+
+      /* Scene 4: the promise */
+      #promise { position: absolute; inset: 0; }
+      #p-you { top: 190px; font-size: 80px; opacity: 0; }
+      #p-we { top: 292px; font-size: 80px; opacity: 0; color: var(--secondary); }
+      #p-line { position: absolute; left: 230px; top: 500px; width: 1.5px; height: 630px; background: rgba(159, 230, 205, 0.55); transform-origin: 50% 0; }
+      #p-head { position: absolute; left: 231px; top: 500px; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: #f4fbf8;
+        box-shadow: 0 0 16px 5px rgba(159, 230, 205, 0.55); opacity: 0; }
+      .p-node { position: absolute; left: 231px; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; border: 1.5px solid rgba(159, 230, 205, 0.6); background: var(--bg); opacity: 0; }
+      .p-node i { position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px 4px rgba(159, 230, 205, 0.5); opacity: 0; }
+      .p-step { position: absolute; left: 290px; width: 700px; margin-top: -34px; text-align: left; opacity: 0; }
+      .p-step small { display: block; font-size: 16px; letter-spacing: 0.3em; color: var(--muted); margin-bottom: 10px; }
+      .p-step span { font-size: 38px; color: var(--text); }
+      .p-step.key span { color: var(--accent); }
+      #p-proof { top: 540px; font-size: 100px; line-height: 1.1; opacity: 0; }
+      .coral-italic { font-style: italic; color: var(--coral); }
+
+      /* Scene 5 */
+      #brand { position: absolute; inset: 0; opacity: 0; }
+      #brand-logo { position: absolute; left: 488px; top: 330px; width: 104px; height: 104px; opacity: 0; }
+      #brand-label { top: 468px; opacity: 0; font-size: 17px; }
+      #headline { position: absolute; left: 0; right: 0; top: 526px; text-align: center; font-size: 106px; line-height: 1.06; }
+      .mask { display: block; overflow: hidden; padding: 0 0.1em 0.12em; }
+      .mask > span { display: inline-block; }
+      .grad { font-style: italic; background: linear-gradient(135deg, #c8f2e2, #7fd3b8); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: 0.08em; }
+      #caps { top: 858px; font-size: 28px; color: var(--secondary); letter-spacing: 0.04em; opacity: 0; }
+
+      /* Scene 6 */
+      #cta-lockup { position: absolute; left: 0; right: 0; top: 380px; display: flex; justify-content: center; align-items: center; gap: 14px; opacity: 0; }
+      #cta-lockup img { width: 58px; height: 58px; }
+      #cta-lockup span { font-family: var(--display); font-size: 42px; font-weight: 400; letter-spacing: -0.01em; }
+      #question { top: 560px; font-size: 90px; line-height: 1.1; opacity: 0; }
+      #answer { top: 580px; font-size: 128px; opacity: 0; }
+      #cta-row { position: absolute; left: 0; right: 0; top: 800px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 26px; opacity: 0; }
+      .pill { height: 76px; padding: 0 12px 0 36px; border-radius: 38px; background: var(--accent); color: #051210; font-size: 26px; font-weight: 600; display: flex; align-items: center; gap: 20px; }
+      .pill b { width: 54px; height: 54px; border-radius: 50%; background: #051210; color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 22px; }
+      .url-text { font-size: 26px; color: var(--secondary); letter-spacing: 0.06em; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="26.9" data-width="1080" data-height="1350">
+      <div id="film" class="clip" data-start="0" data-duration="26.9" data-track-index="0">
+        <div id="haze-teal"></div>
+        <div id="haze-coral"></div>
+
+        <div id="world">
+        <div id="cam">
+          <!-- Scene 1 -->
+          <div id="spark"></div>
+          <div id="e-top" class="edge"></div>
+          <div id="e-left" class="edge"></div>
+          <div id="e-right" class="edge"></div>
+          <div id="e-bottom" class="edge"></div>
+
+          <!-- Scene 3 planes sit behind the interface -->
+          <div id="plane-data" class="plane">
+            
+            <div class="tables">
+              <div class="tbl">users<div class="bar" style="width: 80%"></div><div class="bar" style="width: 60%"></div><div class="bar" style="width: 70%"></div></div>
+              <div class="tbl">orders<div class="bar" style="width: 70%"></div><div class="bar" style="width: 85%"></div><div class="bar" style="width: 50%"></div></div>
+              <div class="tbl">payments<div class="bar" style="width: 65%"></div><div class="bar" style="width: 75%"></div><div class="bar" style="width: 55%"></div></div>
+              <div class="tbl">events<div class="bar" style="width: 85%"></div><div class="bar" style="width: 45%"></div><div class="bar" style="width: 70%"></div></div>
+            </div>
+          </div>
+          <div id="plane-api" class="plane">
+            
+            <div class="endpoints">
+              <div class="ep"><em>GET</em>/bookings</div>
+              <div class="ep"><em>POST</em>/payments</div>
+              <div class="ep"><em>AUTH</em>/session</div>
+              <div class="ep"><em>HOOK</em>/orders</div>
+            </div>
+          </div>
+
+          <!-- Scene 2 interface -->
+          <div id="ui">
+            <div id="frame">
+              <div class="chrome"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="url">app.yourproduct.com</div></div>
+              <div class="side" id="side">
+                <div class="brandmark"></div>
+                <div class="nav on"><i></i>Overview</div>
+                <div class="nav"><i></i>Bookings</div>
+                <div class="nav"><i></i>Customers</div>
+                <div class="nav"><i></i>Payments</div>
+                <div class="nav"><i></i>Reports</div>
+              </div>
+              <div class="main">
+                <div class="head" id="head"><h4>Overview<small>This week</small></h4><div class="btn">+ New booking</div></div>
+                <div class="stats">
+                  <div class="stat"><span>Active users</span><b>1,284</b></div>
+                  <div class="stat"><span>Bookings</span><b>326</b></div>
+                  <div class="stat"><span>Conversion</span><b>4.6%</b></div>
+                </div>
+                <div class="lower">
+                  <div class="card" id="chart-card">
+                    <h5>Bookings this week</h5>
+                    <svg width="440" height="250" viewBox="0 0 440 250" style="position: absolute; left: 18px; bottom: 18px">
+                      <line x1="0" y1="62" x2="440" y2="62" stroke="rgba(234,242,239,0.06)" />
+                      <line x1="0" y1="124" x2="440" y2="124" stroke="rgba(234,242,239,0.06)" />
+                      <line x1="0" y1="186" x2="440" y2="186" stroke="rgba(234,242,239,0.06)" />
+                      <path id="chart-fill" d="M0 200 C 50 190, 70 150, 110 158 S 170 120, 220 128 S 290 70, 330 86 S 400 40, 440 30 L 440 250 L 0 250 Z" fill="rgba(159,230,205,0.08)" opacity="0" />
+                      <path id="chart-line" d="M0 200 C 50 190, 70 150, 110 158 S 170 120, 220 128 S 290 70, 330 86 S 400 40, 440 30" fill="none" stroke="#9FE6CD" stroke-width="3" stroke-linecap="round" stroke-dasharray="620" stroke-dashoffset="620" />
+                    </svg>
+                  </div>
+                  <div class="card" id="table-card">
+                    <h5>Recent</h5>
+                    <div class="row"><div class="who"><div class="avatar"></div><div class="bar" style="width: 90px"></div></div><span class="chip">Confirmed</span></div>
+                    <div class="row"><div class="who"><div class="avatar"></div><div class="bar" style="width: 110px"></div></div><span class="chip">Paid</span></div>
+                    <div class="row"><div class="who"><div class="avatar"></div><div class="bar" style="width: 80px"></div></div><span class="chip warm">Pending</span></div>
+                    <div class="row"><div class="who"><div class="avatar"></div><div class="bar" style="width: 100px"></div></div><span class="chip">Confirmed</span></div>
+                    <div class="row"><div class="who"><div class="avatar"></div><div class="bar" style="width: 70px"></div></div><span class="chip">Paid</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="phone">
+              <div class="screen">
+                <h6>My bookings</h6>
+                <div class="pcard"><div class="t">Tomorrow · 10:30</div><div class="bar" style="width: 70%"></div></div>
+                <div class="pcard"><div class="t">Fri · 16:00</div><div class="bar" style="width: 55%"></div></div>
+                <div class="pcard"><div class="t">Mon · 09:00</div><div class="bar" style="width: 62%"></div></div>
+                <div class="pnav"><i class="on"></i><i></i><i></i><i></i></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <svg id="wires" viewBox="0 0 1920 1080"></svg>
+        </div>
+
+        <!-- Scene 3 overlays (not in camera) -->
+        <div class="layer-label label" id="ll-0">Interface</div>
+        <div class="layer-label label" id="ll-1">APIs &amp; services</div>
+        <div class="layer-label label" id="ll-2">Data</div>
+        <div id="code"></div>
+        <div id="words"></div>
+
+        <!-- Captions -->
+        <div id="s1-text" class="caption display"></div>
+        <div id="s2-text" class="caption display"></div>
+        <!-- Scene 4: the promise -->
+        <div id="promise">
+          <div id="p-you" class="caption display"></div>
+          <div id="p-we" class="caption display"></div>
+          <div id="p-line"></div>
+          <div id="p-steps"></div>
+          <div id="p-head"></div>
+          <div id="p-proof" class="caption display"></div>
+        </div>
+
+        <!-- Scene 5 -->
+        <div id="brand">
+          <img id="brand-logo" alt="" />
+          <div id="brand-label" class="caption label"></div>
+          <div id="headline" class="display"></div>
+          <div id="caps" class="caption"></div>
+        </div>
+
+        <!-- Scene 6 -->
+        <div id="cta-lockup"><img alt="" id="cta-logo" /><span>Soonlay</span></div>
+        <div id="question" class="caption display"></div>
+        <div id="answer" class="caption display"></div>
+        <div id="cta-row"><div class="pill"><span id="cta-text"></span><b>→</b></div><span class="url-text" id="cta-url"></span></div>
+
+        <div id="vignette"></div>
+        <div id="grain"></div>
+      </div>
+
+      <audio id="score" class="clip" data-start="0" data-duration="26.9" data-track-index="1" data-volume="1" src="assets/audio/score.wav"></audio>
+    </div>
+
+    <script>
+      (function () {
+        const F = window.FILM;
+        const T = F.text;
+        const $ = (s) => document.querySelector(s);
+
+        // Absolute scene start times from the config durations.
+        const S = {};
+        let acc = 0;
+        for (const sc of F.scenes) { S[sc.id] = acc; acc += sc.duration; }
+        const END = acc;
+
+        // ---------- Fill text & assets from config ----------
+        const rich = (parts) => parts.map((p, i) => (i === 1 ? `<span class="accent-italic">${p}</span>` : p)).join("");
+        $("#s1-text").innerHTML = rich(T.idea);
+        $("#s2-text").innerHTML = rich(T.interface);
+        $("#words").innerHTML = T.build.map((w, i) => `<div class="display${i === T.build.length - 1 ? " accent-italic" : ""}">${w}</div>`).join("");
+        $("#brand-label").textContent = T.label;
+        $("#headline").innerHTML =
+          `<span class="mask"><span>${T.headline[0]}</span></span>` +
+          `<span class="mask"><span>${T.headline[1]}<span class="grad">${T.headline[2]}</span></span></span>`;
+        $("#caps").textContent = T.capabilities;
+        $("#question").innerHTML = T.question.replace(" worth", "<br>worth");
+        $("#answer").innerHTML = `${T.answer[0]}<span class="accent-italic">${T.answer[1]}</span>`;
+        $("#cta-text").textContent = T.cta;
+        $("#cta-url").textContent = T.url;
+        $("#brand-logo").src = F.logo;
+        $("#cta-logo").src = F.logo;
+        const PR = T.promise;
+        const NODE_Y = PR.steps.map((_, i) => 500 + (630 * i) / (PR.steps.length - 1));
+        $("#p-you").innerHTML = rich(PR.you);
+        $("#p-we").textContent = PR.we;
+        $("#p-proof").innerHTML = `${PR.proof[0].trim()}<br><span class="coral-italic">${PR.proof[1]}</span>${PR.proof[2]}`;
+        $("#p-steps").innerHTML = PR.steps
+          .map((st, i) => `<div class="p-node" id="pn-${i}" style="top:${NODE_Y[i]}px"><i></i></div><div class="p-step${i === 1 ? " key" : ""}" id="ps-${i}" style="top:${NODE_Y[i]}px"><small>0${i + 1}</small><span>${st}</span></div>`)
+          .join("");
+        $("#code").innerHTML = [
+          'GET  /api/bookings        200  18ms',
+          'POST /api/payments        201  42ms',
+          'emit("order.created")     → queue',
+        ].join("<br>");
+
+        // ---------- Architecture wires (scene 3) ----------
+        const wires = $("#wires");
+        const NS = "http://www.w3.org/2000/svg";
+        const LAYER_Y = [210, 540, 870]; // projected plane centres (world space)
+        const LAYER_X = 960;
+        const toCanvasY = (y) => 700 + (y - 540) * 0.8;
+        const paths = [
+          { id: "w-web", d: `M ${LAYER_X - 70} ${LAYER_Y[0] + 30} L ${LAYER_X - 70} ${LAYER_Y[1] - 30}` },
+          { id: "w-mob", d: `M ${LAYER_X + 70} ${LAYER_Y[0] + 30} L ${LAYER_X + 70} ${LAYER_Y[1] - 30}` },
+          { id: "w-api", d: `M ${LAYER_X} ${LAYER_Y[1] + 30} L ${LAYER_X} ${LAYER_Y[2] - 30}` },
+        ];
+        for (const p of paths) {
+          const el = document.createElementNS(NS, "path");
+          el.setAttribute("id", p.id);
+          el.setAttribute("d", p.d);
+          el.setAttribute("stroke", "rgba(159,230,205,0.55)");
+          el.setAttribute("stroke-width", "1.5");
+          el.setAttribute("fill", "none");
+          el.setAttribute("stroke-dasharray", "400");
+          el.setAttribute("stroke-dashoffset", "400");
+          wires.appendChild(el);
+        }
+        const pulses = [];
+        const mkPulse = (color) => {
+          const c = document.createElementNS(NS, "circle");
+          c.setAttribute("r", "4");
+          c.setAttribute("fill", color);
+          c.setAttribute("opacity", "0");
+          c.style.filter = `drop-shadow(0 0 6px ${color})`;
+          wires.appendChild(c);
+          pulses.push(c);
+          return c;
+        };
+        LAYER_Y.forEach((y, i) => { $("#ll-" + i).style.top = toCanvasY(y) - 150 + "px"; });
+
+        // ---------- Timeline ----------
+        const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+        const E = { soft: "sine.inOut", out: "power3.out", expo: "expo.inOut", slow: "power2.inOut" };
+
+        // Global camera drift + atmosphere
+        tl.fromTo("#cam", { scale: 1.0 }, { scale: 1.045, duration: S.brand, ease: "none" }, 0);
+        tl.to("#haze-teal", { opacity: 0.55, duration: 3, ease: E.soft }, 0.2);
+        tl.to("#haze-teal", { opacity: 1, duration: 4, ease: E.soft }, S.interface);
+
+        // ===== Scene 1: THE IDEA =====
+        const a = S.idea;
+        tl.fromTo("#spark", { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.6, ease: E.out }, a + 0.1);
+        tl.to("#spark", { scale: 1.35, duration: 0.7, ease: E.soft, yoyo: true, repeat: 1 }, a + 0.8);
+        tl.fromTo("#s1-text", { opacity: 0, y: 18, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.0 }, a + 0.45);
+        // Top edge grows out of the spark
+        gsap.set("#e-top", { left: 400, top: 540, width: 1120, height: 1.5, scaleX: 0, transformOrigin: "50% 50%" });
+        tl.to("#e-top", { scaleX: 1, duration: 1.1, ease: E.expo }, a + 1.8);
+        tl.to("#spark", { opacity: 0, duration: 0.5 }, a + 2.2);
+        tl.to("#s1-text", { opacity: 0, y: -12, filter: "blur(6px)", duration: 0.5, ease: "power2.in" }, a + 2.55);
+
+        // ===== Scene 2: FROM IDEA TO INTERFACE =====
+        const b = S.interface;
+        tl.to("#e-top", { y: -340, duration: 0.7, ease: E.expo }, b - 0.2);
+        gsap.set("#e-left", { left: 400, top: 200, width: 1.5, height: 640, scaleY: 0, transformOrigin: "50% 0%" });
+        gsap.set("#e-right", { left: 1518.5, top: 200, width: 1.5, height: 640, scaleY: 0, transformOrigin: "50% 0%" });
+        gsap.set("#e-bottom", { left: 400, top: 838.5, width: 1120, height: 1.5, scaleX: 0, transformOrigin: "50% 50%" });
+        tl.to(["#e-left", "#e-right"], { scaleY: 1, duration: 0.6, ease: E.expo }, b + 0.35);
+        tl.to("#e-bottom", { scaleX: 1, duration: 0.5, ease: E.expo }, b + 0.7);
+        tl.fromTo("#frame", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: E.soft }, b + 0.95);
+        tl.to(".edge", { opacity: 0, duration: 0.5 }, b + 1.1);
+        // Assemble contents one by one
+        tl.fromTo("#frame .chrome", { opacity: 0 }, { opacity: 1, duration: 0.4 }, b + 1.05);
+        tl.fromTo("#side", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.6 }, b + 1.25);
+        tl.fromTo("#head", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, b + 1.45);
+        tl.fromTo(".stat", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.16 }, b + 1.6);
+        tl.fromTo("#chart-card", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, b + 2.0);
+        tl.to("#chart-line", { strokeDashoffset: 0, duration: 1.2, ease: E.slow }, b + 2.2);
+        tl.to("#chart-fill", { opacity: 1, duration: 0.8 }, b + 2.9);
+        tl.fromTo("#table-card", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, b + 2.15);
+        tl.fromTo("#table-card .row", { opacity: 0, x: 12 }, { opacity: 1, x: 0, duration: 0.35, stagger: 0.1 }, b + 2.35);
+        tl.fromTo("#phone", { opacity: 0, x: 140, y: 30 }, { opacity: 1, x: 0, y: 0, duration: 1.0, ease: E.out }, b + 2.7);
+        tl.fromTo("#phone .pcard", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.12 }, b + 3.1);
+        tl.fromTo("#frame", { x: 0 }, { x: -30, duration: 2.2, ease: E.soft }, b + 2.4); // parallax: frame drifts left while phone arrives
+        tl.fromTo("#s2-text", { opacity: 0, y: 14, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9 }, b + 1.7);
+        tl.to("#s2-text", { opacity: 0, filter: "blur(6px)", duration: 0.5, ease: "power2.in" }, b + 4.0);
+
+        // ===== Scene 3: THE BUILD =====
+        const c = S.build;
+        const ISO = { rotationX: 64, rotationZ: -34, transformPerspective: 2600 };
+        // Interface folds back into the top layer
+        tl.to("#ui", { ...ISO, scale: 0.46, x: LAYER_X - 960, y: LAYER_Y[0] - 520, duration: 1.25, ease: E.expo }, c - 0.1);
+        gsap.set(["#plane-api", "#plane-data"], { ...ISO, scale: 0.46, x: LAYER_X - 960 });
+        gsap.set("#plane-api", { y: LAYER_Y[1] - 520 });
+        gsap.set("#plane-data", { y: LAYER_Y[2] - 520 });
+        tl.fromTo("#plane-api", { opacity: 0, y: LAYER_Y[1] - 480 }, { opacity: 1, y: LAYER_Y[1] - 520, duration: 0.8 }, c + 0.7);
+        tl.fromTo("#plane-data", { opacity: 0, y: LAYER_Y[2] - 480 }, { opacity: 1, y: LAYER_Y[2] - 520, duration: 0.8 }, c + 1.0);
+        tl.to(["#ll-0", "#ll-1", "#ll-2"], { opacity: 1, duration: 0.6, stagger: 0.25 }, c + 1.1);
+        tl.to(["#w-web", "#w-mob", "#w-api"], { strokeDashoffset: 0, duration: 0.7, stagger: 0.15, ease: E.slow }, c + 1.4);
+        tl.to("#code", { opacity: 1, duration: 0.8 }, c + 1.8);
+        // Data pulses travel interface → API → data (and one response back up)
+        const route = (x1, y1, x2, y2, t0, color, dur = 0.7) => {
+          const p = mkPulse(color);
+          tl.set(p, { attr: { cx: x1, cy: y1 } }, t0);
+          tl.to(p, { attr: { opacity: 1 }, duration: 0.12 }, t0);
+          tl.to(p, { attr: { cx: x2, cy: y2 }, duration: dur, ease: "power1.inOut" }, t0);
+          tl.to(p, { attr: { opacity: 0 }, duration: 0.15 }, t0 + dur - 0.1);
+        };
+        const P = { web: [LAYER_X - 70, LAYER_Y[0] + 30, LAYER_X - 70, LAYER_Y[1] - 30], mob: [LAYER_X + 70, LAYER_Y[0] + 30, LAYER_X + 70, LAYER_Y[1] - 30], api: [LAYER_X, LAYER_Y[1] + 30, LAYER_X, LAYER_Y[2] - 30] };
+        const ACC = F.colors.accent;
+        [0, 1.1, 2.2].forEach((o, i) => {
+          route(...P.web, c + 2.0 + o, ACC);
+          route(...P.api, c + 2.65 + o, ACC);
+          route(...P.mob, c + 2.4 + o, ACC);
+          if (i === 1) route(P.api[2], P.api[3], P.api[0], P.api[1], c + 3.45, F.colors.coral, 0.6); // single coral response
+        });
+        // Words
+        tl.fromTo("#words div", { opacity: 0, y: 26, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, stagger: 1.0 }, c + 1.3);
+        // Exit
+        tl.to(["#ui", "#plane-api", "#plane-data"], { opacity: 0, duration: 0.6, ease: "power2.in" }, c + 4.45);
+        tl.to(["#wires", "#ll-0", "#ll-1", "#ll-2", "#code", "#words"], { opacity: 0, duration: 0.5, ease: "power2.in" }, c + 4.45);
+
+        // ===== Scene 4: THE PROMISE (real process, no invented claims) =====
+        const d = S.promise;
+        const LINE = 1.5; // seconds for the process line to draw
+        gsap.set("#p-line", { scaleY: 0 });
+        tl.fromTo("#p-you", { opacity: 0, y: 16, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8 }, d + 0.25);
+        tl.fromTo("#p-we", { opacity: 0, y: 16, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8 }, d + 1.1);
+        tl.to("#p-line", { scaleY: 1, duration: LINE, ease: "none" }, d + 1.45);
+        tl.fromTo("#p-head", { opacity: 0, y: 0 }, { opacity: 1, duration: 0.2 }, d + 1.45);
+        tl.to("#p-head", { y: 630, duration: LINE, ease: "none" }, d + 1.45);
+        tl.to("#p-head", { opacity: 0, duration: 0.3 }, d + 1.45 + LINE);
+        PR.steps.forEach((_, i) => {
+          const t = d + 1.45 + (LINE * i) / (PR.steps.length - 1);
+          tl.fromTo("#pn-" + i, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, t - 0.05);
+          tl.fromTo("#pn-" + i + " i", { opacity: 0 }, { opacity: 1, duration: 0.3 }, t);
+          tl.fromTo("#ps-" + i, { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.45 }, t + 0.05);
+        });
+        tl.to(["#p-you", "#p-we", "#p-line", "#p-steps"], { opacity: 0, y: -10, duration: 0.45, ease: "power2.in" }, d + 3.8);
+        tl.fromTo("#p-proof", { opacity: 0, y: 18, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.85 }, d + 4.1);
+        tl.to("#p-proof", { opacity: 0, filter: "blur(8px)", duration: 0.35, ease: "power2.in" }, S.brand - 0.5);
+
+        // Collapse back into a point of light (callback to scene 1)
+        const col = S.brand - 0.35;
+        tl.set("#spark", { opacity: 0, scale: 0.4 }, col + 0.3);
+        tl.to("#spark", { opacity: 1, scale: 1.4, duration: 0.25 }, col + 0.35);
+        tl.to("#spark", { opacity: 0, scale: 3, duration: 0.6, ease: "power2.out" }, col + 0.6);
+
+        // ===== Scene 5: SOONLAY =====
+        const e = S.brand;
+        tl.to("#haze-teal", { opacity: 0.8, duration: 1 }, e);
+        tl.to("#haze-coral", { opacity: 1, duration: 2.2, ease: E.soft }, e + 0.4);
+        tl.set("#brand", { opacity: 1 }, e);
+        tl.fromTo("#brand-logo", { opacity: 0, scale: 0.85, filter: "blur(10px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.9 }, e + 0.25);
+        tl.fromTo("#brand-label", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 1.0 }, e + 0.5);
+        tl.fromTo("#headline .mask > span", { yPercent: 105 }, { yPercent: 0, duration: 1.1, stagger: 0.18, ease: "power4.out" }, e + 0.75);
+        tl.fromTo("#caps", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.8 }, e + 2.0);
+        tl.to("#brand", { opacity: 0, duration: 0.55, ease: "power2.in" }, S.cta - 0.45);
+        tl.to("#haze-coral", { opacity: 0.35, duration: 1 }, S.cta - 0.4);
+
+        // ===== Scene 6: CTA =====
+        const f = S.cta;
+        tl.fromTo("#question", { opacity: 0, y: 16, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8 }, f + 0.1);
+        tl.to("#question", { opacity: 0, y: -14, filter: "blur(6px)", duration: 0.45, ease: "power2.in" }, f + 1.05);
+        tl.fromTo("#answer", { opacity: 0, y: 18, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8 }, f + 1.5);
+        tl.fromTo("#cta-lockup", { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: 0.7 }, f + 1.85);
+        tl.fromTo("#cta-row", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.7 }, f + 2.0);
+        tl.to({}, { duration: 0.01 }, END - 0.01); // pin timeline length
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["main"] = tl;
+        tl.seek(0);
+      })();
+    </script>
+  </body>
+</html>
