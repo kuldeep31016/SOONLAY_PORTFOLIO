@@ -5,6 +5,7 @@ import Image from "next/image"
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { SectionHeading } from "@/components/ui/SectionHeading"
+import { ProjectPreview } from "@/components/ui/ProjectPreview"
 import { projectFilters, projects, type Project, type ProjectCategory } from "@/lib/projects"
 
 export function PortfolioSection({ variant = "home" }: { variant?: "home" | "page" }) {
@@ -87,16 +88,24 @@ export function PortfolioSection({ variant = "home" }: { variant?: "home" | "pag
                   className="relative aspect-[16/11] w-full overflow-hidden bg-white/[0.06]"
                   aria-label={`View ${project.title} screenshots`}
                 >
-                  <Image
-                    src={project.images[0]}
-                    alt={project.title}
-                    fill
-                    className={cn(
-                      "transition-transform duration-500 group-hover:scale-[1.03]",
-                      portrait ? "object-contain p-4" : "object-cover object-top"
-                    )}
-                    sizes="(min-width:1024px) 400px, (min-width:768px) 50vw, 100vw"
-                  />
+                  {project.preview ? (
+                    <ProjectPreview
+                      src={`/video/work/${project.preview}.mp4`}
+                      poster={`/video/work/${project.preview}.jpg`}
+                      label={`${project.title} preview`}
+                    />
+                  ) : (
+                    <Image
+                      src={project.images[0]}
+                      alt={project.title}
+                      fill
+                      className={cn(
+                        "transition-transform duration-500 group-hover:scale-[1.03]",
+                        portrait ? "object-contain p-4" : "object-cover object-top"
+                      )}
+                      sizes="(min-width:1024px) 400px, (min-width:768px) 50vw, 100vw"
+                    />
+                  )}
                 </button>
                 <div className="flex flex-1 flex-col p-6">
                   <div className="mb-3 flex flex-wrap gap-1.5">

@@ -8,6 +8,8 @@ export interface Project {
   /** Extra filters this project also appears under. */
   alsoIn?: Exclude<ProjectCategory, "all">[]
   images: string[]
+  /** Looping motion preview built from the real screenshots (public/video/work/<id>.mp4 + .jpg). */
+  preview?: string
 }
 
 export const projects: Project[] = [
@@ -17,7 +19,8 @@ export const projects: Project[] = [
     tags: ["Web App", "SaaS", "Healthcare"],
     category: "ai",
     alsoIn: ["saas", "web"],
-    images: ["/images/Telemedine-1.png", "/images/Telemedine-2.png", "/images/Telemedine-3.png"]
+    images: ["/images/Telemedine-1.png", "/images/Telemedine-2.png", "/images/Telemedine-3.png"],
+    preview: "healthcare"
   },
   {
     title: "Stock Management System",
@@ -25,7 +28,8 @@ export const projects: Project[] = [
     tags: ["Web", "SaaS", "Retail"],
     category: "web",
     alsoIn: ["saas"],
-    images: ["/images/mydukan-1.png", "/images/mydukan-2.png", "/images/mydukan-3.png"]
+    images: ["/images/mydukan-1.png", "/images/mydukan-2.png", "/images/mydukan-3.png"],
+    preview: "stock"
   },
   {
     title: "Travel Booking Website",
@@ -33,7 +37,8 @@ export const projects: Project[] = [
       "Tour and travel website with holiday packages, online booking requests, a photo gallery and customer reviews.",
     tags: ["Web", "Travel", "Booking"],
     category: "web",
-    images: ["/images/travel-1.png", "/images/travel-2.png", "/images/travel-3.png"]
+    images: ["/images/travel-1.png", "/images/travel-2.png", "/images/travel-3.png"],
+    preview: "travel"
   },
   {
     title: "Apna Khaata — Billing & Invoicing App",
@@ -42,7 +47,8 @@ export const projects: Project[] = [
     tags: ["Mobile", "SaaS", "Billing"],
     category: "mobile",
     alsoIn: ["saas"],
-    images: ["/images/khaata-1.png", "/images/khaata-2.png", "/images/khaata-3.png"]
+    images: ["/images/khaata-1.png", "/images/khaata-2.png", "/images/khaata-3.png"],
+    preview: "khaata"
   },
   {
     title: "Dealora — Coupon Savings App",
@@ -50,14 +56,16 @@ export const projects: Project[] = [
       "Consumer app that brings coupons from shopping apps into one place, tracks expiry dates and reminds users before deals lapse.",
     tags: ["Mobile", "B2C", "Savings"],
     category: "mobile",
-    images: ["/images/dealora-1.png", "/images/dealora-2.png", "/images/dealora-3.png"]
+    images: ["/images/dealora-1.png", "/images/dealora-2.png", "/images/dealora-3.png"],
+    preview: "dealora"
   },
   {
     title: "Terminal Emulator & File System",
     description: "Android Native terminal emulator with integrated file system.",
     tags: ["Mobile", "B2C"],
     category: "mobile",
-    images: ["/images/Betturmux-1.png", "/images/Betturmux-2.png", "/images/Betturmux-3.png"]
+    images: ["/images/Betturmux-1.png", "/images/Betturmux-2.png", "/images/Betturmux-3.png"],
+    preview: "terminal"
   }
 ]
 
