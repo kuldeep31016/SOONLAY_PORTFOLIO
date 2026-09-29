@@ -7,7 +7,6 @@ import { useContactModal } from "@/components/layout/ContactModalContext"
 
 const FILM_SRC = "/video/soonlay-film.mp4"
 const FILM_POSTER = "/video/soonlay-film-poster.jpg"
-const FILM_LENGTH = "0:27"
 
 /** "Watch the film" trigger plus the full-screen player it opens. */
 export function FilmPlayer() {
@@ -72,7 +71,6 @@ export function FilmPlayer() {
           <Play className="ml-0.5 h-4 w-4 fill-current text-accent-2" />
         </span>
         <span className="link-underline">Watch the film</span>
-        <span className="text-sm font-normal tabular-nums text-muted">{FILM_LENGTH}</span>
       </button>
 
       {open &&
